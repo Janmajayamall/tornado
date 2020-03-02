@@ -16,10 +16,10 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* tornadoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* tornadoTests.m */; };
-		3EDC43549CB568CCAECDBEB8 /* libPods-tornadoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC4AC0F101A0B9F66C5DE602 /* libPods-tornadoTests.a */; };
-		6E49204BFDB8FAA586F0B41E /* libPods-tornado-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04933555AF8EC5298C27CF9 /* libPods-tornado-tvOSTests.a */; };
-		73EA56733E1C4193E347A21E /* libPods-tornado.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 566A11453ED076DDFF9976DE /* libPods-tornado.a */; };
-		9CCDD4B18819558F412464F9 /* libPods-tornado-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEA48EB84AB7FD82B94FE9A8 /* libPods-tornado-tvOS.a */; };
+		3C93ADBEC4658BE986CC8D48 /* libPods-tornado-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E985AB8873AA8570ECF55F4 /* libPods-tornado-tvOS.a */; };
+		4E004441495763DC345A322D /* libPods-tornadoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23FA7B67C03AF6519BFC996B /* libPods-tornadoTests.a */; };
+		6BB6498248FDEABC579697F5 /* libPods-tornado-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 621585F105EFA7CADC12F08F /* libPods-tornado-tvOSTests.a */; };
+		D02570BA1542A63AB83E166A /* libPods-tornado.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBF2E036D5A7CDC63C97A23 /* libPods-tornado.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,8 +44,7 @@
 		00E356EE1AD99517003FC87E /* tornadoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tornadoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* tornadoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tornadoTests.m; sourceTree = "<group>"; };
-		05184C3C9B6204ECB84B4A87 /* Pods-tornado.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado.debug.xcconfig"; path = "Target Support Files/Pods-tornado/Pods-tornado.debug.xcconfig"; sourceTree = "<group>"; };
-		068C38A3883A10CC42434170 /* Pods-tornado.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado.release.xcconfig"; path = "Target Support Files/Pods-tornado/Pods-tornado.release.xcconfig"; sourceTree = "<group>"; };
+		06EDFBAFA82978F1010A5CE3 /* Pods-tornado-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-tornado-tvOSTests/Pods-tornado-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* tornado.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tornado.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = tornado/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = tornado/AppDelegate.m; sourceTree = "<group>"; };
@@ -53,20 +52,21 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = tornado/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = tornado/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = tornado/main.m; sourceTree = "<group>"; };
+		1829E647CF44B84F95E5242E /* Pods-tornado.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado.release.xcconfig"; path = "Pods/Target Support Files/Pods-tornado/Pods-tornado.release.xcconfig"; sourceTree = "<group>"; };
+		1E985AB8873AA8570ECF55F4 /* libPods-tornado-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornado-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		23FA7B67C03AF6519BFC996B /* libPods-tornadoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornadoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		25A094FF08C4B5C5540B603D /* Pods-tornadoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornadoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-tornadoTests/Pods-tornadoTests.release.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* tornado-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tornado-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* tornado-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tornado-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		566A11453ED076DDFF9976DE /* libPods-tornado.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornado.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A8C6E887C0DBC993BEA6EE0 /* Pods-tornado-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-tornado-tvOSTests/Pods-tornado-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		9E3996CF0F276F06694CBFCC /* Pods-tornado-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOS.release.xcconfig"; path = "Target Support Files/Pods-tornado-tvOS/Pods-tornado-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		A04933555AF8EC5298C27CF9 /* libPods-tornado-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornado-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AC4AC0F101A0B9F66C5DE602 /* libPods-tornadoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornadoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BEAD0CD470F04917CC299082 /* Pods-tornadoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornadoTests.release.xcconfig"; path = "Target Support Files/Pods-tornadoTests/Pods-tornadoTests.release.xcconfig"; sourceTree = "<group>"; };
-		DE3BBF7C72B17DE7878D1721 /* Pods-tornadoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornadoTests.debug.xcconfig"; path = "Target Support Files/Pods-tornadoTests/Pods-tornadoTests.debug.xcconfig"; sourceTree = "<group>"; };
-		DEA48EB84AB7FD82B94FE9A8 /* libPods-tornado-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornado-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A6001D8236E9F3599CC43AC /* Pods-tornado.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tornado/Pods-tornado.debug.xcconfig"; sourceTree = "<group>"; };
+		4CBF2E036D5A7CDC63C97A23 /* libPods-tornado.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornado.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		621585F105EFA7CADC12F08F /* libPods-tornado-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tornado-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62640B24C940F427A92A40EF /* Pods-tornado-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tornado-tvOSTests/Pods-tornado-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6946C74F97A7B1AEF85688AB /* Pods-tornadoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornadoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tornadoTests/Pods-tornadoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6C7B09ABF6E8B414FEB06733 /* Pods-tornado-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-tornado-tvOS/Pods-tornado-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		C39431D5BB283165DACCD0E8 /* Pods-tornado-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tornado-tvOS/Pods-tornado-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EE59B8F1B6898F228DF3BEA8 /* Pods-tornado-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-tornado-tvOSTests/Pods-tornado-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		FE2A3D95C3AC400B38809E09 /* Pods-tornado-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tornado-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-tornado-tvOS/Pods-tornado-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EDC43549CB568CCAECDBEB8 /* libPods-tornadoTests.a in Frameworks */,
+				4E004441495763DC345A322D /* libPods-tornadoTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73EA56733E1C4193E347A21E /* libPods-tornado.a in Frameworks */,
+				D02570BA1542A63AB83E166A /* libPods-tornado.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CCDD4B18819558F412464F9 /* libPods-tornado-tvOS.a in Frameworks */,
+				3C93ADBEC4658BE986CC8D48 /* libPods-tornado-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6E49204BFDB8FAA586F0B41E /* libPods-tornado-tvOSTests.a in Frameworks */,
+				6BB6498248FDEABC579697F5 /* libPods-tornado-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,10 +141,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				566A11453ED076DDFF9976DE /* libPods-tornado.a */,
-				DEA48EB84AB7FD82B94FE9A8 /* libPods-tornado-tvOS.a */,
-				A04933555AF8EC5298C27CF9 /* libPods-tornado-tvOSTests.a */,
-				AC4AC0F101A0B9F66C5DE602 /* libPods-tornadoTests.a */,
+				4CBF2E036D5A7CDC63C97A23 /* libPods-tornado.a */,
+				1E985AB8873AA8570ECF55F4 /* libPods-tornado-tvOS.a */,
+				621585F105EFA7CADC12F08F /* libPods-tornado-tvOSTests.a */,
+				23FA7B67C03AF6519BFC996B /* libPods-tornadoTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -164,7 +164,7 @@
 				00E356EF1AD99517003FC87E /* tornadoTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				DDF13B9B7C9A62077DF105A2 /* Pods */,
+				97F429527A002DFC9AA3810D /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -182,20 +182,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DDF13B9B7C9A62077DF105A2 /* Pods */ = {
+		97F429527A002DFC9AA3810D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				05184C3C9B6204ECB84B4A87 /* Pods-tornado.debug.xcconfig */,
-				068C38A3883A10CC42434170 /* Pods-tornado.release.xcconfig */,
-				FE2A3D95C3AC400B38809E09 /* Pods-tornado-tvOS.debug.xcconfig */,
-				9E3996CF0F276F06694CBFCC /* Pods-tornado-tvOS.release.xcconfig */,
-				EE59B8F1B6898F228DF3BEA8 /* Pods-tornado-tvOSTests.debug.xcconfig */,
-				9A8C6E887C0DBC993BEA6EE0 /* Pods-tornado-tvOSTests.release.xcconfig */,
-				DE3BBF7C72B17DE7878D1721 /* Pods-tornadoTests.debug.xcconfig */,
-				BEAD0CD470F04917CC299082 /* Pods-tornadoTests.release.xcconfig */,
+				3A6001D8236E9F3599CC43AC /* Pods-tornado.debug.xcconfig */,
+				1829E647CF44B84F95E5242E /* Pods-tornado.release.xcconfig */,
+				C39431D5BB283165DACCD0E8 /* Pods-tornado-tvOS.debug.xcconfig */,
+				6C7B09ABF6E8B414FEB06733 /* Pods-tornado-tvOS.release.xcconfig */,
+				62640B24C940F427A92A40EF /* Pods-tornado-tvOSTests.debug.xcconfig */,
+				06EDFBAFA82978F1010A5CE3 /* Pods-tornado-tvOSTests.release.xcconfig */,
+				6946C74F97A7B1AEF85688AB /* Pods-tornadoTests.debug.xcconfig */,
+				25A094FF08C4B5C5540B603D /* Pods-tornadoTests.release.xcconfig */,
 			);
 			name = Pods;
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,7 +204,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "tornadoTests" */;
 			buildPhases = (
-				E5C5E3DF44596AB5456F08DE /* [CP] Check Pods Manifest.lock */,
+				BE8D1ADA66311B4E5D0BD4F8 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -224,7 +223,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "tornado" */;
 			buildPhases = (
-				1D777FCB547BF20475A1D348 /* [CP] Check Pods Manifest.lock */,
+				D1024F229C814BB577A67F8B /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -244,7 +243,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "tornado-tvOS" */;
 			buildPhases = (
-				3066F8F5122AEA143CDA952B /* [CP] Check Pods Manifest.lock */,
+				93D6B7FF2508692A31EB3EA8 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -264,7 +263,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "tornado-tvOSTests" */;
 			buildPhases = (
-				6FE7E52A9C36D9DDEDB270A9 /* [CP] Check Pods Manifest.lock */,
+				03888190FE4E5335B5B4FB46 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -373,65 +372,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		1D777FCB547BF20475A1D348 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-tornado-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		3066F8F5122AEA143CDA952B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-tornado-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6FE7E52A9C36D9DDEDB270A9 /* [CP] Check Pods Manifest.lock */ = {
+		03888190FE4E5335B5B4FB46 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -453,7 +394,43 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E5C5E3DF44596AB5456F08DE /* [CP] Check Pods Manifest.lock */ = {
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		93D6B7FF2508692A31EB3EA8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-tornado-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BE8D1ADA66311B4E5D0BD4F8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -469,6 +446,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-tornadoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D1024F229C814BB577A67F8B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-tornado-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -580,7 +579,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DE3BBF7C72B17DE7878D1721 /* Pods-tornadoTests.debug.xcconfig */;
+			baseConfigurationReference = 6946C74F97A7B1AEF85688AB /* Pods-tornadoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -603,7 +602,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BEAD0CD470F04917CC299082 /* Pods-tornadoTests.release.xcconfig */;
+			baseConfigurationReference = 25A094FF08C4B5C5540B603D /* Pods-tornadoTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -623,7 +622,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 05184C3C9B6204ECB84B4A87 /* Pods-tornado.debug.xcconfig */;
+			baseConfigurationReference = 3A6001D8236E9F3599CC43AC /* Pods-tornado.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -643,7 +642,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 068C38A3883A10CC42434170 /* Pods-tornado.release.xcconfig */;
+			baseConfigurationReference = 1829E647CF44B84F95E5242E /* Pods-tornado.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -662,7 +661,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE2A3D95C3AC400B38809E09 /* Pods-tornado-tvOS.debug.xcconfig */;
+			baseConfigurationReference = C39431D5BB283165DACCD0E8 /* Pods-tornado-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -690,7 +689,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9E3996CF0F276F06694CBFCC /* Pods-tornado-tvOS.release.xcconfig */;
+			baseConfigurationReference = 6C7B09ABF6E8B414FEB06733 /* Pods-tornado-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -718,7 +717,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE59B8F1B6898F228DF3BEA8 /* Pods-tornado-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 62640B24C940F427A92A40EF /* Pods-tornado-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -745,7 +744,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A8C6E887C0DBC993BEA6EE0 /* Pods-tornado-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 06EDFBAFA82978F1010A5CE3 /* Pods-tornado-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
