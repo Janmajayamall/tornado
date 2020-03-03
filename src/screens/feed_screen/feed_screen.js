@@ -9,6 +9,9 @@ import {
 } from 'react-native'
 import base_style from './../../styles/base'
 
+//importing components 
+import ContentBox from './../../custom_components/content_list/content_box'
+
 
 class FeedScreen extends React.Component {
 
@@ -25,14 +28,17 @@ class FeedScreen extends React.Component {
     render(){
         return(
             <View style={styles.main_container}>
+                
                 <ScrollView
                     contentContainerStyle={{
                         flexGrow:1,
                         justifyContent:'space-between'
                     }}>
-                    <Text>
-                        dad
-                    </Text>
+                    <ContentBox/>
+                    <ContentBox/>
+                    <ContentBox/>
+                    <ContentBox/>
+                    <ContentBox/>
                 </ScrollView>
                 
             </View>

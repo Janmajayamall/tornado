@@ -1,5 +1,23 @@
 export default base_style = {
     color:{
-        primary_color:'#242424'
+        primary_color:'#121212',
+        primary_color_lighter:'#2c2c2c',
+        secondary_color:"#ffffff"
+    },
+    typography:{
+        small_header:{
+            color:'#ffffff',
+            fontSize:17,
+            fontWeight:'bold',
+        },
+        small_font:{
+            color:'#d9d9d9',
+            fontSize:17,
+        },
+        small_font_paragraph:{
+            color:'#d9d9d9',
+            fontSize:17,
+            textAlign:'left'
+        }
     }
 }
