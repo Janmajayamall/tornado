@@ -36,9 +36,7 @@ class FeedScreen extends React.Component {
                     }}>
                     <ContentBox/>
                     <ContentBox/>
-                    <ContentBox/>
-                    <ContentBox/>
-                    <ContentBox/>
+
                 </ScrollView>
                 
             </View>

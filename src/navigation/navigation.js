@@ -7,6 +7,7 @@ import {
 
 import registerScreens from './register_screens';
 
+
 // Register all screens on launch
 registerScreens();
 
