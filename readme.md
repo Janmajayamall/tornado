@@ -29,4 +29,14 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 3. https://mongodb.github.io/node-mongodb-native/3.5/ (Link for native client of MongoDB for node js)
 
 
+## Guide for using Apollo local state management
+1. https://itnext.io/managing-local-state-with-apollo-client-and-react-hooks-9ad357e6d649
 
+
+## Guide for images in react native
+1. https://medium.com/@adamjacobb/react-native-performance-images-adf5843e120
+2. How to implement "Progressive Image Loading" in react native:
+    This requires generating thumbnail image sources for each, hence look at it later. It is amazing for UI
+    a. https://medium.com/react-native-training/progressive-image-loading-in-react-native-e7a01827feb7
+    b. https://medium.com/the-react-native-log/progressive-image-loading-in-react-native-ecc88e724343
+    

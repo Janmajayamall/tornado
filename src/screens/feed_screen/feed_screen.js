@@ -8,9 +8,16 @@ import {
 
 } from 'react-native'
 import base_style from './../../styles/base'
+import gql from 'graphql-tag';
+import {
+    Query
+} from 'react-apollo'
+
+//importing queries/mutations in gql
+import {GET_ROOM_FEED} from './queries/index'
 
 //importing components 
-import ContentBox from './../../custom_components/content_list/content_box'
+import ContentList from "./../../custom_components/content_list/content_list"
 
 
 class FeedScreen extends React.Component {
@@ -25,20 +32,75 @@ class FeedScreen extends React.Component {
 
     }
 
+    get_room_posts = () => {
+    //    in-build pagination
+
+    return(
+
+        <Query 
+            query={GET_ROOM_FEED}
+            variables={{
+                limit:5
+            }}
+        >
+            {({ loading, error, data, fetchMore }) => {
+                
+                return(
+                    <ContentList
+                        error={error}
+                        loading={loading}
+                        room_posts={data ? data.get_room_posts_user_id.room_posts : undefined}
+                        on_load_more={()=>{
+                            fetchMore({
+                                //getting more posts using cursor
+                                query:GET_ROOM_FEED,
+                                variables:{
+                                    limit:5,
+                                    room_post_cursor:data.get_room_posts_user_id.room_post_cursor
+                                },
+                                updateQuery: (previous_data, {fetchMoreResult}) => {
+                                    //appending to the previous result 
+
+                                    if (!previous_data.get_room_posts_user_id.next_page){
+                                        return previous_data
+                                    }
+
+
+                                    const new_posts_arr = [
+                                        ...previous_data.get_room_posts_user_id.room_posts,
+                                        ...fetchMoreResult.get_room_posts_user_id.room_posts
+                                    ]
+
+                                    const new_data_object = {
+                                        ...fetchMoreResult, 
+                                        get_room_posts_user_id:{
+                                            ...fetchMoreResult.get_room_posts_user_id,
+                                            room_posts:new_posts_arr
+                                        }
+                                    }
+
+                                    return new_data_object
+                                    }
+                                })
+                            }}  
+                    />
+                )
+            }}
+        </Query>
+
+    )
+
+
+
+    }
+
+
     render(){
         return(
             <View style={styles.main_container}>
-                
-                <ScrollView
-                    contentContainerStyle={{
-                        flexGrow:1,
-                        justifyContent:'space-between'
-                    }}>
-                    <ContentBox/>
-                    <ContentBox/>
-
-                </ScrollView>
-                
+                {
+                    this.get_room_posts()
+                }
             </View>
         )
     }

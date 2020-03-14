@@ -1,19 +1,19 @@
 import React from 'react'
 import {
     View,
-    StyleSheet,
-    Text,
-    ScrollView,
-    Image,
-    Dimensions
+    Dimensions,
+    Image
 } from 'react-native'
+import FastImage from "react-native-fast-image"
+import PropTypes from "prop-types"
 
 const window = Dimensions.get('window')
 
 class AsyncImage extends React.Component {
     
     static propsTypes = {
-        
+        width:PropTypes.any,
+        height:PropTypes.any
     }
 
     constructor(props){
@@ -22,8 +22,9 @@ class AsyncImage extends React.Component {
 
         this.state={
             loaded:false,
-            width:100,
-            height:100
+            width:window.width,
+            main_container_width:this.props.width,
+            main_container_height:this.props.height*1.2
         }
 
     }
@@ -34,25 +35,32 @@ class AsyncImage extends React.Component {
             if (window.width){
                 this.setState({
                     width: window.width,
-                    height: height * (window.width / width)
-                });
+                    height: height * (window.width / width),
+                    main_container_height:  height * (window.width / width),
+                    main_container_width: window.width
+                })
             }
         });
+
+        
     }
 
     on_load = () => {
         this.setState({loaded:true})
     }
 
+    //TODO: add blur load vision for this later
+
     render(){
 
         return(
-            <View>
+            <View style={[styles.main_container, {width:this.state.main_container_width, height:this.props.main_container_height}]}>
 
                 <Image
                     source={{uri:this.props.source}}
-                    style={{...styles.posted_image_style, width:this.state.width, height:this.state.height}} 
+                    style={[styles.posted_image_style, {width:this.state.width, height:this.state.height}]} 
                     onLoad={this.on_load}
+                    resizeMode={"contain"}
                 />
 
                 {!this.state.loaded ?
@@ -69,6 +77,9 @@ class AsyncImage extends React.Component {
 }
 
 const styles = {
+    main_container:{
+        backgroundColor:"#ffffff"
+    },
     posted_image_style:{
 
     },

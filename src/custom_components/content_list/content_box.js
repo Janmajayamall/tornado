@@ -9,15 +9,16 @@ import {
 import PropTypes from 'prop-types'
 
 //customer components
-import AsyncImage from './../image/image'
+import AsyncImage from '../image/async_image'
 import Avatar from './../image/profile_image'
+
+import {get_scaled_image_size} from "./../../helpers"
 
 defaultContent={
     user_profile:{
         avatar:'https://www.nowrunning.com/content/Artist/Zendaya/banner.jpg',
         creative_name:'JayZendaya',
     },
-    brand:['addidas', 'nike'],
     trend:['olympics'],
     posted_image:'https://www.rollingstone.com/wp-content/uploads/2018/10/colin-Kaepernick-just-do-it-nike-ad-2018.jpg?resize=1800,1200&w=450',
     likes:10,
@@ -36,26 +37,68 @@ class ContentBox extends React.Component {
         super(props)
 
         this.state={
-            ...defaultContent
+            img_dim_loaded:false
         }
 
     }
 
+    componentDidMount(){
+    }
+
+    // load_async_image_dims = async (img_url) => {
+        
+    //     try{
+    //         const img_dims = await get_scaled_image_size(window.width, img_url)
+    //         this.setState({img_dims:img_dims, img_dim_loaded:true})
+    //     }catch(e){
+    //         console.log(e, "image load error")
+    //     }
+    // }
+
+    // load_async_image = () => {
+
+    //     if (!this.state.img_dim_loaded){
+    //         console.log("heree")
+    //         return(
+    //             <Text>
+    //                 dwdwdwdwd......
+    //             </Text>
+    //         )
+    //     }
+
+    //     return(
+    //         <AsyncImage
+    //             source={this.props.post_object.img_url}
+    //             height={this.state.img_dims.height}
+    //             width={this.state.img_dims.width}
+    //         />
+    //     )
+    // }
+
+
     render(){
         return(
             <View style={styles.main_container}>
-            
-                <View>
-                    <AsyncImage
-                        source={this.state.posted_image}
-                    />
-                </View>
+
+                {
+
+                    this.props.post_object.img_url ? 
+
+                        <View>
+                            <AsyncImage
+                                source={this.props.post_object.img_url}
+                                width={window.width}
+                            />
+                        </View> : 
+
+                        undefined
+                }
             
                 <View style={styles.user_content_container}>
 
                     <View style={styles.user_profile_pic_container}>
                         <Avatar
-                                source={this.state.user_profile.avatar}
+                                source={this.props.post_object.creator_info.avatar}
                         />
                     </View>
 
@@ -65,13 +108,13 @@ class ContentBox extends React.Component {
                  
                             <View>
                                 <Text style={base_style.typography.small_header}>
-                                    {this.state.user_profile.creative_name}
+                                    {this.props.post_object.creator_info.username}
                                 </Text>
                             </View>
 
                             <View>
                                 <Text style={base_style.typography.small_font}>
-                                    {this.state.description}
+                                    {this.props.post_object.description}
                                 </Text>
                             </View>
 
