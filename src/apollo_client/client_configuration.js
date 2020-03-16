@@ -37,7 +37,6 @@ const requestLink = new ApolloLink((operation, forward) =>
 const client = new ApolloClient({
     link: ApolloLink.from([
         onError(({graphql_errors, network_error}) => {
-          
             if (graphql_errors){
                 graphql_errors.forEach(({message, locations, path})=> {
                     console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}`)

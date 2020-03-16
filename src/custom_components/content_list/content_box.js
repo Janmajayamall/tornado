@@ -1,18 +1,25 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {
     View,
     StyleSheet,
     Text,
     ScrollView,
-    Dimensions
+    Dimensions,
+    Image,
+    TouchableOpacity
 } from 'react-native'
 import PropTypes from 'prop-types'
+import {Navigation} from "react-native-navigation"
 
 //customer components
 import AsyncImage from '../image/async_image'
-import Avatar from './../image/profile_image'
+import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
 
 import {get_scaled_image_size} from "./../../helpers"
+
+
+// import screens
+import {COMMENT_SCREEN} from "./../../navigation/screens"
 
 defaultContent={
     user_profile:{
@@ -26,10 +33,11 @@ defaultContent={
 }
 
 const window = Dimensions.get('window')
-class ContentBox extends React.Component {
+class ContentBox extends React.PureComponent {
 
     static propTypes = {
-        
+        post_object:PropTypes.object,
+        om_feed:PropTypes.bool
     }
 
     constructor(props){
@@ -37,44 +45,55 @@ class ContentBox extends React.Component {
         super(props)
 
         this.state={
-            img_dim_loaded:false
+            img_width:window.width,
+            img_height:window.width*1.2
         }
-
+        this.load_async_image_dims(this.props.post_object.img_url)
     }
 
-    componentDidMount(){
-    }
+    // componentDidMount(){
+    //     console.log("rendered: ContentBox")
+    // }
 
-    // load_async_image_dims = async (img_url) => {
+    load_async_image_dims = async (img_url) => {
         
-    //     try{
-    //         const img_dims = await get_scaled_image_size(window.width, img_url)
-    //         this.setState({img_dims:img_dims, img_dim_loaded:true})
-    //     }catch(e){
-    //         console.log(e, "image load error")
-    //     }
-    // }
+        Image.getSize(img_url, (width, height) => {
 
-    // load_async_image = () => {
+            if (window.width){
+                this.setState({
+                    img_width: window.width,
+                    img_height: height * (window.width / width),
+                }, this.props.source)
+            }
+        });
 
-    //     if (!this.state.img_dim_loaded){
-    //         console.log("heree")
-    //         return(
-    //             <Text>
-    //                 dwdwdwdwd......
-    //             </Text>
-    //         )
-    //     }
+    }
 
-    //     return(
-    //         <AsyncImage
-    //             source={this.props.post_object.img_url}
-    //             height={this.state.img_dims.height}
-    //             width={this.state.img_dims.width}
-    //         />
-    //     )
-    // }
+    navigate_to_comment_screen = () => {
+        
+        Navigation.push(this.props.componentId, {
+            component: {
+                name: COMMENT_SCREEN,
+                passProps: {
+                    post_object:this.props.post_object
+                },
+                options: {
 
+                },
+                topBar:{
+                    leftButtons: [
+                        {
+                            id: 'back',
+                            icon: {
+                                uri: 'back',
+                            },
+                        },
+                    ],
+                }
+            }
+        });
+
+    }
 
     render(){
         return(
@@ -87,43 +106,45 @@ class ContentBox extends React.Component {
                         <View>
                             <AsyncImage
                                 source={this.props.post_object.img_url}
-                                width={window.width}
+                                width={this.state.img_width}
+                                height={this.state.img_height}
                             />
                         </View> : 
 
                         undefined
                 }
-            
+
                 <View style={styles.user_content_container}>
-
-                    <View style={styles.user_profile_pic_container}>
-                        <Avatar
-                                source={this.props.post_object.creator_info.avatar}
-                        />
-                    </View>
-
-                    <View style={styles.user_description_container}>
-                    
-                        <View style={styles.user_description_container_child}>
-                 
-                            <View>
-                                <Text style={base_style.typography.small_header}>
-                                    {this.props.post_object.creator_info.username}
-                                </Text>
-                            </View>
-
-                            <View>
-                                <Text style={base_style.typography.small_font}>
-                                    {this.props.post_object.description}
-                                </Text>
-                            </View>
-
-                        </View>
-
-                    </View>
+                    <AvatarTextPanel
+                        avatar={this.props.post_object.creator_info.avatar}
+                        username={this.props.post_object.creator_info.username}
+                        description={this.props.post_object.description}
+                    />
                 </View>
 
-                <View style={{backgroundColor:"#2c2c2c", width:"100%", height:10}}/>
+                {/* comment and like */}
+                <View style={styles.like_comment_main_container}>
+                    <View style={styles.like_container}>
+                        <Text>
+                            Like
+                        </Text>
+                    </View>
+                    <TouchableOpacity style={styles.comment_container}
+                        onPress={()=>{
+                            if(!this.props.on_feed){
+                                console.log("open comment")
+                            }else{
+                                this.navigate_to_comment_screen()
+                            }
+                        }}
+                    >
+                        <Text>
+                            comment
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={[styles.horizontal_line, this.props.on_feed ? {marginBottom:15} : {}]}/>
                 
 
                 {/* <View style={styles.horizontal_line}/> */}
@@ -141,31 +162,31 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        marginTop:15,
+        // marginTop:15,
         marginBottom:15
     },
     user_content_container:{
-        flexDirection:'row',
         borderRadius:10,
         padding:5
-    },
-    user_profile_pic_container:{
-        width:'20%',
-        justifyContent:'flex-start',
-        padding:5
-    },
-    user_description_container:{
-        width:'80%',
-        padding:5
-    },
-    user_description_container_child:{
-        flexDirection:'column',
     },
     horizontal_line:{
         borderBottomColor:base_style.color.primary_color_lighter,
         borderBottomWidth:1,
-        width:"80%",
+        width:"100%",
+    },
+    like_comment_main_container:{
+        flexDirection:"row"
+    },
+    like_container:{
+        width:"50%",
+        // borderRightWidth:2,
+        // borderRightColor:base_style.color.primary_color_lighter
+
+    },
+    comment_container:{
+        width:"50%"
     }
+
 })
 
 export default ContentBox

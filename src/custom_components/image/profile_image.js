@@ -7,9 +7,9 @@ import {
     Image,
     Dimensions
 } from 'react-native'
+import FastImage from "react-native-fast-image"
 
-
-class Avatar extends React.Component {
+class Avatar extends React.PureComponent {
     
     static propsTypes = {
         
@@ -42,12 +42,19 @@ class Avatar extends React.Component {
         return(
             <View onLayout={this.on_layout}>
 
-                <Image
+                <FastImage
                     source={{uri:this.props.source}}
                     resizeMode={'cover'}
                     style={{...styles.posted_image_style, borderRadius:this.state.width/2}} 
                     onLoad={this.on_load}
                 />
+
+                {!this.state.loaded ?
+                    <View
+                        style={styles.replace_container}
+                    /> :
+                    undefined
+                } 
 
             </View>
         )
@@ -60,6 +67,10 @@ const styles = {
         width:"100%",
         aspectRatio:1
     },
+    replace_container:{
+        backgroundColor:'#ffffff',
+        width:'100%',
+    }
 }
 
 export default Avatar

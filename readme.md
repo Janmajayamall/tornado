@@ -40,3 +40,11 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
     a. https://medium.com/react-native-training/progressive-image-loading-in-react-native-e7a01827feb7
     b. https://medium.com/the-react-native-log/progressive-image-loading-in-react-native-ecc88e724343
     
+## Guide on optimisation
+1. https://medium.com/@rossbulat/how-to-memoize-in-react-3d20cbcd2b6e (--- guide on react memoization)
+2. https://hackernoon.com/react-native-performance-do-and-dont-1198e97b730a
+3. https://engineering.fb.com/android/dive-into-react-native-performance/
+4. https://www.youtube.com/watch?v=Pa2uN2KRbj0 (react native profiling guide
+)
+5. Check this app out https://github.com/infinitered/reactotron
+6. https://medium.com/better-programming/https-medium-com-mayank-gupta-6-88-21-performance-optimizations-techniques-for-react-d15fa52c2349

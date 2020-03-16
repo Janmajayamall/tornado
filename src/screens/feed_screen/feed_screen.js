@@ -15,6 +15,7 @@ import {
 
 //importing queries/mutations in gql
 import {GET_ROOM_FEED} from './queries/index'
+import {GET_POST_COMMENTS} from "./../comment_screen/queries/index"
 
 //importing components 
 import ContentList from "./../../custom_components/content_list/content_list"
@@ -47,6 +48,7 @@ class FeedScreen extends React.Component {
                 
                 return(
                     <ContentList
+                        componentId={this.props.componentId}
                         error={error}
                         loading={loading}
                         room_posts={data ? data.get_room_posts_user_id.room_posts : undefined}

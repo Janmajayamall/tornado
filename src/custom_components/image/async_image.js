@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import {
     View,
     Dimensions,
@@ -9,7 +9,7 @@ import PropTypes from "prop-types"
 
 const window = Dimensions.get('window')
 
-class AsyncImage extends React.Component {
+class AsyncImage extends PureComponent {
     
     static propsTypes = {
         width:PropTypes.any,
@@ -22,28 +22,13 @@ class AsyncImage extends React.Component {
 
         this.state={
             loaded:false,
-            width:window.width,
-            main_container_width:this.props.width,
-            main_container_height:this.props.height*1.2
         }
 
     }
 
-    componentDidMount() {
-        Image.getSize(this.props.source, (width, height) => {
-
-            if (window.width){
-                this.setState({
-                    width: window.width,
-                    height: height * (window.width / width),
-                    main_container_height:  height * (window.width / width),
-                    main_container_width: window.width
-                })
-            }
-        });
-
-        
-    }
+    // componentDidMount(){
+    //     console.log("rendered: AsyncImage")
+    // }
 
     on_load = () => {
         this.setState({loaded:true})
@@ -54,13 +39,13 @@ class AsyncImage extends React.Component {
     render(){
 
         return(
-            <View style={[styles.main_container, {width:this.state.main_container_width, height:this.props.main_container_height}]}>
+            <View style={[styles.main_container, {width:this.props.width, height:this.props.height}]}>
 
-                <Image
+                <FastImage
                     source={{uri:this.props.source}}
-                    style={[styles.posted_image_style, {width:this.state.width, height:this.state.height}]} 
+                    style={[styles.posted_image_style, {width:this.props.width, height:this.props.height}]} 
                     onLoad={this.on_load}
-                    resizeMode={"contain"}
+                    // resizeMode={"contain"}
                 />
 
                 {!this.state.loaded ?
