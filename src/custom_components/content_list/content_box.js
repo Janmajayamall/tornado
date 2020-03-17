@@ -119,6 +119,7 @@ class ContentBox extends React.PureComponent {
                         avatar={this.props.post_object.creator_info.avatar}
                         username={this.props.post_object.creator_info.username}
                         description={this.props.post_object.description}
+                        is_description={true}
                     />
                 </View>
 
@@ -166,8 +167,7 @@ const styles = StyleSheet.create({
         marginBottom:15
     },
     user_content_container:{
-        borderRadius:10,
-        padding:5
+        
     },
     horizontal_line:{
         borderBottomColor:base_style.color.primary_color_lighter,

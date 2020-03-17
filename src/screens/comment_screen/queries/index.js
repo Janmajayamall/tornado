@@ -12,11 +12,13 @@ export const GET_POST_COMMENTS = gql`
             content_id, 
             content_type, 
             creator_info{
-            username,
-            timestamp,
+                username,
+                timestamp,
+                avatar
             }, 
-            status, 
-            comment_body
+            comment_body,
+            timestamp,
+            last_modified
         }
     }
 `
@@ -24,19 +26,19 @@ export const GET_POST_COMMENTS = gql`
 
 //Mutations
 export const CREATE_COMMENT = gql`
-
-    mutation create_comment($user_id:String!, $content_id:String!, $content_type:String!, $comment_body:String!) {
-        create_comment(user_input:{
-            user_id:$user_id,
-            content_id:$content_id,
-            content_type:$content_type,
-            comment_body:$comment_body
-        }){
-            _id, 
-            status, 
-            user_id, 
-            content_id, 
-            comment_body
-        }
+    
+ mutation create_comments($user_id:ID!, $content_id:ID!, $content_type:String!, $comment_body:String!){
+    create_comment(user_input:{
+        user_id:$user_id,
+        content_id:$content_id
+        content_type:$content_type
+        comment_body:$comment_body
+    }),{
+        _id, 
+        content_id, 
+        comment_body,
+        content_type
+    }
 }
-`
+    
+`;

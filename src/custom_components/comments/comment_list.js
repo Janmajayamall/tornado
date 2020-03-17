@@ -10,7 +10,6 @@ import {
 import PropTypes from 'prop-types'
 
 //custom components
-import CommentDisplay from "./comment_display"
 import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
 import ContentBox from "./../content_list/content_box"
 
@@ -34,7 +33,6 @@ class CommentList extends React.PureComponent{
     }
 
     render_item = (object) => {
-        console.log(object.item)
         if (object.index===0){
             return(
                 <ContentBox
@@ -49,10 +47,16 @@ class CommentList extends React.PureComponent{
                 avatar={object.item.creator_info.avatar}
                 username={object.item.creator_info.username}
                 description={object.item.comment_body}
+                is_description={true}
             />
         )
-
     }
+
+    refresh_list = () => {
+        this.setState({refreshing:true})
+        this.props.refresh_list()
+    }
+
 
     render(){
 
@@ -77,6 +81,8 @@ class CommentList extends React.PureComponent{
             <FlatList
                 data={[this.props.post_object, ...this.props.comment_list]}
                 renderItem={(object)=>this.render_item(object)}
+                onRefresh={this.refresh_list}
+                refreshing={!this.props.network_status===7}
             />      
         )
     }

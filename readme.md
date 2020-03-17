@@ -48,3 +48,6 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 )
 5. Check this app out https://github.com/infinitered/reactotron
 6. https://medium.com/better-programming/https-medium-com-mayank-gupta-6-88-21-performance-optimizations-techniques-for-react-d15fa52c2349
+
+## Links on react native keyboard animation
+1. https://stackoverflow.com/questions/29313244/how-to-auto-slide-the-window-out-from-behind-keyboard-when-textinput-has-focus/32593814#32593814
