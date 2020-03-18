@@ -26,6 +26,7 @@ import {CREATE_COMMENT, GET_POST_COMMENTS} from './queries/index'
 import CommentList from "./../../custom_components/comments/comment_list"
 import AvatarTextPanel from "./../../custom_components/user_attributes/avatar_text_panel"
 import QueryComments from "./wrapper_components/query_comments"
+import base from './../../styles/base';
 
 const window = Dimensions.get("window")
 
@@ -35,8 +36,9 @@ class Comment extends React.PureComponent {
         super(props)
     
         this.state = {
-            comment_list_height:"100%",
-            post_comment_box_padding:0
+            comment_list_padding:0,
+            post_comment_box_padding:0,
+            comment_container_height:0
         }
 
     }   
@@ -48,13 +50,18 @@ class Comment extends React.PureComponent {
 
     _keyboard_did_show = (e) => {
         if (e){
-            const temp_height_list = window.height-e.endCoordinates.height
-            this.setState({comment_list_height:temp_height_list, post_comment_box_padding:e.endCoordinates.height})
+            this.setState((prev_state)=>{
+                const temp_height_list = prev_state.comment_list_padding+e.endCoordinates.height
+                return({
+                    comment_list_padding:temp_height_list, 
+                    post_comment_box_padding:e.endCoordinates.height
+                })
+            })
         }
     }   
 
     _keyboard_will_hide = (e) => {
-        this.setState({comment_list_height:"100%", post_comment_box_padding:0})
+        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:0})
     }
 
     componentWillUnmount(){
@@ -71,7 +78,6 @@ class Comment extends React.PureComponent {
                 content_type={"ROOM_POST"}
                 user_id={"5e6644854b2a594d5c2f3c1d"}
                 create_comment_func={(comment_obj)=>{
-                    console.log(comment_obj)
                     mutate({
                         variables:comment_obj,
                         optimisticResponse:{
@@ -121,6 +127,10 @@ class Comment extends React.PureComponent {
         )
     }
 
+    on_comment_container_render = (e) => {
+        this.setState({comment_container_height:e.nativeEvent.layout.height, comment_list_padding:e.nativeEvent.layout.height})
+    }
+
     render(){
 
         return(
@@ -132,11 +142,14 @@ class Comment extends React.PureComponent {
                         content_id={this.props.post_object._id}
                         content_type={"ROOM_POST"}
                         post_object={this.props.post_object}
+                        bottom_padding={this.state.comment_list_padding}
                     />
                 </View>
 
                 {/* creating comment section */}
-                <View style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}>
+                <View 
+                    onLayout={this.on_comment_container_render}
+                    style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}>
                     <Mutation mutation={CREATE_COMMENT}>
                         {mutate => {
                             return this.post_comment(mutate)
@@ -160,10 +173,12 @@ const styles = StyleSheet.create(
         },
      
         create_comment_container:{
-          width: '100%', 
-          position: "absolute",
-          bottom: 0,
-
+            width: '100%', 
+            position: "absolute",
+            bottom: 0,
+            borderTopColor:base.color.primary_color_lighter,
+            backgroundColor:base.color.primary_color,
+            borderTopWidth:1
         },
 
     });

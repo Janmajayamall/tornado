@@ -41,8 +41,7 @@ class Avatar extends React.PureComponent {
 
         return(
             <View onLayout={this.on_layout}>
-
-                <FastImage
+                <Image
                     source={{uri:this.props.source}}
                     resizeMode={'cover'}
                     style={{...styles.posted_image_style, borderRadius:this.state.width/2}} 

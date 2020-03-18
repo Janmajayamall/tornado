@@ -13,7 +13,6 @@ import CommentList from "../../../custom_components/comments/comment_list"
 import {GET_POST_COMMENTS} from "../queries/index"
 
 const QueryComments = (props) => {
-    console.log("dadw")
     return(
         <Query
             query={GET_POST_COMMENTS}
@@ -23,7 +22,6 @@ const QueryComments = (props) => {
             }}
         >
             {({loading, error, data, refetch, networkStatus}) => {
-                console.log(data, networkStatus)
                 return(
                     <CommentList
                         comment_list={data ? data.get_post_comments : []}
@@ -34,6 +32,7 @@ const QueryComments = (props) => {
                             refetch()
                         }}
                         network_status={networkStatus}
+                        bottom_padding={props.bottom_padding}
                     />
                 )
 

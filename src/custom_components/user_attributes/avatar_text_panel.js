@@ -8,6 +8,7 @@ import {
 
 import Avatar from "./../image/profile_image"
 import PropTypes from "prop-types"
+import base from "../../styles/base"
 
 
 class AvatarTextPanel extends React.PureComponent{
@@ -26,7 +27,8 @@ class AvatarTextPanel extends React.PureComponent{
     constructor(props){
         super(props)
         this.state={
-            comment_text_input:""
+            comment_text_input:"",
+            avatar_width:1
         }
     }
     
@@ -64,6 +66,8 @@ class AvatarTextPanel extends React.PureComponent{
                             onChangeText={(val)=>{
                                 this.setState({comment_text_input:val})
                             }}
+                            placeholder={"Add a new comment..."}
+                            placeholderTextColor={"white"}
                     />
                 </View>
                 <TouchableOpacity 
@@ -95,9 +99,12 @@ class AvatarTextPanel extends React.PureComponent{
         return(
             <View style={styles.main_container}>
                 <View style={styles.user_profile_pic_container}>
-                    <Avatar
-                            source={this.props.avatar}
-                    />
+                    <View>
+                        <Avatar
+                                source={this.props.avatar}
+                                width={this.state.avatar_width}
+                        />
+                    </View>                    
                 </View>
 
                 <View style={styles.user_description_container}>
@@ -136,14 +143,15 @@ const styles = {
     },
     input_text_container:{
         width:"90%",
-        height:"100%"
+        height:"100%",
     },
     post_button_container:{
         width:"10%"
     },
     comment_text_input:{
         width:"100%",
-        color:"white"
+        ...base.typography.small_font
+
     }
 }
 

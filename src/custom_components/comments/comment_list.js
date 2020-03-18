@@ -29,7 +29,7 @@ class CommentList extends React.PureComponent{
     }
 
     componentDidUpdate(){
-        // console.log("rendered: ContentList" )
+        // console.log("rendered: ContentList", this.props.bottom_padding)
     }
 
     render_item = (object) => {
@@ -83,6 +83,7 @@ class CommentList extends React.PureComponent{
                 renderItem={(object)=>this.render_item(object)}
                 onRefresh={this.refresh_list}
                 refreshing={!this.props.network_status===7}
+                contentContainerStyle={{paddingBottom:this.props.bottom_padding}}
             />      
         )
     }
