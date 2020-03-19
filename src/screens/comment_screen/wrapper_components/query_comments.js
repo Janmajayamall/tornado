@@ -33,6 +33,7 @@ const QueryComments = (props) => {
                         }}
                         network_status={networkStatus}
                         bottom_padding={props.bottom_padding}
+                        toggle_post_like={props.toggle_post_like}
                     />
                 )
 

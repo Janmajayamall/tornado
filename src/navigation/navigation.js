@@ -2,7 +2,8 @@
 import { Navigation } from 'react-native-navigation';
 
 import {
-  FEED_SCREEN
+  FEED_SCREEN,
+  REGISTER_SCREEN
 } from './screens';
 
 import registerScreens from './register_screens';
@@ -18,7 +19,7 @@ export function start_app () {
       stack: {
         children: [{
           component: {
-            name: FEED_SCREEN,
+            name: REGISTER_SCREEN,
             options: {
               topBar: {
                 visible: false,

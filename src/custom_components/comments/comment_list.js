@@ -19,7 +19,12 @@ class CommentList extends React.PureComponent{
     static propTypes = {
         comment_list:PropTypes.array,
         loading:PropTypes.any,
-        error:PropTypes.any
+        error:PropTypes.any,
+        refresh_list:PropTypes.func,
+        bottom_padding:PropTypes.any,
+        post_object:PropTypes.object,
+        network_status:PropTypes.any,
+        toggle_post_like:PropTypes.func
     }
 
     constructor(props){
@@ -38,6 +43,7 @@ class CommentList extends React.PureComponent{
                 <ContentBox
                     post_object={object.item}
                     on_feed={false}
+                    toggle_post_like={this.props.toggle_post_like}
                 />
             )
         }

@@ -18,6 +18,7 @@ import {
     Mutation,
     useQuery
 } from 'react-apollo'
+import {Navigation} from "react-native-navigation"
 
 //importing queries/mutations in gql
 import {CREATE_COMMENT, GET_POST_COMMENTS} from './queries/index'
@@ -41,12 +42,19 @@ class Comment extends React.PureComponent {
             comment_container_height:0
         }
 
+        console.log(this.props)
+
     }   
 
     componentDidMount(){
         this.keyboard_did_show_listener = Keyboard.addListener("keyboardWillShow", this._keyboard_did_show)
         this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
+
     }
+
+    // componentDidAppear(ee){
+    //     console.log(ee, "event")
+    // }
 
     _keyboard_did_show = (e) => {
         if (e){
@@ -141,8 +149,10 @@ class Comment extends React.PureComponent {
                     <QueryComments
                         content_id={this.props.post_object._id}
                         content_type={"ROOM_POST"}
-                        post_object={this.props.post_object}
+                        content_box={this.props.content_box}
                         bottom_padding={this.state.comment_list_padding}
+                        post_object={this.props.post_object}
+                        toggle_post_like={this.props.toggle_post_like}                        
                     />
                 </View>
 

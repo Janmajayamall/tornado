@@ -49,7 +49,6 @@ class FeedScreen extends React.Component {
                 return(
                     <ContentList
                         componentId={this.props.componentId}
-                        error={error}
                         loading={loading}
                         room_posts={data ? data.get_room_posts_user_id.room_posts : undefined}
                         on_load_more={()=>{
