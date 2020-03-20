@@ -3,13 +3,40 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, Observable } from 'apollo-link';
+import AsyncStorage from '@react-native-community/async-storage';
 
+const get_jwt_asyncstorage = async() => {
+  try{
+    const jwt = await AsyncStorage.getItem("token")
+    if (jwt){
+      console.log(jwt, "daw")
+      return jwt
+    }
+    return ""
+  }catch(e){
+    console.log("AsyncStorage Error(jwt token not setup): "+e)
+    return ""
+  }
+}
+
+const get_user_info_asyncstorage = async() => {
+  try{
+    const user_info_string = await AsyncStorage.getItem("user_info")
+    if (user_info_string){
+      return JSON.parse(user_info_string)
+    }
+    return {}
+  }catch(e){
+    console.log("AsyncStorage Error(user_info not setup): "+e)
+    return {}
+  }
+}
 
 const request = async (operation) => {
     // const token = await AsyncStorage.getItem('token');
     operation.setContext({
       headers: {
-        authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTY2NDQ4NTRiMmE1OTRkNWMyZjNjMWQiLCJpYXQiOjE1ODQwMDM0NjY5NzMsImV4cCI6MTU4NDAwNDMzMDk3M30.VJFB18hc_FyxpxUgIPXxUff1hMCbTULwGcpjBeS7cU2OypSeN8RdRlqcMPlFjWq-s-6hBmmUIMKd4i9kKzoA0qYmvXqfjBWvJfpfUcqMfeYSsHe_mk-8JU3Q9N3Bhz2U9ALJzXkdzFzogDsRLt6WYGJ32pnxvjxzmAExnICglqYpU4IpUMuED7kjaCW7wFNj6d9eAeAcXS7-o-P6z0ZpQcMMfF8q0DUIcTh0qPZTi5OUILBJbNJGVCYgkwA631dlPibjsN47j7kGcdTOJ2Akac4608bSDWFp9X_URrOFUj08GAgOjwjYypCtlRnNvk_jcvCG6F6Fu1MzwdHqcw0d6tIWqiUZlE2k--o93a47H1itI-9iKPb3IADdB3RpNyrPQDsChUe-8D_jH7ldBLIwSRckSF4ct1erAzStzz14y8_ixzcuQ4K2qw3Nml3C8g1SNnmxAv1hXw0Fi3UNihPlYuygxMAGWOrrBH0RKui2-NViryMC6qQSGqCKioWhwJ4lFDpSHzHdokSmjP7eGS_QIhrf23auRQ0h5XYx9ururD3zkmUKlocjtKL1MgoA_PjWguT6Wno7kd5YOiB_6hoJWwpPbQqV00WzAzHWj_3CDKqnNID3QuwnxZ7pqwq25efF_prdup39eATKkXDfZ2xlcQmS2vEYZkAULk7BdwrIaUI"
+        authorization: await get_jwt_asyncstorage()
       }
     });
 };
@@ -34,6 +61,21 @@ const requestLink = new ApolloLink((operation, forward) =>
   })
 )
 
+const cache = new InMemoryCache()
+
+const load_cache_with_user = async(cache) => {
+  const user_info_obj = await get_user_info_asyncstorage()
+  console.log(user_info_obj)
+
+  cache.writeData({
+    data:{
+      user_info:user_info_obj
+    }
+  })
+}
+
+load_cache_with_user(cache)
+
 const client = new ApolloClient({
     link: ApolloLink.from([
         onError(({graphql_errors, network_error}) => {
@@ -52,7 +94,7 @@ const client = new ApolloClient({
             credentials: "same-origin"
         })
     ]),
-    cache: new InMemoryCache()
+    cache:cache
 });
 
 export default client

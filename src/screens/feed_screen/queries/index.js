@@ -10,7 +10,6 @@ export const GET_ROOM_FEED = gql`
                 creator_info{
                     user_id, 
                     username,
-                    dob,
                     avatar
                 },
                 likes_count,

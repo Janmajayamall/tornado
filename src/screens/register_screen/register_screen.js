@@ -9,6 +9,7 @@ import {
 import {
     Mutation
 } from "react-apollo"
+import {Navigation} from "react-native-navigation"
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -19,18 +20,43 @@ import base from "./../../styles/base";
 
 //import custom components
 import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
+import BigButton from "./../../custom_components/buttons/big_buttons"
+
+// importing screens
+import {
+    REGISTER_OTHER_ARR_SCREEN
+} from "./../../navigation/screens"
+
+//import input validators
+import {
+    validate_email,
+    validate_password,
+    validate_username
+} from "./helpers/validators"
+
 
 class Register extends React.PureComponent{
+
     constructor(props){
         super(props)
 
         this.state = {
-            email:"",
-            name:"",
-            username:"",
-            password:"",
-            three_words:"",
-            age:"",
+            email:{
+                value:"",
+                error:false,
+                error_text:"Please enter a valid email ID"
+            },
+            username:{
+                value:"",
+                error:false,
+                error_text:"Please enter username of length greater than 0 and less than 150 characters"
+            },
+            password:{
+                value:"",
+                error:false,
+                error_text:"Please enter a password of length 8-50 characters"
+            },
+
             //keyboard safe
             main_container_bottom_padding:0
         }
@@ -51,6 +77,91 @@ class Register extends React.PureComponent{
         this.setState({main_container_bottom_padding:0})
     }
 
+    validate_the_input = () =>{
+
+        let all_inputs_valid = true
+
+        let new_input_objects = {}
+
+        //validating email
+        if (!validate_email(this.state.email.value)){
+            all_inputs_valid = false
+            new_input_objects.email = {...this.state.email, error:true}
+        }
+
+        //validating username
+        if (!validate_username(this.state.username.value)){
+            all_inputs_valid = false
+            new_input_objects.username = {...this.state.username, error:true}
+        }
+
+        //validating password
+        if (!validate_password(this.state.password.value)){
+            all_inputs_valid = false
+            new_input_objects.password = {...this.state.password, error:true}
+        }
+        //if even one of the inputs are not valid, update the state
+        if (!all_inputs_valid){
+            this.setState((prev_state)=>{
+                return({
+                    ...prev_state,
+                    ...new_input_objects
+                })
+            })
+        }
+
+        return all_inputs_valid
+    }
+
+    register_other_att = () => {
+
+        //validate the input
+        if (!this.validate_the_input()){
+            return
+        }
+
+        Navigation.push(this.props.componentId, {
+            component:{
+                name: REGISTER_OTHER_ARR_SCREEN,
+                passProps: {
+                    email:this.state.email.value,
+                    password:this.state.password.value,
+                    username:this.state.username.value,
+                },
+                topBar:{
+                    visible:false
+                }
+            }
+        });
+    }
+
+    change_email_id = (val) => {
+        this.setState({
+            email:{
+                ...this.state.email,
+                value:val
+            }
+        })
+    }
+
+    change_password = (val) => {
+        this.setState({
+            password:{
+                ...this.state.password,
+                value:val
+            }
+        })
+    }
+
+    change_username = (val) => {
+        this.setState({
+            username:{
+                ...this.state.username,
+                value:val
+            }
+        })
+    }
+    
     render(){
         return(
             <TouchableWithoutFeedback
@@ -66,49 +177,37 @@ class Register extends React.PureComponent{
                         <BigTextInput
                             placeholder={"Email Address"}
                             type="EMAIL"
-                            value={this.state.email}
-                            onChangeText={(val)=>{this.setState({email:val})}}
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"What your friends call you?"}
-                            type="TEXT"
-                            value={this.state.name}
-                            onChangeText={(val)=>{this.setState({name:val})}}
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"Whats your go to cool name?"}
-                            type="TEXT"
-                            value={this.state.username}
-                            onChangeText={(val)=>{this.setState({username:val})}}
+                            value={this.state.email.value}
+                            onChangeText={this.change_email_id}
+                            error_state={this.state.email.error}
+                            error_text={this.state.email.error_text}
                         />
                     </View>
                     <View style={styles.input_box}>
                         <BigTextInput
                             placeholder={"Password"}
                             type="PASSWORD"
-                            value={this.state.password}
-                            onChangeText={(val)=>{this.setState({password:val})}}
+                            value={this.state.password.value}
+                            onChangeText={this.change_password}
+                            error_state={this.state.password.error}
+                            error_text={this.state.password.error_text}
                         />
                     </View>
                     <View style={styles.input_box}>
                         <BigTextInput
-                            placeholder={"Describe yourself in 3 or less words"}
+                            placeholder={"Username"}
                             type="TEXT"
-                            value={this.state.three_words}
-                            onChangeText={(val)=>{this.setState({three_words:val})}}
+                            value={this.state.username.value}
+                            onChangeText={this.change_username}
+                            error_state={this.state.username.error}
+                            error_text={this.state.username.error_text}
                         />
                     </View>
                     <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"Your age?"}
-                            type="NUMBER"
-                            value={this.state.age}
-                            onChangeText={(val)=>{this.setState({age:val})}}
-                        />
+                        <BigButton
+                            button_text={"Next"}
+                            onPress={this.register_other_att}
+                        />  
                     </View>
                 </ScrollView>
             </TouchableWithoutFeedback>

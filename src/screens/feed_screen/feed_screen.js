@@ -45,7 +45,7 @@ class FeedScreen extends React.Component {
             }}
         >
             {({ loading, error, data, fetchMore }) => {
-                
+                console.log(data, error)
                 return(
                     <ContentList
                         componentId={this.props.componentId}

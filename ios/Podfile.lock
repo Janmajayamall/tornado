@@ -230,6 +230,8 @@ PODS:
     - React
     - React-RCTImage
     - React-RCTText
+  - RNCAsyncStorage (1.8.1):
+    - React
   - RNDateTimePicker (2.2.3):
     - React
   - RNFastImage (8.1.5):
@@ -273,6 +275,7 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -335,6 +338,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNFastImage:
@@ -370,6 +375,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: d55e1365be416980217914fe009e9d55dec02e03
   ReactCommon: eb96b70a2a5bed775e919151fd77699fed52944c
   ReactNativeNavigation: 9818ae9405400955028b4fe96ecbc499bf4d0002
+  RNCAsyncStorage: e99188b8a89ea0edddc82d8831cd5142f4550fdc
   RNDateTimePicker: 157eb591c25f7f426a9c04220bcd67275a18907e
   RNFastImage: 3aed2a7be32ca8427afa4f05e9d0338a8ce97e17
   SDWebImage: 7edb9c3ea661e77a66661f7f044de8c1b55d1120

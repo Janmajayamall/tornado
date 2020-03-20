@@ -1,11 +1,14 @@
 import React from "react"
 import { 
     View, 
-    TextInput   
+    TextInput ,
+    Text  
 } from "react-native";
 import base_style from "../../styles/base";
 
 class BigTextInput extends React.PureComponent {
+
+
 
     constructor(props){
         super(props)
@@ -37,7 +40,6 @@ class BigTextInput extends React.PureComponent {
                 />
             )
         }else if(this.props.type==="EMAIL"){
-            console.log("Æ")
             return(
                 <TextInput
                     placeholder={this.props.placeholder}
@@ -78,6 +80,15 @@ class BigTextInput extends React.PureComponent {
         return(
             <View style={styles.main_container}>
                 {this.generate_input_box()}
+                {
+                    this.props.error_state ? 
+                    <View style={styles.error_view}>
+                        <Text style={styles.error_text}>
+                            {this.props.error_text}
+                        </Text>
+                    </View>:
+                    undefined
+                }                
             </View>
         )
     }
@@ -94,6 +105,12 @@ const styles = {
         padding:15,
         backgroundColor:base_style.color.primary_color_lighter,
         borderRadius:5,
+    },
+    error_view:{
+        paddingTop:2
+    },
+    error_text:{
+        ...base_style.typography.mini_font
     }
 }
 

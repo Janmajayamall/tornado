@@ -18,6 +18,10 @@ export default base_style = {
             color:'#d9d9d9',
             fontSize:17,
             textAlign:'left'
+        },
+        mini_font:{
+            color:"#ffffff",
+            fontSize:12,
         }
     }
 }

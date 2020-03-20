@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 
 // Mutation 
 export const REGISTER_USER = gql`
-    query register_users($email:String!, $password:String!, $age:Int!, $username:String!, $name:String!, $three_words:String!, $bio:String!){
+    mutation register_users($email:String!, $password:String!, $age:Int!, $username:String!, $name:String!, $three_words:String!, $bio:String!){
         register_user(user_input:{
             email:$email,
             password:$password,
@@ -19,6 +19,7 @@ export const REGISTER_USER = gql`
             jwt,
             email,
             age,
+            user_id
         }
     }
 `
