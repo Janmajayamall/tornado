@@ -22,6 +22,11 @@ export default base_style = {
         mini_font:{
             color:"#ffffff",
             fontSize:12,
+        },
+        medium_header:{
+            color:'#ffffff',
+            fontSize:22,
+            fontWeight:'bold',
         }
     }
 }

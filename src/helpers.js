@@ -2,6 +2,7 @@ import {
     Image
  } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage"
+import moment from "moment"
 
 export const get_scaled_image_size = async(parent_dim=null, img_src=null, reference_height=false) => {
 
@@ -78,7 +79,10 @@ export const setting_up_the_user = async(user_data, apollo_client) => {
             }
         }
     })
-
     return
+}
 
+//get relative time ago from a timestamp
+export const get_relative_time_ago = (timestamp) => {
+    return moment(new Date(parseInt(timestamp))).fromNow()
 }

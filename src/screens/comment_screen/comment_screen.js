@@ -16,12 +16,13 @@ import gql from 'graphql-tag';
 import {
     Query,
     Mutation,
-    useQuery
+    useQuery,
+    ApolloConsumer
 } from 'react-apollo'
 import {Navigation} from "react-native-navigation"
 
 //importing queries/mutations in gql
-import {CREATE_COMMENT, GET_POST_COMMENTS} from './queries/index'
+import {CREATE_COMMENT, GET_LOCAL_USER_INFO, GET_POST_COMMENTS} from './queries/index'
 
 //importing components 
 import CommentList from "./../../custom_components/comments/comment_list"
@@ -41,8 +42,6 @@ class Comment extends React.PureComponent {
             post_comment_box_padding:0,
             comment_container_height:0
         }
-
-        console.log(this.props)
 
     }   
 
@@ -77,21 +76,25 @@ class Comment extends React.PureComponent {
         this.keyboard_will_hide_listener.remove()
     }
 
-    post_comment = (mutate) => {
+    post_comment = (mutate, user_info) => {
+        
         return (
             <AvatarTextPanel
                 avatar={this.props.post_object.creator_info.avatar}
                 is_description={false}                                    
                 content_id={this.props.post_object._id}
                 content_type={"ROOM_POST"}
-                user_id={"5e6644854b2a594d5c2f3c1d"}
                 create_comment_func={(comment_obj)=>{
+            
+                    //populating comment object with user_id of the user 
+                    comment_obj.user_id = user_info.user_id
+
                     mutate({
                         variables:comment_obj,
                         optimisticResponse:{
                             __typename: "Mutation",
                             create_comment:{
-                                _id:"mnh mul",
+                                _id:"fake id",
                                 content_id:comment_obj.content_id,
                                 content_type:comment_obj.content_type,
                                 comment_body:comment_obj.comment_body,
@@ -106,8 +109,8 @@ class Comment extends React.PureComponent {
                                 timestamp:new Date().toISOString(),
                                 last_modified:new Date().toISOString(),
                                 creator_info:{
-                                    username: "jay", 
-                                    avatar: "https://marriedbiography.com/wp-content/uploads/2017/09/Zendaya.jpg", 
+                                    username: user_info.username, 
+                                    avatar: user_info.avatar,
                                     timestamp: new Date().toISOString(), 
                                     __typename: "User_account"
                                 }                                                 
@@ -159,13 +162,33 @@ class Comment extends React.PureComponent {
                 {/* creating comment section */}
                 <View 
                     onLayout={this.on_comment_container_render}
-                    style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}>
-                    <Mutation mutation={CREATE_COMMENT}>
-                        {mutate => {
-                            return this.post_comment(mutate)
-                        }}                        
-                    </Mutation>
-                    
+                    style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}
+                >
+                    <Query query={GET_LOCAL_USER_INFO}>
+                        {({loading, error, data})=>{
+
+                            if (loading){
+                                return <Text>Loadingggg</Text>
+                            }
+
+                            if (error){
+                                console.log("Error in getting user_id from cache")
+                            }
+
+                            //don't let the loading stop until data.user_info is not present. 
+                            //TODO: also is user_info is not present then log the user out
+                            if (data.user_info){
+                                return(
+                                    <Mutation mutation={CREATE_COMMENT}>
+                                        {mutate => {
+                                            return this.post_comment(mutate, data.user_info)
+                                        }}                        
+                                    </Mutation>
+                                )
+                            }    
+                            
+                        }}
+                    </Query>                    
                 </View>
 
             </SafeAreaView>

@@ -11,7 +11,7 @@ import {
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
 import { 
-    Mutation
+    Mutation, Query
  } from "react-apollo";
 
 //customer components
@@ -21,7 +21,8 @@ import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
 //importing graphql queries
 import {
     CREATE_LIKE,
-    UNLIKE_CONTENT
+    UNLIKE_CONTENT,
+    GET_LOCAL_USER_INFO
 } from "./../../screens/comment_screen/queries/index"
 
 import {get_scaled_image_size} from "./../../helpers"
@@ -161,30 +162,40 @@ class ContentBox extends React.PureComponent {
 
                 {/* comment and like */}
                 <View style={styles.like_comment_main_container}>
-                    <Mutation mutation={this.state.user_liked ? UNLIKE_CONTENT : CREATE_LIKE}>
-                        {(create_like, {data})=>{
-                            return(
-                                <TouchableOpacity 
-                                    onPress={()=>{
-                                        create_like({
-                                            variables:{
-                                                user_id:"5e6644854b2a594d5c2f3c1d",
-                                                like_type:"ROOM_POST",
-                                                content_id:this.props.post_object._id
-                                            }
-                                        })
-                                        this.toggle_like()
-                                    }}
-                                    style={styles.like_container}
-                                >
-                                    <Text style={{backgroundColor:this.state.user_liked ? "white":"red"}}>
-                                        {this.state.likes_count}
-                                    </Text>
-                                </TouchableOpacity>
-                            )
-                        }}
+                    <Query query={GET_LOCAL_USER_INFO}>
+                        {({loading, error, data})=>{
+                            const user_info = data.user_info
 
-                    </Mutation>
+                            //TODO: do validating for token and user_id and only render the like button if the user is logged in
+
+                            return (
+                                <Mutation mutation={this.state.user_liked ? UNLIKE_CONTENT : CREATE_LIKE}>
+                                    {(create_like, {})=>{    
+                                        return(
+                                            <TouchableOpacity 
+                                                onPress={()=>{
+                                                    create_like({
+                                                        variables:{
+                                                            user_id:user_info.user_id,
+                                                            like_type:"ROOM_POST",
+                                                            content_id:this.props.post_object._id
+                                                        }
+                                                    })
+                                                    this.toggle_like()
+                                                }}
+                                                style={styles.like_container}
+                                            >
+                                                <Text style={{backgroundColor:this.state.user_liked ? "white":"red"}}>
+                                                    {this.state.likes_count}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )
+                                    }}
+                                </Mutation>          
+                            )                          
+                            }
+                        }                  
+                    </Query>
                     <TouchableOpacity style={styles.comment_container}
                         onPress={()=>{
                             if(!this.props.on_feed){

@@ -23,11 +23,23 @@ export const GET_POST_COMMENTS = gql`
     }
 `
 
+export const GET_LOCAL_USER_INFO = gql`
+    {
+        user_info @client {
+            user_id,
+            avatar, 
+            username,
+            
+        }
+    }
+`
+
 
 //Mutations
 export const CREATE_COMMENT = gql`
-    
+
     mutation create_comments($user_id:ID!, $content_id:ID!, $content_type:String!, $comment_body:String!){
+        
         create_comment(user_input:{
             user_id:$user_id,
             content_id:$content_id

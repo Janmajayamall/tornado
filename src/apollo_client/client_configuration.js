@@ -9,7 +9,6 @@ const get_jwt_asyncstorage = async() => {
   try{
     const jwt = await AsyncStorage.getItem("token")
     if (jwt){
-      console.log(jwt, "daw")
       return jwt
     }
     return ""

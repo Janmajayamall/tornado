@@ -77,7 +77,6 @@ class AvatarTextPanel extends React.PureComponent{
                             console.log("Please enter comment first")
                         }else{
                             this.props.create_comment_func({
-                                    user_id:this.props.user_id,
                                     content_id:this.props.content_id,
                                     content_type:this.props.content_type,
                                     comment_body:this.state.comment_text_input                                    

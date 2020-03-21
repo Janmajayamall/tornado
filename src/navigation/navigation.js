@@ -5,7 +5,8 @@ import {
   FEED_SCREEN,
   REGISTER_SCREEN,
   LOGIN_SCREEN,
-  SETTER_SCREEN
+  SETTER_SCREEN,
+  EXPLORE_ROOMS_SCREEN
 } from './screens';
 
 import registerScreens from './register_screens';
@@ -21,7 +22,7 @@ export function start_app () {
       stack: {
         children: [{
           component: {
-            name: SETTER_SCREEN,
+            name: EXPLORE_ROOMS_SCREEN,
             options: {
               topBar: {
                 visible: false,

@@ -45,46 +45,43 @@ class Setter extends React.PureComponent{
     }
 
     navigate_to_screen = (data) => {
-        if (data.user_info && data.user_info.jwt && data.user_info.user_id){
+      if (data.user_info && data.user_info.jwt && data.user_info.user_id){
 
-            Navigation.setRoot({
-                root: {
-                  stack: {
-                    children: [{
-                      component: {
-                        name: FEED_SCREEN,
-                        options: {
-                          topBar: {
-                            visible: false,
-                          },
-                        }
+          Navigation.setRoot({
+              root: {
+                stack: {
+                  children: [{
+                    component: {
+                      name: FEED_SCREEN,
+                      options: {
+                        topBar: {
+                          visible: false,
+                        },
                       }
-                    }]
-                  }
+                    }
+                  }]
                 }
-              });
+              }
+            });
 
-        }else{
-            Navigation.setRoot({
-                root: {
-                  stack: {
-                    children: [{
-                      component: {
-                        name: LOGIN_SCREEN,
-                        options: {
-                          topBar: {
-                            visible: false,
-                          },
-                        }
+      }else{
+          Navigation.setRoot({
+              root: {
+                stack: {
+                  children: [{
+                    component: {
+                      name: LOGIN_SCREEN,
+                      options: {
+                        topBar: {
+                          visible: false,
+                        },
                       }
-                    }]
-                  }
+                    }
+                  }]
                 }
-              });
-        }
-
- 
-
+              }
+            });
+      }
     }
 
     render(){
