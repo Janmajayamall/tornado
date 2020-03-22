@@ -22,7 +22,7 @@ import {
 import {Navigation} from "react-native-navigation"
 
 //importing queries/mutations in gql
-import {CREATE_COMMENT, GET_LOCAL_USER_INFO, GET_POST_COMMENTS} from './queries/index'
+import {CREATE_COMMENT, GET_LOCAL_USER_INFO, GET_POST_COMMENTS} from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
 import CommentList from "./../../custom_components/comments/comment_list"

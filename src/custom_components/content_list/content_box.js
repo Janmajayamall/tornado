@@ -115,7 +115,9 @@ class ContentBox extends React.PureComponent {
                     toggle_post_like:this.toggle_like
                 },
                 options: {
-
+                    bottomTabs:{
+                        visible:false
+                    }
                 },
                 topBar:{
                     leftButtons: [

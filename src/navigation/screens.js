@@ -10,4 +10,5 @@ export const LOGIN_SCREEN = "screen.login"
 export const SETTER_SCREEN = "screen.setter"
 
 export const EXPLORE_ROOMS_SCREEN = "screen.explore_rooms"
+export const ROOM_DETAILS_SCREEN = "screen.room_details"
 

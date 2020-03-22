@@ -6,7 +6,8 @@ import {
   REGISTER_SCREEN,
   LOGIN_SCREEN,
   SETTER_SCREEN,
-  EXPLORE_ROOMS_SCREEN
+  EXPLORE_ROOMS_SCREEN,
+  ROOM_DETAILS_SCREEN
 } from './screens';
 
 import registerScreens from './register_screens';
@@ -16,22 +17,65 @@ import registerScreens from './register_screens';
 registerScreens();
 
 export function start_app () {
- 
+
   Navigation.setRoot({
     root: {
-      stack: {
-        children: [{
-          component: {
-            name: EXPLORE_ROOMS_SCREEN,
-            options: {
-              topBar: {
-                visible: false,
-              },
+      bottomTabs: {
+        id: 'BottomTabsId',
+        children: [
+          {
+            stack: {
+              children: [{
+                component: {
+                  name: FEED_SCREEN,
+                  options: {
+                    topBar: {
+                      visible: false,
+                    },
+                    bottomTab: {
+                      text: 'FEED SCREEN',
+                      fontSize: 20,
+                      drawBehind:true
+                    }
+                  }
+                }
+              }]
             }
-          }
-        }]
-      }
+          },
+          {
+            component: {
+              name: ROOM_DETAILS_SCREEN,
+              options: {
+                bottomTab: {
+                  text: 'EXPLORE SCREEN',
+                  fontSize: 20,
+                }
+              }
+            },
+          },
+        ],
+      },
+
     }
   });
 }
+
+ 
+  // Navigation.setRoot({
+  //   root: {
+      // stack: {
+      //   children: [{
+      //     component: {
+      //       name: EXPLORE_ROOMS_SCREEN,
+      //       options: {
+      //         topBar: {
+      //           visible: false,
+      //         },
+      //       }
+      //     }
+      //   }]
+      // }
+    // }
+  // });
+
 

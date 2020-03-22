@@ -16,7 +16,13 @@ import ContentBox from "./content_box"
 class ContentList extends React.PureComponent{
 
     static propTypes = {
-        
+        room_posts:PropTypes.array,
+        loading:PropTypes.any,
+        error:PropTypes.any,
+        componentId:PropTypes.any,
+        on_load_more:PropTypes.func,
+        header_display:PropTypes.bool,
+        header_component:PropTypes.any
     }
 
     constructor(props){
@@ -24,6 +30,34 @@ class ContentList extends React.PureComponent{
         this.state={
 
         }
+    }
+
+    render_item_list = (object) => {
+
+        if (this.props.header_display===true && object.index===0){
+            return object.item
+        }
+
+        return(
+            <ContentBox
+                post_object={object.item}
+                on_feed={true}
+                componentId={this.props.componentId}
+            />
+        )
+    }
+
+    generate_data_for_list = () => {
+
+        if (this.props.header_display===true){
+            return[
+                this.props.header_component,
+                ...this.props.room_posts
+            ]
+        }else{
+            return this.props.room_posts
+        }
+
     }
 
     render(){
@@ -47,16 +81,8 @@ class ContentList extends React.PureComponent{
     
         return(
             <FlatList
-                data={this.props.room_posts}
-                renderItem={(object)=>{
-                    return(
-                        <ContentBox
-                            post_object={object.item}
-                            on_feed={true}
-                            componentId={this.props.componentId}
-                        />
-                    )
-                }}
+                data={this.generate_data_for_list()}
+                renderItem={this.render_item_list}
                 onEndReached={this.props.on_load_more}
                 onEndReachedThreshold={0.5}
             />      

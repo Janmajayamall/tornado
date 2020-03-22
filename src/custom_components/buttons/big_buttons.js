@@ -44,10 +44,16 @@ class BigButton extends React.PureComponent {
 const styles = {
     main_container:{
         width:"100%",
-        backgroundColor:base_style.color.primary_color_lighter
+        backgroundColor:base_style.color.primary_color,
+        // borderRadius:10,
+        borderColor:base_style.color.primary_color_lighter,
+        borderWidth:2,
+        padding:10,
+        justifyContent:"center",
+        alignItems:"center"
     },
     button_text:{
-        ...base_style.typography.small_font,
+        ...base_style.typography.small_header
     }
 }
 

@@ -12,6 +12,7 @@ import register_other_att_screen from "./../screens/register_screen/register_oth
 import login_screen from "./../screens/login_screen/login_screen"
 import setter_screen from "./../screens/setter_screen/setter_screen"
 import explore_rooms_screen from "./../screens/explore_rooms_screen/explore_rooms_screen"
+import room_details_screen from "./../screens/explore_rooms_screen/room_details_screen"
 
 //importing apollo client 
 import apollo_client from './../apollo_client/client_configuration'
@@ -26,7 +27,8 @@ import {
     REGISTER_OTHER_ATT_SCREEN,
     LOGIN_SCREEN,
     SETTER_SCREEN,
-    EXPLORE_ROOMS_SCREEN
+    EXPLORE_ROOMS_SCREEN,
+    ROOM_DETAILS_SCREEN
 } from './screens'
 
 export default function () {
@@ -37,4 +39,5 @@ export default function () {
     Navigation.registerComponent(LOGIN_SCREEN, ()=>enhance_provider_hoc(login_screen, apollo_client, store))
     Navigation.registerComponent(SETTER_SCREEN, ()=>enhance_provider_hoc(setter_screen, apollo_client, store))
     Navigation.registerComponent(EXPLORE_ROOMS_SCREEN, ()=>enhance_provider_hoc(explore_rooms_screen, apollo_client, store))
+    Navigation.registerComponent(ROOM_DETAILS_SCREEN, ()=>enhance_provider_hoc(room_details_screen, apollo_client, store))
 }

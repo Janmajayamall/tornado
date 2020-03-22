@@ -14,8 +14,7 @@ import {
 } from 'react-apollo'
 
 //importing queries/mutations in gql
-import {GET_ROOM_FEED} from './queries/index'
-import {GET_POST_COMMENTS} from "./../comment_screen/queries/index"
+import {GET_ROOM_FEED} from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
 import ContentList from "./../../custom_components/content_list/content_list"
@@ -50,7 +49,7 @@ class FeedScreen extends React.Component {
                     <ContentList
                         componentId={this.props.componentId}
                         loading={loading}
-                        room_posts={data ? data.get_room_posts_user_id.room_posts : undefined}
+                        room_posts={data ? data.get_room_posts_user_id.room_posts : []}
                         on_load_more={()=>{
                             fetchMore({
                                 //getting more posts using cursor
@@ -83,7 +82,9 @@ class FeedScreen extends React.Component {
                                     return new_data_object
                                     }
                                 })
-                            }}  
+                            }}
+                        header_display={false}
+                        header_component={undefined}  
                     />
                 )
             }}

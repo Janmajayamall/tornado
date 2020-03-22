@@ -7,7 +7,8 @@ import {
     ScrollView,
     FlatList,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
+    SafeAreaView
 } from "react-native";
 import {
     Mutation,
@@ -15,6 +16,9 @@ import {
     Query
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+import {  
+    FEED_SCREEN
+} from "./../../navigation/screens";
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -22,17 +26,19 @@ import base_style from "./../../styles/base"
 //importing custom components
 import RoomItemDisplay from "./components/room_item_display"
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
-import { GET_NOT_JOINED_ROOMS, GET_LOCAL_USER_INFO, BULK_ROOM_FOLLOWS } from "./queries/index";
-import { undefinedFieldMessage } from "graphql/validation/rules/FieldsOnCorrectType";
+import BigButton from "./../../custom_components/buttons/big_buttons"
+
+//importing graphql queries
+import { GET_NOT_JOINED_ROOMS, GET_LOCAL_USER_INFO, BULK_ROOM_FOLLOWS } from "./../../apollo_client/apollo_queries/index";
 
 
-class ExploreRooms extends React.PureComponent{
+class ExploreRooms extends React.Component{
 
     constructor(props){
         super(props)
 
         this.state = {
-            selected_set:new Set()
+            selected_set:new Set(),
         }
     }
 
@@ -62,6 +68,8 @@ class ExploreRooms extends React.PureComponent{
 
     generate_selected_rooms_arr = (rooms_arr, user_id) => {
 
+        //TODO: inform the user they haven't selected any room if rooms_arr length is 0
+
         if (user_id===undefined || rooms_arr===undefined){
             return
         }
@@ -70,8 +78,8 @@ class ExploreRooms extends React.PureComponent{
         //iterating through selected indexes
         for(let index of this.state.selected_set){
             final_selected_arr.push({
-                room_id:user_id,
-                follower_id:rooms_arr[index]._id,
+                room_id:rooms_arr[index]._id,
+                follower_id:user_id,
             })
         }
 
@@ -80,7 +88,23 @@ class ExploreRooms extends React.PureComponent{
     }
 
     navigate_to_feed = (data) =>{
-        console.log(data, "added")
+
+        Navigation.setRoot({
+            root: {
+              stack: {
+                children: [{
+                  component: {
+                    name: FEED_SCREEN,
+                    options: {
+                      topBar: {
+                        visible: false,
+                      },
+                    }
+                  }
+                }]
+              }
+            }
+          });
     }
 
     render(){
@@ -127,7 +151,7 @@ class ExploreRooms extends React.PureComponent{
                                                     }
                                                     
                                                     return(
-                                                        <View style={styles.main_container}>
+                                                        <SafeAreaView style={styles.main_container}>
                                                             <FlatList
                                                                 data={not_joined_rooms}
                                                                 renderItem={(object)=>{
@@ -143,23 +167,30 @@ class ExploreRooms extends React.PureComponent{
                                                                 ItemSeparatorComponent={()=> {
                                                                     return <ListItemDivider/>
                                                                 }}
+                                                                
                                                             />    
-                                                            <TouchableOpacity
-                                                                onPress={()=>{
-                                                                    //getting the user_id 
-                                                                    const {user_info} = client.readQuery({query:GET_LOCAL_USER_INFO}) 
-                                                                    const bulk_join_objects = this.generate_selected_rooms_arr(not_joined_rooms, user_info.user_id)
-                                                                    console.log(bulk_join_objects, "asaa")
-                                                                    
-                                                                    //mutation bulk follow rooms
-                                                                    bulk_follow_rooms({variables:{follow_room_objects:bulk_join_objects}})
-                                                                }}
-                                                            >
-                                                                <Text style={{color:"white"}}>
-                                                                    nextdawdadawdadadaw
-                                                                </Text>
-                                                            </TouchableOpacity>                                                                                                                        
-                                                        </View>
+                                                            {
+                                                                this.state.selected_set.size!==0?
+                                                                <View style={styles.join_button_container}>
+                                                                    <View style={styles.join_button_main_view}>
+                                                                        <BigButton
+                                                                            button_text={"Join Rooms"}
+                                                                            onPress={()=> {
+                                                                                //getting the user_id 
+                                                                                const {user_info} = client.readQuery({query:GET_LOCAL_USER_INFO}) 
+                                                                                const bulk_join_objects = this.generate_selected_rooms_arr(not_joined_rooms, user_info.user_id)
+                                                                                                                                                    
+                                                                                //mutation bulk follow rooms
+                                                                                bulk_follow_rooms({variables:{follow_room_objects:bulk_join_objects}})
+                                                                            }}
+                                                                        />
+                                                                    </View>
+                                                                </View>
+                                                                :
+                                                                undefined
+                                                            }
+                                                                                                                                                           
+                                                        </SafeAreaView>
                                                     )
                                                 }}                            
                                             </Mutation>
@@ -181,6 +212,14 @@ const styles = StyleSheet.create({
         backgroundColor:base_style.color.primary_color,
         flex:1
     },    
+    join_button_container:{
+        justifyContent:"center",
+        alignContent:"center",
+        flexDirection:"row"
+    },
+    join_button_main_view:{
+        width:"40%"
+    }
 })
 
 export default ExploreRooms

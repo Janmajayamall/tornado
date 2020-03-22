@@ -15,8 +15,7 @@ import {Navigation} from "react-native-navigation"
 import base_style from "./../../styles/base"
 
 //importing graphql queries
-import {REGISTER_USER} from "./queries/index"
-import base from "./../../styles/base";
+
 
 //import custom components
 import BigTextInput from "./../../custom_components/text_inputs/big_input_text"

@@ -19,7 +19,7 @@ import {
 import base_style from "./../../styles/base"
 
 //importing graphql queries
-import {REGISTER_USER} from "./queries/index"
+import {REGISTER_USER} from "./../../apollo_client/apollo_queries/index"
 import base from "./../../styles/base";
 
 //import custom components
