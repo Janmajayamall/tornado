@@ -65,7 +65,6 @@ class FeedScreen extends React.Component {
                                         return previous_data
                                     }
 
-
                                     const new_posts_arr = [
                                         ...previous_data.get_room_posts_user_id.room_posts,
                                         ...fetchMoreResult.get_room_posts_user_id.room_posts
