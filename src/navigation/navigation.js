@@ -28,7 +28,7 @@ export function start_app () {
             stack: {
               children: [{
                 component: {
-                  name: REGISTER_OTHER_ATT_SCREEN,
+                  name: REGISTER_SCREEN,
                   options: {
                     topBar: {
                       visible: false,

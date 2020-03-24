@@ -23,7 +23,7 @@ import BigButton from "./../../custom_components/buttons/big_buttons"
 
 // importing screens
 import {
-    REGISTER_OTHER_ARR_SCREEN
+    REGISTER_OTHER_ATT_SCREEN
 } from "./../../navigation/screens"
 
 //import input validators
@@ -121,7 +121,7 @@ class Register extends React.PureComponent{
 
         Navigation.push(this.props.componentId, {
             component:{
-                name: REGISTER_OTHER_ARR_SCREEN,
+                name: REGISTER_OTHER_ATT_SCREEN,
                 passProps: {
                     email:this.state.email.value,
                     password:this.state.password.value,

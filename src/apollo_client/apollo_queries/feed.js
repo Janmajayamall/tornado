@@ -10,17 +10,29 @@ export const GET_ROOM_FEED = gql`
                 creator_info{
                     user_id, 
                     username,
-                    avatar
+                    avatar{
+                        width,
+                        height,
+                        cdn_url,
+                        image_name
+                    },
+                    three_words,
+                    default_avatar
                 },
                 likes_count,
                 user_liked, 
-                img_url, 
+                image{
+                    width,
+                    height,
+                    cdn_url,
+                    image_name
+                }, 
                 description,
                 timestamp
-                },
+            },
             next_page,
             room_post_cursor, 
-            last_room_post_cursor
+            last_room_post_cursor            
         }
     }
 ` 

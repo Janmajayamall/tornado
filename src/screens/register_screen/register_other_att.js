@@ -146,6 +146,7 @@ class RegisterOtherAtt extends React.PureComponent{
     }
 
     setting_up_the_user = async(user_data, apollo_client) => {
+        console.log(user_data)
         await setting_up_the_user(user_data, apollo_client)
         return 
     }
@@ -230,30 +231,45 @@ class RegisterOtherAtt extends React.PureComponent{
                                                                     <BigButton
                                                                         button_text={"Register"}
                                                                         onPress={async()=>{
+                                                                            
                                                                             //validate the input
                                                                             if(!this.validate_the_input()){
                                                                                 return
                                                                             }
 
-                                                                            const presigned_upload_url = await this.get_presigned_url(client)                                                  
-                                                                                                                              
-                                                                            try{
-                                                                                await upload_image_to_s3(presigned_upload_url, this.state.avatar_img_obj.image_data, this.state.avatar_img_obj.file_mime)                                
-                                                                            }catch(e){
-                                                                                console.log(e)
-                                                                            }
-
-                                                                            // register_user({
-                                                                            //     variables:{
-                                                                            //         email:this.props.email.trim(),
-                                                                            //         password:this.props.password.trim(),
-                                                                            //         username:this.props.username.trim(),
+                                                                            //generating register_user query variables
+                                                                            let register_user_variables = {                                                                        
+                                                                                    email:this.props.email.trim(),
+                                                                                    password:this.props.password.trim(),
+                                                                                    username:this.props.username.trim(),
                             
-                                                                            //         age:parseInt(this.state.age.value),
-                                                                            //         name:this.state.name.value.trim(), 
-                                                                            //         three_words:this.state.three_words.value.trim(),
-                                                                            //         bio:this.state.bio.value.trim()
-                                                                            // }})
+                                                                                    age:parseInt(this.state.age.value),
+                                                                                    name:this.state.name.value.trim(), 
+                                                                                    three_words:this.state.three_words.value.trim(),
+                                                                                    bio:this.state.bio.value.trim(),                                                                                
+                                                                                }
+
+                                                                            //checking whether the user has uploaded a default picture
+                                                                            if (Object.keys(this.state.avatar_img_obj).length>0){
+                                                                                const presigned_upload_url = await this.get_presigned_url(client)                                                                                                                                                                                
+                                                                                try{
+                                                                                    await upload_image_to_s3(presigned_upload_url, this.state.avatar_img_obj.image_data, this.state.avatar_img_obj.file_mime)                                
+                                                                                }catch(e){
+                                                                                    console.log(e)
+                                                                                }
+
+                                                                                //updating register_user_variables with avatar
+                                                                                register_user_variables.avatar={
+                                                                                    image_name:this.state.avatar_img_obj.file_name,
+                                                                                    width:this.state.avatar_img_obj.width,
+                                                                                    height:this.state.avatar_img_obj.height
+                                                                                }
+                                                                                register_user_variables.default_avatar=false
+                                                                            }else{
+                                                                                register_user_variables.default_avatar=true
+                                                                            }   
+
+                                                                            register_user({variables:register_user_variables})
                                                                         }}
                                                                     />  
                                                                 </View>

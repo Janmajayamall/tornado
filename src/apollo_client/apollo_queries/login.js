@@ -9,13 +9,22 @@ export const LOGIN_USER = gql`
             email:$email,
             password:$password
         }){
-            _id,
-            username,
-            avatar,
-            jwt,
-            email,
-            age,
-            user_id
+            _id, 
+            user_id,
+            avatar{
+                image_name,
+                height,
+                width, 
+                cdn_url
+            },
+            jwt, 
+            email, 
+            age, 
+            name, 
+            three_words, 
+            bio,
+            username, 
+            default_avatar
         }
     }
 `

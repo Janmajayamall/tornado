@@ -62,25 +62,11 @@ class ContentBox extends React.PureComponent {
             user_liked:this.props.post_object.user_liked,
             likes_count:this.props.post_object.likes_count
         }
-        this.load_async_image_dims(this.props.post_object.img_url)
     }
 
     // componentDidMount(){
     //     console.log("rendered: ContentBox")
     // }
-
-    load_async_image_dims = async (img_url) => {
-        
-        Image.getSize(img_url, (width, height) => {
-            if (window.width){
-                this.setState({
-                    img_width: window.width,
-                    img_height: height * (window.width / width),
-                }, this.props.source)
-            }
-        });
-
-    }
 
     toggle_like = () => {
 
@@ -137,13 +123,11 @@ class ContentBox extends React.PureComponent {
 
                 {
 
-                    this.props.post_object.img_url ? 
+                    this.props.post_object.image ? 
 
                         <View>
                             <AsyncImage
-                                source={this.props.post_object.img_url}
-                                width={this.state.img_width}
-                                height={this.state.img_height}
+                                image_object={this.props.post_object.image}
                             />
                         </View> : 
 

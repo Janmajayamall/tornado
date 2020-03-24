@@ -22,23 +22,37 @@ export const GET_ROOM_POSTS = gql`
             limit:$limit,
             room_post_cursor:$room_post_cursor
         }),{
-            room_posts{
-                _id, 
-                creator_id,
-                creator_info{
-                    user_id, 
-                    username,
-                    avatar
+            get_room_posts_user_id(user_input:{limit:$limit, room_post_cursor:$room_post_cursor}){
+                room_posts{
+                    _id, 
+                    creator_id,
+                    creator_info{
+                        user_id, 
+                        username,
+                        avatar{
+                            width,
+                            height
+                            cdn_url,
+                            image_name
+                        },
+                        three_words,
+                        default_avatar
+                    },
+                    likes_count,
+                    user_liked, 
+                    image{
+                        width,
+                        height,
+                        cdn_url,
+                        image_name
+                    }, 
+                    description,
+                    timestamp
                 },
-                likes_count,
-                user_liked, 
-                img_url, 
-                description,
-                timestamp
-                },
-            next_page,
-            room_post_cursor, 
-            last_room_post_cursor
+                next_page,
+                room_post_cursor, 
+                last_room_post_cursor            
+            }
         }
     }
 `

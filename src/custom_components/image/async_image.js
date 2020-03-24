@@ -12,8 +12,8 @@ const window = Dimensions.get('window')
 class AsyncImage extends PureComponent {
     
     static propsTypes = {
-        width:PropTypes.any,
-        height:PropTypes.any
+        image_object:PropTypes.object,
+        window_dimensions:PropTypes.any
     }
 
     constructor(props){
@@ -22,6 +22,7 @@ class AsyncImage extends PureComponent {
 
         this.state={
             loaded:false,
+            image_dimensions:this.calculate_dimensions()
         }
 
     }
@@ -29,6 +30,13 @@ class AsyncImage extends PureComponent {
     // componentDidMount(){
     //     console.log("rendered: AsyncImage")
     // }
+
+    calculate_dimensions = () => {
+        return({
+            width:this.props.window_dimensions.width,
+            height:this.props.image_object.height * (this.props.window_dimensions.width/this.props.image_object.width)
+        })
+    }
 
     on_load = () => {
         this.setState({loaded:true})
@@ -42,15 +50,14 @@ class AsyncImage extends PureComponent {
             <View style={[styles.main_container, {width:this.props.width, height:this.props.height}]}>
 
                 <Image
-                    source={{uri:this.props.source}}
-                    style={[styles.posted_image_style, {width:this.props.width, height:this.props.height}]} 
+                    source={{uri:`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`}}
+                    style={[styles.posted_image_style, {width:this.image_dimensions.width, height:this.image_dimensions.height}]} 
                     onLoad={this.on_load}
-                    // resizeMode={"contain"}
                 />
 
                 {!this.state.loaded ?
                     <View
-                        style={styles.replace_container}
+                        style={[styles.replace_container, {width:this.image_dimensions.width, height:this.image_dimensions.height}]}
                     /> :
                     undefined
                 } 
@@ -70,7 +77,6 @@ const styles = {
     },
     replace_container:{
         backgroundColor:'#ffffff',
-        width:'100%',
     }
 }
 
