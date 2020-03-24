@@ -25,8 +25,6 @@ import {
     GET_LOCAL_USER_INFO
 } from "./../../screens/comment_screen/queries/index"
 
-import {get_scaled_image_size} from "./../../helpers"
-
 
 // import screens
 import {COMMENT_SCREEN} from "./../../navigation/screens"
@@ -74,7 +72,6 @@ class ContentBox extends React.PureComponent {
     load_async_image_dims = async (img_url) => {
         
         Image.getSize(img_url, (width, height) => {
-
             if (window.width){
                 this.setState({
                     img_width: window.width,

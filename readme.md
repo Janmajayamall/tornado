@@ -51,3 +51,14 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 
 ## Links on react native keyboard animation
 1. https://stackoverflow.com/questions/29313244/how-to-auto-slide-the-window-out-from-behind-keyboard-when-textinput-has-focus/32593814#32593814
+
+
+## How to load image dimensions fast
+1. Make your images 1080p if possible. On upload save actual width and height of the image to a database. On request the client already knows the image dimensions and can calculate it's aspect ratio. The client also knows it's screens dimensions. This way it can request the exact size needed from the server and knows exactly how much space on the screen will be used. This is important to render lists efficiently without stutter. On the backend you'll want to passively read through a cache. Sanitize image requests. You don't want to deliver 877 pixels width but rather 800,850,900,etc. Try to whitelist sizes that make sense and cover many devices. Resize the image accordingly, put it in your LRU or whatever cache and respond to client. Also make sure to set client caching headers so that the client will also cache images locally. That's basically it. You can also add a CDN as cache between client and backend but that's another story.
+
+
+## Interesting technical posts
+1. https://instagram-engineering.com/what-powers-instagram-hundreds-of-instances-dozens-of-technologies-adf2e22da2ad
+2. https://speakerdeck.com/mikeyk/secrets-to-lightning-fast-mobile-design?slide=94
+
+# Instagram engineering: https://instagram-engineering.com/instagram-darkmode-58802b43c0f2

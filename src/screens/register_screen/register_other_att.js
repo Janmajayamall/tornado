@@ -4,7 +4,8 @@ import {
     Text,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    Dimensions
 } from "react-native";
 import {
     Mutation,
@@ -12,32 +13,34 @@ import {
 } from "react-apollo"
 import PropTypes from "prop-types"
 import {
-    setting_up_the_user
-} from "./../../helpers"
+    setting_up_the_user,
+    validate_three_words,
+    validate_age
+} from "./../../helpers/index"
+import { 
+    upload_image_to_s3
+ } from "./../../helpers/index";
 
 //importing base style 
 import base_style from "./../../styles/base"
 
 //importing graphql queries
-import {REGISTER_USER} from "./../../apollo_client/apollo_queries/index"
+import {REGISTER_USER, GET_PRESIGNED_URL} from "./../../apollo_client/apollo_queries/index"
 import base from "./../../styles/base";
 
 //import custom components
 import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
 import BigButton from "./../../custom_components/buttons/big_buttons"
+import ChooseAvatar from "./../../custom_components/choose_image/choose_avatar"
 
-//import input validators
-import {
-    validate_three_words,
-    validate_age
-} from "./helpers/validators"
+const window = Dimensions.get("window")
 
 class RegisterOtherAtt extends React.PureComponent{
 
     static propTypes = {
         email:PropTypes.string,
         username:PropTypes.string,
-        password:PropTypes.string,    
+        password:PropTypes.string,   
     }
 
     constructor(props){
@@ -66,7 +69,10 @@ class RegisterOtherAtt extends React.PureComponent{
             },
 
             //keyboard safe
-            main_container_bottom_padding:0
+            main_container_bottom_padding:0,
+
+            //image_upload
+            avatar_img_obj:{}
         }
 
     }
@@ -113,7 +119,6 @@ class RegisterOtherAtt extends React.PureComponent{
                 })
             })
         }
-        console.log(new_input_objects,)
         return all_inputs_valid
     }
 
@@ -142,88 +147,127 @@ class RegisterOtherAtt extends React.PureComponent{
 
     setting_up_the_user = async(user_data, apollo_client) => {
         await setting_up_the_user(user_data, apollo_client)
-        
         return 
     }
 
+    get_img_object = (img_obj) => {
+        this.setState({
+            avatar_img_obj:img_obj
+        })
+    }
+
+    get_presigned_url = async(apollo_client) => {
+        console.log({
+            file_name:this.state.avatar_img_obj.file_name,
+            file_mime:this.state.avatar_img_obj.file_mime
+        })
+        const {data} = await apollo_client.query({
+            query:GET_PRESIGNED_URL,
+            variables:{
+                 file_name:this.state.avatar_img_obj.file_name,
+                 file_mime:this.state.avatar_img_obj.file_mime
+             }
+        })
+        
+        return data.get_image_upload_url
+    }  
+
+
     render(){
         return(
-            <TouchableWithoutFeedback
-                onPress={()=>{
-                    Keyboard.dismiss()
-                }}
-            >
-                <ScrollView 
-                    contentContainerStyle={styles.main_scroll_container}
-                    style={[styles.main_container, {paddingBottom:this.state.main_container_bottom_padding}]}
-                    >
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"You in 3-4 words?"}
-                            type="TEXT"
-                            value={this.state.three_words.value}
-                            onChangeText={this.change_three_words}
-                            error_state={this.state.three_words.error}
-                            error_text={this.state.three_words.error_text}
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"Your age?"}
-                            type="NUMBER"
-                            value={this.state.age.value}
-                            onChangeText={this.change_age}
-                            error_state={this.state.age.error}
-                            error_text={this.state.age.error_text}
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <ApolloConsumer>
-                            {
-                                client => (
-                                    <Mutation
-                                        mutation={REGISTER_USER}
+            <ApolloConsumer>
+                {
+                    client=>{
+                        return(
+                            <TouchableWithoutFeedback
+                                onPress={()=>{
+                                    Keyboard.dismiss()
+                                }}
+                            >
+                                <ScrollView 
+                                    contentContainerStyle={styles.main_scroll_container}
+                                    style={[styles.main_container, {paddingBottom:this.state.main_container_bottom_padding}]}
                                     >
-                                        {(register_user, {data})=>{
-            
-                                            if (data){
-                                                this.setting_up_the_user(data.register_user, client)
-                                            }
-        
-                                            return(
-                                                <View style={styles.input_box}>
-                                                    <BigButton
-                                                        button_text={"Register"}
-                                                        onPress={()=>{
-                                                            //validate the input
-                                                            if(!this.validate_the_input()){
-                                                                return
+                                    <View style={styles.input_box}> 
+                                        <ChooseAvatar
+                                            width={window.width*0.8}
+                                            upload_img_s3={this.get_img_object}
+                                        />
+                                    </View>
+                                    <View style={styles.input_box}>
+                                        <BigTextInput
+                                            placeholder={"You in 3-4 words?"}
+                                            type="TEXT"
+                                            value={this.state.three_words.value}
+                                            onChangeText={this.change_three_words}
+                                            error_state={this.state.three_words.error}
+                                            error_text={this.state.three_words.error_text}
+                                        />
+                                    </View>
+                                    <View style={styles.input_box}>
+                                        <BigTextInput
+                                            placeholder={"Your age?"}
+                                            type="NUMBER"
+                                            value={this.state.age.value}
+                                            onChangeText={this.change_age}
+                                            error_state={this.state.age.error}
+                                            error_text={this.state.age.error_text}
+                                        />
+                                    </View>
+                                    <View style={styles.input_box}>
+                
+                                                    <Mutation
+                                                        mutation={REGISTER_USER}
+                                                    >
+                                                        {(register_user, {data})=>{
+                            
+                                                            if (data){
+                                                                this.setting_up_the_user(data.register_user, client)
                                                             }
-                                                
-                                                            register_user({
-                                                                variables:{
-                                                                    email:this.props.email.trim(),
-                                                                    password:this.props.password.trim(),
-                                                                    username:this.props.username.trim(),
-            
-                                                                    age:parseInt(this.state.age.value),
-                                                                    name:this.state.name.value.trim(), 
-                                                                    three_words:this.state.three_words.value.trim(),
-                                                                    bio:this.state.bio.value.trim()
-                                                            }})
+                        
+                                                            return(
+                                                                <View style={styles.input_box}>
+                                                                    <BigButton
+                                                                        button_text={"Register"}
+                                                                        onPress={async()=>{
+                                                                            //validate the input
+                                                                            if(!this.validate_the_input()){
+                                                                                return
+                                                                            }
+
+                                                                            const presigned_upload_url = await this.get_presigned_url(client)                                                  
+                                                                                                                              
+                                                                            try{
+                                                                                await upload_image_to_s3(presigned_upload_url, this.state.avatar_img_obj.image_data, this.state.avatar_img_obj.file_mime)                                
+                                                                            }catch(e){
+                                                                                console.log(e)
+                                                                            }
+
+                                                                            // register_user({
+                                                                            //     variables:{
+                                                                            //         email:this.props.email.trim(),
+                                                                            //         password:this.props.password.trim(),
+                                                                            //         username:this.props.username.trim(),
+                            
+                                                                            //         age:parseInt(this.state.age.value),
+                                                                            //         name:this.state.name.value.trim(), 
+                                                                            //         three_words:this.state.three_words.value.trim(),
+                                                                            //         bio:this.state.bio.value.trim()
+                                                                            // }})
+                                                                        }}
+                                                                    />  
+                                                                </View>
+                                                            )
+                            
                                                         }}
-                                                    />  
-                                                </View>
-                                            )
-            
-                                        }}
-                                    </Mutation>                    
-                                )
-                            }
-                        </ApolloConsumer>        
-                    </View>
-                </ScrollView>
-            </TouchableWithoutFeedback>
+                                                    </Mutation>                           
+                                    </View>
+                                </ScrollView>
+                            </TouchableWithoutFeedback>                    
+                        )
+                    }
+                }
+            </ApolloConsumer>
         )
     }
 }

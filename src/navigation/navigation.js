@@ -7,7 +7,8 @@ import {
   LOGIN_SCREEN,
   SETTER_SCREEN,
   EXPLORE_ROOMS_SCREEN,
-  ROOM_DETAILS_SCREEN
+  ROOM_DETAILS_SCREEN,
+  REGISTER_OTHER_ATT_SCREEN
 } from './screens';
 
 import registerScreens from './register_screens';
@@ -27,7 +28,7 @@ export function start_app () {
             stack: {
               children: [{
                 component: {
-                  name: FEED_SCREEN,
+                  name: REGISTER_OTHER_ATT_SCREEN,
                   options: {
                     topBar: {
                       visible: false,
@@ -44,7 +45,7 @@ export function start_app () {
           },
           {
             component: {
-              name: ROOM_DETAILS_SCREEN,
+              name: EXPLORE_ROOMS_SCREEN,
               options: {
                 bottomTab: {
                   text: 'EXPLORE SCREEN',

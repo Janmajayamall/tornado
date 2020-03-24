@@ -18,8 +18,7 @@ import {Navigation} from "react-native-navigation"
 import base_style from "./../../../styles/base"
 
 //importing helpers
-import {get_relative_time_ago} from "./../../../helpers"
-import base from "./../../../styles/base";
+import {get_relative_time_ago} from "./../../../helpers/index"
 
 //importing custom components
 import BigButton from "./../../../custom_components/buttons/big_buttons"

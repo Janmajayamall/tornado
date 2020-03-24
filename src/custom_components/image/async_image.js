@@ -41,7 +41,7 @@ class AsyncImage extends PureComponent {
         return(
             <View style={[styles.main_container, {width:this.props.width, height:this.props.height}]}>
 
-                <FastImage
+                <Image
                     source={{uri:this.props.source}}
                     style={[styles.posted_image_style, {width:this.props.width, height:this.props.height}]} 
                     onLoad={this.on_load}

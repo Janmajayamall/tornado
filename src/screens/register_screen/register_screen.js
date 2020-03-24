@@ -31,7 +31,7 @@ import {
     validate_email,
     validate_password,
     validate_username
-} from "./helpers/validators"
+} from "./../../helpers/index"
 
 
 class Register extends React.PureComponent{

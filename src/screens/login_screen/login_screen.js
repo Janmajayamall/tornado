@@ -12,8 +12,10 @@ import {
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 import { 
-    setting_up_the_user
- } from "./../../helpers";
+    setting_up_the_user,
+    validate_email,
+    validate_password
+ } from "./../../helpers/index";
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -32,11 +34,6 @@ import {
     FEED_SCREEN
 } from "./../../navigation/screens"
 
-//import input validators
-import {
-    validate_email,
-    validate_password,
-} from "./helpers/validators"
 
 
 class Login extends React.PureComponent{

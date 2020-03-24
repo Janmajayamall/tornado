@@ -23,3 +23,13 @@ export const REGISTER_USER = gql`
         }
     }
 `
+
+//Query
+export const GET_PRESIGNED_URL = gql`
+    query get_presigned_url($file_name:String!, $file_mime:String!){
+        get_image_upload_url(user_input:{
+            file_name:$file_name
+            file_mime:$file_mime
+        })
+    }
+`

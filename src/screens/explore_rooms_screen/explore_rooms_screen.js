@@ -19,6 +19,8 @@ import {Navigation} from "react-native-navigation"
 import {  
     FEED_SCREEN
 } from "./../../navigation/screens";
+import ImagePicker from "react-native-image-crop-picker"
+
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -107,15 +109,14 @@ class ExploreRooms extends React.Component{
           });
     }
 
+
+
     render(){
         return(
             <ApolloConsumer>
                 {
                     client => (
                         <TouchableWithoutFeedback
-                            onPress={()=>{
-                                Keyboard.dismiss()
-                            }}
                         >
                             <Query
                                 query={GET_NOT_JOINED_ROOMS}
@@ -130,7 +131,7 @@ class ExploreRooms extends React.Component{
                                     }
         
                                     if (error){
-                                        return <Text>Error thrown.....</Text>
+                                        return <BigButton onPress={this.select_image_from_device} button_tex="IMAGE"/>
                                     }
         
                                     if (not_joined_rooms){
