@@ -10,7 +10,8 @@ import {
   ROOM_DETAILS_SCREEN,
   REGISTER_OTHER_ATT_SCREEN,
   CREATE_ROOM_POSTS_SCREEN,
-  CREATE_ROOM_POST_SELECT_SCREEN
+  CREATE_ROOM_POST_SELECT_SCREEN,
+  ADD_ROOMS_SCREEN
 } from './screens';
 
 import registerScreens from './register_screens';

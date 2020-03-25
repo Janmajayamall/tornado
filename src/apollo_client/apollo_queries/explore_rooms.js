@@ -85,3 +85,23 @@ export const BULK_ROOM_FOLLOWS = gql`
     }
 `
 
+export const CREATE_ROOM = gql`
+
+    mutation create_rooms($name:String!, $creator_id:ID!, $description:String!){
+        create_room(user_input:{
+            name:$name, 
+            creator_id:$creator_id,
+            description:$description
+        }){
+            _id,
+            name,
+            status,
+            timestamp,
+            last_modified,
+            creator_id,
+            room_members_count,
+            user_follows
+        }
+    }
+`
+

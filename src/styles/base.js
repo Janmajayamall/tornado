@@ -11,11 +11,11 @@ export default base_style = {
             fontWeight:'bold',
         },
         small_font:{
-            color:'#d9d9d9',
+            color:'#ffffff',
             fontSize:17,
         },
         small_font_paragraph:{
-            color:'#d9d9d9',
+            color:'#ffffff',
             fontSize:17,
             textAlign:'left'
         },

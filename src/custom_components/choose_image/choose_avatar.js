@@ -27,7 +27,8 @@ class ChooseAvatar extends React.PureComponent{
 
     static propTypes = {
         width:PropTypes.any,
-        upload_img_s3:PropTypes.func
+        upload_img_s3:PropTypes.func,
+        username:PropTypes.string
     }
 
     constructor(props){
@@ -53,18 +54,13 @@ class ChooseAvatar extends React.PureComponent{
             const image_uri = `data:${image.mime};base64,${image.data}`
             const image_extension = image.mime.split("/")[1]
 
-            //getting user_info
-            const {user_info} = this.props.client.readQuery({
-                query:GET_LOCAL_USER_INFO
-            })
-
             //generating image_obj
             const image_obj = {
                 file_mime:image.mime,
                 width:image.width,
                 height:image.height,
                 image_data:image.data,
-                file_name:`${user_info.user_id}_${new Date().toISOString()}.${image_extension}`
+                file_name:`${this.props.username}_${new Date().toISOString()}.${image_extension}`
             }
 
             this.props.upload_img_s3(image_obj)
@@ -78,7 +74,7 @@ class ChooseAvatar extends React.PureComponent{
     //dev 
     select_image_from_device = () => {
         ImagePicker.openPicker({
-            }).then(image => {
+            }).then(image => {                
                 this.crop_image_circle(image.path)
             });
     }

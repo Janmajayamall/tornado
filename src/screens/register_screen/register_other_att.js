@@ -199,6 +199,7 @@ class RegisterOtherAtt extends React.PureComponent{
                                         <ChooseAvatar
                                             width={window.width*0.8}
                                             upload_img_s3={this.get_img_object}
+                                            username={this.props.username}
                                         />
                                     </View>
                                     <View style={styles.input_box}>

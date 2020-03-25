@@ -81,7 +81,7 @@ class ChoosePostImage extends React.PureComponent{
                     width:image.width,
                     height:image.height,
                     image_data:image.data,
-                    file_name:`${user_info.user_id}_${new Date().toISOString()}.${image_extension}`
+                    file_name:`${user_info.username}_${new Date().toISOString()}.${image_extension}`
                 }
 
                 this.props.upload_img_s3(image_obj)
