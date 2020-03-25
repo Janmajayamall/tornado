@@ -8,10 +8,15 @@ import {
   SETTER_SCREEN,
   EXPLORE_ROOMS_SCREEN,
   ROOM_DETAILS_SCREEN,
-  REGISTER_OTHER_ATT_SCREEN
+  REGISTER_OTHER_ATT_SCREEN,
+  CREATE_ROOM_POSTS_SCREEN,
+  CREATE_ROOM_POST_SELECT_SCREEN
 } from './screens';
 
 import registerScreens from './register_screens';
+
+// import navigation functions
+import { navigation_set_root_one_screen } from "./navigation_routes/index";
 
 
 // Register all screens on launch
@@ -19,64 +24,12 @@ registerScreens();
 
 export function start_app () {
 
-  Navigation.setRoot({
-    root: {
-      bottomTabs: {
-        id: 'BottomTabsId',
-        children: [
-          {
-            stack: {
-              children: [{
-                component: {
-                  name: REGISTER_SCREEN,
-                  options: {
-                    topBar: {
-                      visible: false,
-                    },
-                    bottomTab: {
-                      text: 'FEED SCREEN',
-                      fontSize: 20,
-                      drawBehind:true
-                    }
-                  }
-                }
-              }]
-            }
-          },
-          {
-            component: {
-              name: EXPLORE_ROOMS_SCREEN,
-              options: {
-                bottomTab: {
-                  text: 'EXPLORE SCREEN',
-                  fontSize: 20,
-                }
-              }
-            },
-          },
-        ],
-      },
+  navigation_set_root_one_screen({screen_name:REGISTER_SCREEN})
 
-    }
-  });
+
 }
 
  
-  // Navigation.setRoot({
-  //   root: {
-      // stack: {
-      //   children: [{
-      //     component: {
-      //       name: EXPLORE_ROOMS_SCREEN,
-      //       options: {
-      //         topBar: {
-      //           visible: false,
-      //         },
-      //       }
-      //     }
-      //   }]
-      // }
-    // }
-  // });
+
 
 

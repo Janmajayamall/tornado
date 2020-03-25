@@ -57,6 +57,20 @@ export const GET_ROOM_POSTS = gql`
     }
 `
 
+export const GET_ALL_JOINED_ROOMS = gql`
+    {
+        get_all_joined_rooms{
+            _id,
+            name,
+            status,
+            room_members_count,
+            user_follows,
+            timestamp,
+            last_modified
+        }
+    }
+`
+
 // 
 //Mutations
 export const BULK_ROOM_FOLLOWS = gql`
@@ -70,3 +84,4 @@ export const BULK_ROOM_FOLLOWS = gql`
         }
     }
 `
+

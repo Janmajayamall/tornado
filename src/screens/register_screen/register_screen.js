@@ -33,6 +33,11 @@ import {
     validate_username
 } from "./../../helpers/index"
 
+// import navigation routes
+import {  
+    navigation_push_to_screen
+} from "./../../navigation/navigation_routes/index";
+
 
 class Register extends React.PureComponent{
 
@@ -119,19 +124,13 @@ class Register extends React.PureComponent{
             return
         }
 
-        Navigation.push(this.props.componentId, {
-            component:{
-                name: REGISTER_OTHER_ATT_SCREEN,
-                passProps: {
-                    email:this.state.email.value,
-                    password:this.state.password.value,
-                    username:this.state.username.value,
-                },
-                topBar:{
-                    visible:false
-                }
+        navigation_push_to_screen(this.props.componentId, {screen_name:REGISTER_OTHER_ATT_SCREEN}, 
+            {
+                email:this.state.email.value,
+                password:this.state.password.value,
+                username:this.state.username.value,
             }
-        });
+        )
     }
 
     change_email_id = (val) => {

@@ -33,6 +33,14 @@ import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
 import BigButton from "./../../custom_components/buttons/big_buttons"
 import ChooseAvatar from "./../../custom_components/choose_image/choose_avatar"
 
+// importing navigation routes
+import {  
+    navigation_push_to_screen
+} from "./../../navigation/navigation_routes/index";
+import {  
+    EXPLORE_ROOMS_SCREEN
+} from "./../../navigation/screens";
+
 const window = Dimensions.get("window")
 
 class RegisterOtherAtt extends React.PureComponent{
@@ -146,9 +154,10 @@ class RegisterOtherAtt extends React.PureComponent{
     }
 
     setting_up_the_user = async(user_data, apollo_client) => {
-        console.log(user_data)
         await setting_up_the_user(user_data, apollo_client)
-        return 
+        
+        //routing to the explore rooms screen
+        navigation_push_to_screen(this.props.componentId, {screen_name:EXPLORE_ROOMS_SCREEN})
     }
 
     get_img_object = (img_obj) => {
@@ -158,10 +167,7 @@ class RegisterOtherAtt extends React.PureComponent{
     }
 
     get_presigned_url = async(apollo_client) => {
-        console.log({
-            file_name:this.state.avatar_img_obj.file_name,
-            file_mime:this.state.avatar_img_obj.file_mime
-        })
+
         const {data} = await apollo_client.query({
             query:GET_PRESIGNED_URL,
             variables:{
@@ -268,7 +274,7 @@ class RegisterOtherAtt extends React.PureComponent{
                                                                             }else{
                                                                                 register_user_variables.default_avatar=true
                                                                             }   
-
+                                                                            console.log(register_user_variables,"dawdadadada")
                                                                             register_user({variables:register_user_variables})
                                                                         }}
                                                                     />  

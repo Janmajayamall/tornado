@@ -16,17 +16,23 @@ import {
     Query
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+
+// import navigation routers
 import {  
-    FEED_SCREEN
+    FEED_SCREEN,
+    EXPLORE_ROOMS_SCREEN,
 } from "./../../navigation/screens";
-import ImagePicker from "react-native-image-crop-picker"
+import {  
+     navigation_set_root_two_bottoms_tabs
+} from "./../../navigation/navigation_routes/index";
+
 
 
 //importing base style 
 import base_style from "./../../styles/base"
 
 //importing custom components
-import RoomItemDisplay from "./components/room_item_display"
+import RoomItemDisplay from "./../../custom_components/room_display/room_item_display"
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
 import BigButton from "./../../custom_components/buttons/big_buttons"
 
@@ -44,43 +50,43 @@ class ExploreRooms extends React.Component{
         }
     }
 
-    add_to_set = (index) => {
-        if (this.state.selected_set.has(index)){
+    add_to_set = (room_id) => {
+        if (this.state.selected_set.has(room_id)){
             return
         }else{
             this.setState((prev_state)=>{
                 const new_set = prev_state.selected_set
-                new_set.add(index)
+                new_set.add(room_id)
                 return({selected_set:new_set})
             })
         }
     }
 
-    remove_from_set = (index) => {
-        if (!this.state.selected_set.has(index)){
+    remove_from_set = (room_id) => {
+        if (!this.state.selected_set.has(room_id)){
             return
         }else{
             this.setState((prev_state)=>{
                 const new_set = prev_state.selected_set
-                new_set.delete(index)
+                new_set.delete(room_id)
                 return({selected_set:new_set})
             })
         }
     }
 
-    generate_selected_rooms_arr = (rooms_arr, user_id) => {
+    generate_selected_rooms_arr = (user_id) => {
 
         //TODO: inform the user they haven't selected any room if rooms_arr length is 0
 
-        if (user_id===undefined || rooms_arr===undefined){
+        if (user_id===undefined){
             return
         }
         
         let final_selected_arr = []
         //iterating through selected indexes
-        for(let index of this.state.selected_set){
+        for(let room_id of this.state.selected_set){
             final_selected_arr.push({
-                room_id:rooms_arr[index]._id,
+                room_id:room_id,
                 follower_id:user_id,
             })
         }
@@ -91,22 +97,15 @@ class ExploreRooms extends React.Component{
 
     navigate_to_feed = (data) =>{
 
-        Navigation.setRoot({
-            root: {
-              stack: {
-                children: [{
-                  component: {
-                    name: FEED_SCREEN,
-                    options: {
-                      topBar: {
-                        visible: false,
-                      },
-                    }
-                  }
-                }]
-              }
+        navigation_set_root_two_bottoms_tabs(
+            {
+                screen_name:FEED_SCREEN
+            }, 
+            {
+                screen_name:EXPLORE_ROOMS_SCREEN
             }
-          });
+        )
+
     }
 
 
@@ -162,6 +161,8 @@ class ExploreRooms extends React.Component{
                                                                             index={object.index}
                                                                             add_to_set={this.add_to_set}
                                                                             remove_from_set={this.remove_from_set}
+                                                                            selected={false}
+                                                                            
                                                                         />
                                                                     )
                                                                 }}
@@ -179,7 +180,7 @@ class ExploreRooms extends React.Component{
                                                                             onPress={()=> {
                                                                                 //getting the user_id 
                                                                                 const {user_info} = client.readQuery({query:GET_LOCAL_USER_INFO}) 
-                                                                                const bulk_join_objects = this.generate_selected_rooms_arr(not_joined_rooms, user_info.user_id)
+                                                                                const bulk_join_objects = this.generate_selected_rooms_arr(user_info.user_id)
                                                                                                                                                     
                                                                                 //mutation bulk follow rooms
                                                                                 bulk_follow_rooms({variables:{follow_room_objects:bulk_join_objects}})

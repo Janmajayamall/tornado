@@ -4,6 +4,7 @@ https://github.com/archriss/react-native-snap-carousel#layouts-and-custom-interp
 
 ## Links for UI color design
 https://www.colorhexa.com/
+1. https://blog.prototypr.io/how-to-design-a-dark-theme-for-your-android-app-3daeb264637 (good design)
 
 
 ## Links for graphQl
@@ -15,7 +16,7 @@ https://www.edx.org/course/exploring-graphql-a-query-language-for-apis
 https://medium.com/codingthesmartway-com-blog/creating-a-graphql-server-with-node-js-and-express-f6dddc5320e1
 https://www.digitalocean.com/community/tutorials/how-to-build-and-deploy-a-graphql-server-with-node-js-and-mongodb-on-ubuntu-18-04
 https://www.freecodecamp.org/news/how-to-set-up-a-graphql-server-using-node-js-express-mongodb-52421b73f474/
-https://github.com/academind/yt-graphql-react-event-booking-api/blob/06-finish-events-schema/graphql/resolvers/index.js
+https://github.com/academind/yt-graphql-react-event-booking-api/blob/06-finish-ecprevents-schema/graphql/resolvers/index.js
 https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYXcB_&index=11
 
 

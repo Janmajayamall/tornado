@@ -13,20 +13,29 @@ import {
     ApolloConsumer
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+import PropTypes from "prop-types"
 
 //importing base style 
-import base_style from "./../../../styles/base"
+import base_style from "./../../styles/base"
 
 //importing helpers
-import {get_relative_time_ago} from "./../../../helpers/index"
+import {get_relative_time_ago} from "./../../helpers/index"
 
 class RoomItemDisplay extends React.PureComponent{
+
+    static propTypes = {
+        add_to_set:PropTypes.func,
+        remove_from_set:PropTypes.func,
+        index:PropTypes.any,
+        room_object:PropTypes.object,
+        selected:PropTypes.bool
+    }
 
     constructor(props){
         super(props)
 
         this.state = {
-            selected:false
+            selected:this.props.selected
         }
 
     }
@@ -39,9 +48,9 @@ class RoomItemDisplay extends React.PureComponent{
         this.setState((prev_state)=>{
 
             if (!prev_state.selected){
-                this.props.add_to_set(this.props.index)
+                this.props.add_to_set(this.props.room_object._id)
             }else{
-                this.props.remove_from_set(this.props.index)
+                this.props.remove_from_set(this.props.room_object._id)
             }
            
             return({
