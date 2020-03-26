@@ -3,13 +3,16 @@ import {
     View,
     Text,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions,
+    StyleSheet
 } from "react-native"
 
 import Avatar from "./../image/profile_image"
 import PropTypes from "prop-types"
 import base from "../../styles/base"
 
+const window = Dimensions.get("window")
 
 class AvatarTextPanel extends React.PureComponent{
 
@@ -17,7 +20,7 @@ class AvatarTextPanel extends React.PureComponent{
         is_description:PropTypes.bool,
         username:PropTypes.string,
         description:PropTypes.string,
-        avatar:PropTypes.string,
+        avatar:PropTypes.object,
         create_comment_func:PropTypes.func,
         user_id:PropTypes.string,
         content_id:PropTypes.string,
@@ -28,7 +31,7 @@ class AvatarTextPanel extends React.PureComponent{
         super(props)
         this.state={
             comment_text_input:"",
-            avatar_width:1
+            
         }
     }
     
@@ -97,13 +100,11 @@ class AvatarTextPanel extends React.PureComponent{
 
         return(
             <View style={styles.main_container}>
-                <View style={styles.user_profile_pic_container}>
-                    <View>
-                        <Avatar
-                                source={this.props.avatar}
-                                width={this.state.avatar_width}
-                        />
-                    </View>                    
+                <View style={styles.user_profile_pic_container}>                    
+                    <Avatar
+                            width={window.width*0.18}
+                            image_object={this.props.avatar}
+                    />                 
                 </View>
 
                 <View style={styles.user_description_container}>
@@ -117,7 +118,7 @@ class AvatarTextPanel extends React.PureComponent{
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     main_container:{
         flexDirection:"row",
         padding:5,
@@ -125,7 +126,7 @@ const styles = {
     },
     user_profile_pic_container:{
         width:'20%',
-        justifyContent:'flex-start',
+        justifyContent:"flex-start",
         padding:5,
         borderRadius:2
     },
@@ -152,6 +153,6 @@ const styles = {
         ...base.typography.small_font
 
     }
-}
+})
 
 export default AvatarTextPanel

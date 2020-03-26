@@ -40,7 +40,8 @@ export const REGISTER_USER = gql`
             three_words, 
             bio,
             username, 
-            default_avatar
+            default_avatar,
+            timestamp
         }
     }
 `

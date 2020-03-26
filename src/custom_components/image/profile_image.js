@@ -10,7 +10,7 @@ import {
 import FastImage from "react-native-fast-image"
 import PropTypes from "prop-types"
 
-class Avatar extends React.PureComponent {
+class ProfileImage extends React.PureComponent {
     
     static propsTypes = {
         width:PropTypes.any,
@@ -36,7 +36,7 @@ class Avatar extends React.PureComponent {
         return(
             <View>
                 <Image
-                    source={{uri:`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`}}
+                    source={{uri:`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`}}  
                     style={[styles.posted_image_style,this.state.loaded?{width:this.props.width, height:this.props.width, borderRadius:this.props.width/2}:{}]} 
                     onLoad={this.on_load()}
                 />
@@ -65,4 +65,4 @@ const styles = {
     }
 }
 
-export default Avatar
+export default ProfileImage

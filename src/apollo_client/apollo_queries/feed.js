@@ -28,7 +28,8 @@ export const GET_ROOM_FEED = gql`
                     image_name
                 }, 
                 description,
-                timestamp
+                timestamp,
+                post_type
             },
             next_page,
             room_post_cursor, 

@@ -23,22 +23,12 @@ import {
     CREATE_LIKE,
     UNLIKE_CONTENT,
     GET_LOCAL_USER_INFO
-} from "./../../screens/comment_screen/queries/index"
+} from "./../../apollo_client/apollo_queries/index"
 
 
 // import screens
 import {COMMENT_SCREEN} from "./../../navigation/screens"
 
-defaultContent={
-    user_profile:{
-        avatar:'https://www.nowrunning.com/content/Artist/Zendaya/banner.jpg',
-        creative_name:'JayZendaya',
-    },
-    trend:['olympics'],
-    posted_image:'https://www.rollingstone.com/wp-content/uploads/2018/10/colin-Kaepernick-just-do-it-nike-ad-2018.jpg?resize=1800,1200&w=450',
-    likes:10,
-    description:'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s',
-}
 
 const window = Dimensions.get('window')
 class ContentBox extends React.PureComponent {
@@ -89,7 +79,6 @@ class ContentBox extends React.PureComponent {
     }
 
     navigate_to_comment_screen = () => {
-        
         Navigation.push(this.props.componentId, {
             component: {
                 name: COMMENT_SCREEN,
@@ -128,6 +117,7 @@ class ContentBox extends React.PureComponent {
                         <View>
                             <AsyncImage
                                 image_object={this.props.post_object.image}
+                                window_dimensions={window}
                             />
                         </View> : 
 
@@ -160,7 +150,7 @@ class ContentBox extends React.PureComponent {
                                                     create_like({
                                                         variables:{
                                                             user_id:user_info.user_id,
-                                                            like_type:"ROOM_POST",
+                                                            like_type:this.props.post_object.post_type,
                                                             content_id:this.props.post_object._id
                                                         }
                                                     })

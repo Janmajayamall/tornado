@@ -22,6 +22,7 @@ const QueryComments = (props) => {
             }}
         >
             {({loading, error, data, refetch, networkStatus}) => {
+                //TODO: fix the comment retrieval here
                 return(
                     <CommentList
                         comment_list={data ? data.get_post_comments : []}

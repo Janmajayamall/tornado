@@ -43,6 +43,7 @@ class Comment extends React.PureComponent {
             comment_container_height:0
         }
 
+        console.log(this.props)
     }   
 
     componentDidMount(){
@@ -83,7 +84,7 @@ class Comment extends React.PureComponent {
                 avatar={this.props.post_object.creator_info.avatar}
                 is_description={false}                                    
                 content_id={this.props.post_object._id}
-                content_type={"ROOM_POST"}
+                content_type={this.props.post_object.post_type}
                 create_comment_func={(comment_obj)=>{
             
                     //populating comment object with user_id of the user 
@@ -151,7 +152,7 @@ class Comment extends React.PureComponent {
                 <View style={{height:this.state.comment_list_height}}>
                     <QueryComments
                         content_id={this.props.post_object._id}
-                        content_type={"ROOM_POST"}
+                        content_type={this.props.post_object.post_type}
                         content_box={this.props.content_box}
                         bottom_padding={this.state.comment_list_padding}
                         post_object={this.props.post_object}

@@ -62,11 +62,13 @@ export const GET_USER_PROFILE_POSTS = gql`
                     image_name
                 }, 
                 description,
-                timestamp
+                timestamp,
+                post_type
             },
             next_page,
             room_post_cursor, 
-            last_room_post_cursor            
+            last_room_post_cursor,
+                   
         }
     }
 ` 

@@ -31,7 +31,7 @@ export const GET_LOCAL_USER_INFO = gql`
                 image_name,
                 width, 
                 height, 
-                cdn_url
+                # cdn_url
             }, 
             username,
             email, 
