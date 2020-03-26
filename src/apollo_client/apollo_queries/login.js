@@ -24,7 +24,8 @@ export const LOGIN_USER = gql`
             three_words, 
             bio,
             username, 
-            default_avatar
+            default_avatar,
+            timestamp, 
         }
     }
 `

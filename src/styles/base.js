@@ -27,6 +27,10 @@ export default base_style = {
             color:'#ffffff',
             fontSize:22,
             fontWeight:'bold',
+        },
+        medium_font:{
+            color:'#ffffff',
+            fontSize:22,
         }
     }
 }

@@ -30,6 +30,7 @@ class ContentList extends React.PureComponent{
         this.state={
 
         }
+        console.log(this.props)
     }
 
     render_item_list = (object) => {

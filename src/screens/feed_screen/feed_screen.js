@@ -12,12 +12,28 @@ import gql from 'graphql-tag';
 import {
     Query
 } from 'react-apollo'
+import { Navigation } from "react-native-navigation"
 
 //importing queries/mutations in gql
-import {GET_ROOM_FEED} from "./../../apollo_client/apollo_queries/index"
+import {
+    GET_ROOM_FEED
+} from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
 import ContentList from "./../../custom_components/content_list/content_list"
+
+//importing helpers & constants
+import {
+    constants
+} from "./../../helpers/index"
+
+//importing screens and navigation functions
+import { navigation_push_to_screen } from '../../navigation/navigation_routes';
+import {  
+    CREATE_ROOM_POSTS_SCREEN
+} from "./../../navigation/screens";
+
+
 
 
 class FeedScreen extends React.Component {
@@ -30,7 +46,32 @@ class FeedScreen extends React.Component {
 
         }
 
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+
     }
+
+    //react native navigation event binded function for action buttons
+    navigationButtonPressed({ buttonId }) {
+        if (buttonId===constants.navigation.action_buttons.ADD_POST){
+            navigation_push_to_screen(this.props.componentId,
+                    {
+                        screen_name:CREATE_ROOM_POSTS_SCREEN,
+                        options:{
+                            topBar: {
+                                rightButtons: [
+                                    {
+                                        id: constants.navigation.action_buttons.SHARE_POST,
+                                        text:"Share"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                )
+        }
+
+      }
 
     get_room_posts = () => {
     //    in-build pagination

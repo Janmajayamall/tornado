@@ -124,11 +124,14 @@ class Register extends React.PureComponent{
             return
         }
 
-        navigation_push_to_screen(this.props.componentId, {screen_name:REGISTER_OTHER_ATT_SCREEN}, 
-            {
-                email:this.state.email.value,
-                password:this.state.password.value,
-                username:this.state.username.value,
+        navigation_push_to_screen(this.props.componentId, 
+            { 
+                screen_name:REGISTER_OTHER_ATT_SCREEN,
+                props:{
+                    email:this.state.email.value,
+                    password:this.state.password.value,
+                    username:this.state.username.value,    
+                }
             }
         )
     }

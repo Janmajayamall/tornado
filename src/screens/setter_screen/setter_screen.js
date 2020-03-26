@@ -27,8 +27,14 @@ import {
 // importing screens
 import {
     LOGIN_SCREEN,
-    FEED_SCREEN
+    FEED_SCREEN,
+    EXPLORE_ROOMS_SCREEN,
+    PROFILE_SCREEN
 } from "../../navigation/screens"
+import {
+  navigation_push_to_screen,
+  navigation_set_root_two_bottoms_tabs
+} from "./../../navigation/navigation_routes/index"
 
 
 
@@ -47,40 +53,26 @@ class Setter extends React.PureComponent{
     navigate_to_screen = (data) => {
       if (data.user_info && data.user_info.jwt && data.user_info.user_id){
 
-          Navigation.setRoot({
-              root: {
-                stack: {
-                  children: [{
-                    component: {
-                      name: FEED_SCREEN,
-                      options: {
-                        topBar: {
-                          visible: false,
-                        },
-                      }
-                    }
-                  }]
-                }
+          navigation_set_root_two_bottoms_tabs(
+            {
+              screen_name:FEED_SCREEN,  
+              display_text:"FEED"
+            }, 
+            { 
+              screen_name:EXPLORE_ROOMS_SCREEN,  
+              display_text:"EXPLORE"
+            },
+            {
+              screen_name:PROFILE_SCREEN,  
+              display_text:"Profile",
+              props:{
+                is_user_profile:true
               }
-            });
+            }
+          )
 
       }else{
-          Navigation.setRoot({
-              root: {
-                stack: {
-                  children: [{
-                    component: {
-                      name: LOGIN_SCREEN,
-                      options: {
-                        topBar: {
-                          visible: false,
-                        },
-                      }
-                    }
-                  }]
-                }
-              }
-            });
+        navigation_push_to_screen(this.props.componentId, {screen_name:LOGIN_SCREEN})
       }
     }
 
@@ -98,7 +90,6 @@ class Setter extends React.PureComponent{
                     }
                 
                     if (data){
-                        console.log(data, "dw")
                         this.navigate_to_screen(data)
                     }
 

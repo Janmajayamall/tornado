@@ -11,20 +11,30 @@ import {
 } from "react-native";
 import PropTypes from "prop-types"
 import { 
-    Query, ApolloConsumer, Mutation
+    Query, 
+    ApolloConsumer, 
+    Mutation, 
+    withApollo
 } from "react-apollo";
+import { Navigation } from "react-native-navigation"
 
 import base_style from "./../../styles/base"
 
 //import graphql queries/mutations
 import {
     GET_ALL_JOINED_ROOMS,
-    CREATE_ROOM
+    CREATE_ROOM,
+    GET_LOCAL_USER_INFO
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing custom components 
 import BigButton from "../../custom_components/buttons/big_buttons";
 import ApolloClient from "apollo-client";
+
+//importing helpers
+import {
+    constants
+} from "./../../helpers/index"
 
 const window = Dimensions.get("window")
 
@@ -42,13 +52,25 @@ class AddRooms extends React.Component{
             name:"",
             description:""
         }
+
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+    }
+
+    //react native navigation event binded function for action buttons
+    navigationButtonPressed({ buttonId }) {
+
+        //create room action button is triggered
+        if (buttonId===constants.navigation.action_buttons.CREATE_ROOM){
+            this.generate_create_room_variables()
+        }
     }
 
     validate_inputs = () => {
-        return false
+        return true
     }
 
-    generate_create_room_variables = (client) => {
+    generate_create_room_variables = () => {
 
         //TODO:validate the inputs
         if(!this.validate_inputs()){
@@ -59,16 +81,17 @@ class AddRooms extends React.Component{
         }
 
         //considering all inputs are valid
-        const {user_info} = client.readQuery({
+        const {user_info} = this.props.client.readQuery({
             query:GET_LOCAL_USER_INFO
         })
+
         if(user_info.user_id===undefined){
             return({
                 variables:{},
                 valid:false
             })
         }
-        return({
+        this.create_room_query({
             variables:{
                 creator_id:user_info.user_id,
                 name:this.state.name, 
@@ -79,65 +102,55 @@ class AddRooms extends React.Component{
 
     }
 
+    create_room_query = async(create_room_input) => {
+
+        //if the input is invalid then return 
+        if (!create_room_input.valid){
+            return
+        }
+
+        //creating the room using the client
+        const create_room_result = await this.props.client.mutate({
+            mutation:CREATE_ROOM,
+            variables:create_room_input.variables
+        })
+
+        //TODO: creating room is done. stop loading and move to room
+        console.log(create_room_result, "create_room")
+
+    }
+
     render(){
         return(
-            <ApolloConsumer>
-                {client=>{
-                    return(
-                        <ScrollView style={styles.main_container}>
-                            <SafeAreaView>
-                            
-                                <View style={styles.name_container}>
-                                    <TextInput
-                                        value={this.state.name}
-                                        style={styles.name_text_input}
-                                        onChangeText={(val)=>{this.setState({name:val})}}
-                                        placeholder={"Room Name"}
-                                        placeholderTextColor={"#d9d9d9"}
-                                    />
-                                </View>                        
-                                <View style={styles.description_container}>
-                                    <TextInput
-                                        value={this.state.description}
-                                        multiline={true}
-                                        onChangeText={(val)=>{this.setState({description:val})}}
-                                        style={styles.description_text_input}
-                                        placeholder={"Short description of the room..."}
-                                        placeholderTextColor={"#d9d9d9"}
-                                    />
-                                </View>
-                                <Mutation mutation={CREATE_ROOM}>
-                                    {(create_room, {data})=>{
-                                        return(
-                                            <BigButton
-                                                button_text={"Create Room"}
-                                                onPress={()=>{
-                                                    const {variables, valid} = this.generate_create_room_variables(client)
-
-                                                    //if the input is invalid then return 
-                                                    if (!valid){
-                                                        return
-                                                    }
-
-                                                    //creating the room 
-                                                    create_room({
-                                                        variables:variables
-                                                    })
-                                                }}
-                                            />
-                                        )
-                                    }}
-                                </Mutation>                                                                
-                            </SafeAreaView>
-                        </ScrollView>
-                    )
-                }}
-            </ApolloConsumer>
+            <ScrollView style={styles.main_container}>
+                <SafeAreaView>
+                
+                    <View style={styles.name_container}>
+                        <TextInput
+                            value={this.state.name}
+                            style={styles.name_text_input}
+                            onChangeText={(val)=>{this.setState({name:val})}}
+                            placeholder={"Room Name"}
+                            placeholderTextColor={"#d9d9d9"}
+                        />
+                    </View>                        
+                    <View style={styles.description_container}>
+                        <TextInput
+                            value={this.state.description}
+                            multiline={true}
+                            onChangeText={(val)=>{this.setState({description:val})}}
+                            style={styles.description_text_input}
+                            placeholder={"Short description of the room..."}
+                            placeholderTextColor={"#d9d9d9"}
+                        />
+                    </View>
+                </SafeAreaView>
+            </ScrollView>
        )
     }
 }
 
-export default AddRooms
+export default withApollo(AddRooms)
 
 const styles = StyleSheet.create({
     main_container:{

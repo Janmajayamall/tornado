@@ -8,11 +8,13 @@ import {
     Dimensions
 } from 'react-native'
 import FastImage from "react-native-fast-image"
+import PropTypes from "prop-types"
 
 class Avatar extends React.PureComponent {
     
     static propsTypes = {
-        
+        width:PropTypes.any,
+        image_object:PropTypes.object
     }
 
     constructor(props){
@@ -21,7 +23,6 @@ class Avatar extends React.PureComponent {
 
         this.state={
             loaded:false,
-            width:1
         }
 
     }
@@ -30,31 +31,22 @@ class Avatar extends React.PureComponent {
         this.setState({loaded:true})
     }
 
-    on_layout = (e) => {
-        this.setState({
-            width:e.nativeEvent.layout.width,
-            height:e.nativeEvent.layout.height
-        })
-    }
-
     render(){
 
         return(
-            <View onLayout={this.on_layout}>
+            <View>
                 <Image
-                    source={{uri:this.props.source}}
-                    resizeMode={'cover'}
-                    style={{...styles.posted_image_style, borderRadius:this.state.width/2}} 
-                    onLoad={this.on_load}
+                    source={{uri:`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`}}
+                    style={[styles.posted_image_style,this.state.loaded?{width:this.props.width, height:this.props.width, borderRadius:this.props.width/2}:{}]} 
+                    onLoad={this.on_load()}
                 />
-
-                {!this.state.loaded ?
-                    <View
-                        style={styles.replace_container}
-                    /> :
-                    undefined
-                } 
-
+                {
+                    this.state.loaded===false ?
+                        <View
+                            style={[styles.replace_container,{width:this.props.width, height:this.props.width, borderRadius:this.props.width/2, }]}
+                        /> :
+                        undefined
+                }
             </View>
         )
     }
@@ -62,13 +54,14 @@ class Avatar extends React.PureComponent {
 }
 
 const styles = {
+    main_container:{
+        width:"100%"
+    },
     posted_image_style:{
-        width:"100%",
-        aspectRatio:1
+
     },
     replace_container:{
         backgroundColor:'#ffffff',
-        width:'100%',
     }
 }
 

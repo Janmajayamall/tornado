@@ -25,7 +25,7 @@ registerScreens();
 
 export function start_app () {
 
-  navigation_set_root_one_screen({screen_name:REGISTER_SCREEN})
+  navigation_set_root_one_screen({screen_name:SETTER_SCREEN})
 
 
 }

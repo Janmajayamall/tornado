@@ -27,9 +27,20 @@ export const GET_LOCAL_USER_INFO = gql`
     {
         user_info @client {
             user_id,
-            avatar, 
+            avatar{
+                image_name,
+                width, 
+                height, 
+                cdn_url
+            }, 
             username,
-            
+            email, 
+            age, 
+            name, 
+            three_words, 
+            bio, 
+            default_avatar,
+            # timestamp
         }
     }
 `
