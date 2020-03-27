@@ -18,7 +18,8 @@ import {
     validate_age
 } from "./../../helpers/index"
 import { 
-    upload_image_to_s3
+    upload_image_to_s3,
+    get_presigned_url
  } from "./../../helpers/index";
 
 //importing base style 
@@ -166,18 +167,18 @@ class RegisterOtherAtt extends React.PureComponent{
         })
     }
 
-    get_presigned_url = async(apollo_client) => {
+    // get_presigned_url = async(apollo_client) => {
 
-        const {data} = await apollo_client.query({
-            query:GET_PRESIGNED_URL,
-            variables:{
-                 file_name:this.state.avatar_img_obj.file_name,
-                 file_mime:this.state.avatar_img_obj.file_mime
-             }
-        })
+    //     const {data} = await apollo_client.query({
+    //         query:GET_PRESIGNED_URL,
+    //         variables:{
+    //              file_name:this.state.avatar_img_obj.file_name,
+    //              file_mime:this.state.avatar_img_obj.file_mime
+    //          }
+    //     })
         
-        return data.get_image_upload_url
-    }  
+    //     return data.get_image_upload_url
+    // }  
 
 
     render(){
@@ -200,6 +201,7 @@ class RegisterOtherAtt extends React.PureComponent{
                                             width={window.width*0.8}
                                             upload_img_s3={this.get_img_object}
                                             username={this.props.username}
+                                            image_uri={undefined}
                                         />
                                     </View>
                                     <View style={styles.input_box}>
@@ -258,8 +260,9 @@ class RegisterOtherAtt extends React.PureComponent{
 
                                                                             //checking whether the user has uploaded a default picture
                                                                             if (Object.keys(this.state.avatar_img_obj).length>0){
-                                                                                const presigned_upload_url = await this.get_presigned_url(client)                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
                                                                                 try{
+                                                                                    const presigned_upload_url = await get_presigned_url(client, this.state.avatar_img_obj.file_name, this.state.avatar_img_obj.file_mime)
                                                                                     await upload_image_to_s3(presigned_upload_url, this.state.avatar_img_obj.image_data, this.state.avatar_img_obj.file_mime)                                
                                                                                 }catch(e){
                                                                                     console.log(e)

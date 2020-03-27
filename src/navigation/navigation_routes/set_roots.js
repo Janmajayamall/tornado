@@ -69,12 +69,16 @@ export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_t
                           drawBehind:true
                         },
                         topBar: {
-                          rightButtons: [
-                            {
-                              id: constants.navigation.action_buttons.ADD_ROOM,
-                              text:"Add New Room"
-                            }
-                          ]
+                          // rightButtons: [
+                          //   {
+                          //     id: constants.navigation.action_buttons.ADD_ROOM,
+                          //     text:"Add New Room"
+                          //   },
+                          //   {
+                          //     id: constants.navigation.action_buttons.EDIT_PROFILE,
+                          //     text:"Edit Profile"
+                          //   }
+                          // ]
                         }
                       }
                     }
@@ -90,6 +94,7 @@ export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_t
 }
 
 export const navigation_set_root_one_screen = (screen_object) => {
+    console.log(screen_object)
     Navigation.setRoot({
         root: {
           stack: {

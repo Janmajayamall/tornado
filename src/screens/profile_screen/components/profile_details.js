@@ -39,7 +39,7 @@ class ProfileDetails extends React.PureComponent{
 
         this.state = {
         }
-
+        console.log(this.props)
 
     }
 
@@ -63,6 +63,7 @@ class ProfileDetails extends React.PureComponent{
                     <ProfileImage
                         image_object={this.props.user_info.avatar}
                         width={(this.props.width*0.6)/2}
+                        default_avatar={this.props.user_info.default_avatar}
                     />
                 </View>
                 <View style={styles.second_container}>
@@ -70,7 +71,7 @@ class ProfileDetails extends React.PureComponent{
                         {this.props.user_info.three_words}
                     </Text>
                     <Text style={styles.three_word_text}>
-                        {` | ${get_relative_time_ago(new Date().toISOString())}`}
+                        {` | ${get_relative_time_ago(this.props.user_info.timestamp)}`}
                     </Text>
                 </View>
                 <View style={styles.third_container}>

@@ -8,9 +8,10 @@ import {
     StyleSheet
 } from "react-native"
 
-import Avatar from "./../image/profile_image"
+import ProfileImage from "./../image/profile_image"
 import PropTypes from "prop-types"
 import base from "../../styles/base"
+import HyperLinkText from "../../custom_components/text/hyper_link_text"
 
 const window = Dimensions.get("window")
 
@@ -24,7 +25,8 @@ class AvatarTextPanel extends React.PureComponent{
         create_comment_func:PropTypes.func,
         user_id:PropTypes.string,
         content_id:PropTypes.string,
-        content_type:PropTypes.string
+        content_type:PropTypes.string,
+        default_avatar:PropTypes.bool,
     }
 
     constructor(props){
@@ -49,9 +51,9 @@ class AvatarTextPanel extends React.PureComponent{
                         </View>
     
                         <View>
-                            <Text style={base_style.typography.small_font}>
+                            <HyperLinkText style={base_style.typography.small_font}>
                                 {this.props.description}
-                            </Text>
+                            </HyperLinkText>
                         </View>
     
                 </View>
@@ -101,9 +103,10 @@ class AvatarTextPanel extends React.PureComponent{
         return(
             <View style={styles.main_container}>
                 <View style={styles.user_profile_pic_container}>                    
-                    <Avatar
+                    <ProfileImage
                             width={window.width*0.18}
                             image_object={this.props.avatar}
+                            default_avatar={this.props.default_avatar}
                     />                 
                 </View>
 

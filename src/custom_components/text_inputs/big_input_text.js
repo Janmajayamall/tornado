@@ -4,11 +4,19 @@ import {
     TextInput ,
     Text  
 } from "react-native";
+import PropTypes from "prop-types"
+
 import base_style from "../../styles/base";
 
 class BigTextInput extends React.PureComponent {
 
-
+    static propType = {
+        placeholder:PropTypes.string,
+        value:PropTypes.any, 
+        onChangeText:PropTypes.func,
+        height:PropTypes.any, //only when type=="PARAGRAPH"
+        type:PropTypes.string
+    }
 
     constructor(props){
         super(props)
@@ -25,7 +33,7 @@ class BigTextInput extends React.PureComponent {
                     value={this.props.value}
                     onChangeText={this.props.onChangeText}
                     style={styles.input_box}
-                    placeholderTextColor={"white"}
+                    placeholderTextColor={"grey"}
                 />
             )
         }else if(this.props.type==="PHONE"){
@@ -36,7 +44,7 @@ class BigTextInput extends React.PureComponent {
                     onChangeText={this.props.onChangeText}
                     keyboardType={"phone-pad"}
                     style={styles.input_box}
-                    placeholderTextColor={"white"}
+                    placeholderTextColor={"grey"}
                 />
             )
         }else if(this.props.type==="EMAIL"){
@@ -47,7 +55,7 @@ class BigTextInput extends React.PureComponent {
                     onChangeText={this.props.onChangeText}
                     keyboardType={"email-address"}
                     style={styles.input_box}
-                    placeholderTextColor={"white"}
+                    placeholderTextColor={"grey"}
                 />
             )
         }else if(this.props.type==="PASSWORD"){
@@ -58,7 +66,7 @@ class BigTextInput extends React.PureComponent {
                     onChangeText={this.props.onChangeText}
                     secureTextEntry={true}
                     style={styles.input_box}
-                    placeholderTextColor={"white"}
+                    placeholderTextColor={"grey"}
                 />
             )
         }else if(this.props.type==="NUMBER"){
@@ -69,7 +77,19 @@ class BigTextInput extends React.PureComponent {
                     onChangeText={this.props.onChangeText}
                     keyboardType={"number-pad"}
                     style={styles.input_box}
-                    placeholderTextColor={"white"}
+                    placeholderTextColor={"grey"}
+                />
+            )
+        }else if(this.props.type==="PARAGRAPH"){
+            return(
+                <TextInput
+                    placeholder={this.props.placeholder}
+                    value={this.props.value}
+                    onChangeText={this.props.onChangeText}
+                    style={[styles.input_box, {height:this.props.height}]}
+                    placeholderTextColor={"grey"}
+                    multiline={true}
+
                 />
             )
         }

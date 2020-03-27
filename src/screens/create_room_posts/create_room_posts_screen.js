@@ -212,7 +212,7 @@ class CreateRoomPosts extends React.PureComponent{
                                             multiline={true}
                                             value={this.state.description}
                                             onChangeText={(val)=>{this.setState({description:val})}}
-                                            placeholder={`Type what you want to share! \n \n Note: feel free to include links to any of your contents online. For example, "www.tornado.com" or "www.youtube.com/daiwdnaoaa/". Your viewers will be redirected automatically`}
+                                            placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
                                             placeholderTextColor={"#ffffff"}
                                         />
                                     </View>

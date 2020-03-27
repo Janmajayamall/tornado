@@ -18,3 +18,13 @@ export const validate_three_words = (three_words) => {
 export const validate_age = (age) => {
     return true
 }
+
+export const validate_name = (name) => {
+    return true
+}
+
+export const validate_bio = (bio) => {
+    return true
+}
+
+

@@ -82,6 +82,7 @@ class Comment extends React.PureComponent {
         return (
             <AvatarTextPanel
                 avatar={this.props.post_object.creator_info.avatar}
+                default_avatar={this.props.post_object.creator_info.default_avatar}
                 is_description={false}                                    
                 content_id={this.props.post_object._id}
                 content_type={this.props.post_object.post_type}
@@ -153,7 +154,6 @@ class Comment extends React.PureComponent {
                     <QueryComments
                         content_id={this.props.post_object._id}
                         content_type={this.props.post_object.post_type}
-                        content_box={this.props.content_box}
                         bottom_padding={this.state.comment_list_padding}
                         post_object={this.props.post_object}
                         toggle_post_like={this.props.toggle_post_like}                        

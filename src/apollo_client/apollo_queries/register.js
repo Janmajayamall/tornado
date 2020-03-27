@@ -28,13 +28,13 @@ export const REGISTER_USER = gql`
             _id, 
             user_id,
             avatar{
+                _id,
                 image_name,
                 height,
                 width, 
                 cdn_url
             },
             jwt, 
-            email, 
             age, 
             name, 
             three_words, 
@@ -45,6 +45,45 @@ export const REGISTER_USER = gql`
         }
     }
 `
+
+// Mutation 
+export const EDIT_USER_PROFILE = gql`
+    mutation register_users(
+                                $username:String!,
+                                $name:String!,
+                                $bio:String!,
+                                $three_words:String!,
+                                $avatar:image_input,
+                                $last_avatar_id:ID
+                            ){
+        edit_user_profile(user_input:{
+            username:$username,
+            name:$name,
+            bio:$bio,
+            three_words:$three_words,
+            avatar:$avatar,
+            last_avatar_id:$last_avatar_id
+        }){
+            _id, 
+            user_id,
+            avatar{
+                _id,
+                image_name,
+                height,
+                width, 
+                cdn_url
+            },
+            age, 
+            name, 
+            three_words, 
+            bio,
+            username, 
+            default_avatar,
+            timestamp
+        }
+    }
+`
+
 
 //Query
 export const GET_PRESIGNED_URL = gql`

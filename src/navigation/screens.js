@@ -17,6 +17,7 @@ export const CREATE_POST_ROOM_SELECT_SCREEN = "screen.create_post_room_select"
 export const ADD_ROOMS_SCREEN = "screen.add_rooms"
 
 export const PROFILE_SCREEN = "screen.profile"
+export const EDIT_PROFILE_SCREEN = "screen.edit_profile"
 
 
 

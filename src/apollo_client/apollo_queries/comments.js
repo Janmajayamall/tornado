@@ -14,7 +14,12 @@ export const GET_POST_COMMENTS = gql`
             creator_info{
                 username,
                 timestamp,
-                avatar
+                avatar{
+                    width,
+                    height,
+                    image_name, 
+                    cdn_url
+                }
             }, 
             comment_body,
             timestamp,
@@ -31,16 +36,15 @@ export const GET_LOCAL_USER_INFO = gql`
                 image_name,
                 width, 
                 height, 
-                # cdn_url
+                cdn_url
             }, 
             username,
-            email, 
             age, 
             name, 
             three_words, 
             bio, 
             default_avatar,
-            # timestamp
+            timestamp
         }
     }
 `

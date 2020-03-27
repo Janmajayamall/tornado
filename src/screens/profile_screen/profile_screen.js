@@ -28,6 +28,7 @@ import {
 //importing components 
 import ContentList from "./../../custom_components/content_list/content_list"
 import ProfileDetails from "./components/profile_details"
+import SmallButton from "./../../custom_components/buttons/small_button"
 
 //importing helpers & constants
 import {
@@ -37,7 +38,8 @@ import {
 //importing screens and navigation functions
 import { navigation_push_to_screen } from '../../navigation/navigation_routes';
 import {  
-    ADD_ROOMS_SCREEN
+    ADD_ROOMS_SCREEN,
+    EDIT_PROFILE_SCREEN
 } from "./../../navigation/screens";
 
 const window = Dimensions.get("window")
@@ -58,37 +60,74 @@ class ProfileScreen extends React.PureComponent {
             user_info:undefined
         }
 
-        //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        // //binding the topBar add post button 
+        // Navigation.events().bindComponent(this);
 
 
 
     }
 
-    //react native navigation event binded function for action buttons
-    navigationButtonPressed({ buttonId }) {
+    //react native navigation event binded function for action buttons //TODO: remove this function as it is not longer needed for adding rooms
+    // navigationButtonPressed({ buttonId }) {
 
-        if (buttonId===constants.navigation.action_buttons.ADD_ROOM){
-            console.log(buttonId)
-            navigation_push_to_screen(this.props.componentId,
-                    {
-                        screen_name:ADD_ROOMS_SCREEN,
-                        options:{
-                            topBar: {
-                                rightButtons: [
-                                    {
-                                        id: constants.navigation.action_buttons.CREATE_ROOM,
-                                        text:"Create Room"
-                                    }
-                                ]
+    //     if (buttonId===constants.navigation.action_buttons.ADD_ROOM){
+    //         console.log(buttonId)
+    //         navigation_push_to_screen(this.props.componentId,
+    //                 {
+    //                     screen_name:ADD_ROOMS_SCREEN,
+    //                     options:{
+    //                         topBar: {
+    //                             rightButtons: [
+    //                                 {
+    //                                     id: constants.navigation.action_buttons.CREATE_ROOM,
+    //                                     text:"Create Room"
+    //                                 }
+    //                             ]
+    //                         }
+    //                     }
+    //                 }
+    //             )
+    //     }
+
+    // }
+
+
+    navigate_to_add_new_room = () => {
+        navigation_push_to_screen(this.props.componentId,
+            {
+                screen_name:ADD_ROOMS_SCREEN,
+                options:{
+                    topBar: {
+                        rightButtons: [
+                            {
+                                id: constants.navigation.action_buttons.CREATE_ROOM,
+                                text:"Create Room"
                             }
-                        }
+                        ]
                     }
-                )
-        }
-
-        }
+                }
+            }
+        )
+    }
     
+
+    navigate_to_edit_profile = () => {
+        navigation_push_to_screen(this.props.componentId,
+            {
+                screen_name:EDIT_PROFILE_SCREEN,
+                options:{
+                    topBar: {
+                        rightButtons: [
+                            {
+                                id: constants.navigation.action_buttons.EDIT_PROFILE,
+                                text:"Confirm"
+                            }
+                        ]
+                    }
+                }
+            }
+        )
+    }
     
     set_user_info = async(client) => {
 
@@ -101,6 +140,7 @@ class ProfileScreen extends React.PureComponent {
         const {user_info} = await client.readQuery({
             query:GET_LOCAL_USER_INFO
         })
+        console.log(user_info)
         this.setState({
             user_info:user_info
 
@@ -186,6 +226,19 @@ class ProfileScreen extends React.PureComponent {
                                                             width={window.width}
                                                             user_info={this.state.user_info}
                                                         />
+                                                        <View style={styles.small_buttons_container}>
+                                                            <SmallButton
+                                                                button_text={"Edit Profile"}
+                                                                onPress={this.navigate_to_edit_profile}
+                                                            />
+                                                            <SmallButton
+                                                                button_text={"Add Room"}
+                                                                onPress={this.navigate_to_add_new_room}
+                                                            />
+                                                            <SmallButton
+                                                                button_text={"Joined Rooms"}
+                                                            />       
+                                                        </View>
                                                     </View>
                                                 }
                                                 header_display={true}  
@@ -216,6 +269,11 @@ const styles = StyleSheet.create({
         // borderBottomColor:"white",
         // borderBottomWidth:5
     },
+    small_buttons_container:{
+        flexDirection:"row",
+        justifyContent:"space-around",
+        marginTop:10
+    }
 
 })
 

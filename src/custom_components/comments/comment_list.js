@@ -51,6 +51,7 @@ class CommentList extends React.PureComponent{
         return(
             <AvatarTextPanel
                 avatar={object.item.creator_info.avatar}
+                default_avatar={object.item.creator_info.default_avatar}
                 username={object.item.creator_info.username}
                 description={object.item.comment_body}
                 is_description={true}

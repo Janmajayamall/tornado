@@ -28,14 +28,16 @@ class ChooseAvatar extends React.PureComponent{
     static propTypes = {
         width:PropTypes.any,
         upload_img_s3:PropTypes.func,
-        username:PropTypes.string
+        username:PropTypes.string,
+        image_uri:PropTypes.string
     }
 
     constructor(props){
         super(props)
         this.state={
-            image_uri:"https://free4kwallpapers.com/uploads/originals/2015/11/17/beautiful-emma-latest-wallpaper.jpg"
+            image_uri:this.props.image_uri!==undefined?this.props.image_uri:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"
         }
+        console.log(this.props.image_uri)
 
     }
 
@@ -90,18 +92,16 @@ class ChooseAvatar extends React.PureComponent{
                         style={[styles.image_container, {width:this.props.width/2, height:this.props.width/2, borderRadius:this.props.width/4}]}
                     />
                 </View>
+    
                 <TouchableOpacity
                     onPress={this.select_image_from_device}
+                    style={styles.second_container}
                 >
-                    <TouchableOpacity
-                        onPress={this.select_image_from_device}
-                        style={styles.second_container}
-                    >
-                        <Text style={styles.choose_image_text}>
-                            Choose profile image
-                        </Text>
-                    </TouchableOpacity>
+                    <Text style={styles.choose_image_text}>
+                        Choose profile image
+                    </Text>
                 </TouchableOpacity>
+
             </View>
         )
     }

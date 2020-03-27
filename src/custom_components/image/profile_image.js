@@ -14,7 +14,8 @@ class ProfileImage extends React.PureComponent {
     
     static propsTypes = {
         width:PropTypes.any,
-        image_object:PropTypes.object
+        image_object:PropTypes.object,
+        default_avatar:PropTypes.bool
     }
 
     constructor(props){
@@ -24,7 +25,7 @@ class ProfileImage extends React.PureComponent {
         this.state={
             loaded:false,
         }
-
+        console.log(this.props, "this is new")
     }
 
     on_load = () => {
@@ -36,7 +37,7 @@ class ProfileImage extends React.PureComponent {
         return(
             <View>
                 <Image
-                    source={{uri:`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`}}  
+                    source={{uri:!this.props.default_avatar?`${this.props.image_object.cdn_url}w/${this.props.image_object.image_name}`:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"}}  
                     style={[styles.posted_image_style,this.state.loaded?{width:this.props.width, height:this.props.width, borderRadius:this.props.width/2}:{}]} 
                     onLoad={this.on_load()}
                 />

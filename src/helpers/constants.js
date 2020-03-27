@@ -5,7 +5,8 @@ export const constants = {
             VIEW_PROFILE:"view_profile",
             SHARE_POST:"share_post",
             ADD_ROOM:"add_room",
-            CREATE_ROOM:"create_room"
+            CREATE_ROOM:"create_room",
+            EDIT_PROFILE:"edit_profile"
         }
     }
 }

@@ -10,7 +10,7 @@ import {
 import CommentList from "../../../custom_components/comments/comment_list"
 
 //importing queries
-import {GET_POST_COMMENTS} from "../queries/index"
+import {GET_POST_COMMENTS} from "./../../../apollo_client/apollo_queries/index"
 
 const QueryComments = (props) => {
     return(
@@ -18,11 +18,11 @@ const QueryComments = (props) => {
             query={GET_POST_COMMENTS}
             variables={{
                 content_id:props.content_id,
-                content_type:props.content_type, //TODO: make it dynamic
+                content_type:props.content_type,
             }}
         >
             {({loading, error, data, refetch, networkStatus}) => {
-                //TODO: fix the comment retrieval here
+                //TODO: You don't need this thing
                 return(
                     <CommentList
                         comment_list={data ? data.get_post_comments : []}

@@ -44,7 +44,7 @@ export const GET_USER_PROFILE_POSTS = gql`
                 creator_info{
                     user_id, 
                     username,
-                    avatar{
+                    avatar{                    
                         width,
                         height,
                         cdn_url,

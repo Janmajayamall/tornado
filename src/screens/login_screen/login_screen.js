@@ -186,10 +186,13 @@ class Login extends React.PureComponent{
                                     <Mutation
                                         mutation={LOGIN_USER}
                                     >
-                                        {(login_user, {data})=>{
+                                        {(login_user, {data, error})=>{
+
+                                            console.log(error)
 
                                             //after authenticating the user
                                             if (data){
+                                                console.log("Logged in")
                                                 this.setting_up_the_user(data.login_user, client)
                                             }
 
@@ -209,6 +212,7 @@ class Login extends React.PureComponent{
                                                             }
                                                         })
 
+                                            
                                                     }}
                                                 />
                                             )

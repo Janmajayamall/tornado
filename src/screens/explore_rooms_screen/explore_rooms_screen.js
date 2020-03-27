@@ -21,6 +21,7 @@ import {Navigation} from "react-native-navigation"
 import {  
     FEED_SCREEN,
     EXPLORE_ROOMS_SCREEN,
+    PROFILE_SCREEN
 } from "./../../navigation/screens";
 import {  
      navigation_set_root_two_bottoms_tabs
@@ -99,10 +100,19 @@ class ExploreRooms extends React.Component{
 
         navigation_set_root_two_bottoms_tabs(
             {
-                screen_name:FEED_SCREEN
+                screen_name:FEED_SCREEN,  
+                display_text:"FEED"
             }, 
+            { 
+                screen_name:EXPLORE_ROOMS_SCREEN,  
+                display_text:"EXPLORE"
+            },
             {
-                screen_name:EXPLORE_ROOMS_SCREEN
+                screen_name:PROFILE_SCREEN,  
+                display_text:"Profile",
+                props:{
+                is_user_profile:true
+                }
             }
         )
 

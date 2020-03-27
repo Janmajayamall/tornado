@@ -8,6 +8,7 @@ export const setting_up_the_user = async(user_data, apollo_client) => {
     try{
         //setting up the user_info
         const user_info = JSON.stringify(user_data)
+        console.log(user_data,"this is setting")
         await AsyncStorage.setItem("user_info",user_info)
 
         //setting up jwttoken
@@ -22,7 +23,7 @@ export const setting_up_the_user = async(user_data, apollo_client) => {
         data:{
             user_info:{
                 ...user_data,
-                __typename:"User"
+                __typename:"User_account"
             }
         }
     })

@@ -6,7 +6,7 @@ import {
     ScrollView,
     Dimensions,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native'
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
@@ -127,6 +127,7 @@ class ContentBox extends React.PureComponent {
                 <View style={styles.user_content_container}>
                     <AvatarTextPanel
                         avatar={this.props.post_object.creator_info.avatar}
+                        default_avatar={this.props.post_object.creator_info.default_avatar}
                         username={this.props.post_object.creator_info.username}
                         description={this.props.post_object.description}
                         is_description={true}

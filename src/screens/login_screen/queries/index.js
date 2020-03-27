@@ -23,7 +23,7 @@ export const LOGIN_USER = gql`
             username,
             avatar,
             jwt,
-            email,
+            ,
             age,
             user_id
         }
