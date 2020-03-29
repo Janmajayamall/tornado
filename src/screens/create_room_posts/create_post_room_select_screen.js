@@ -10,6 +10,7 @@ import PropTypes from "prop-types"
 import { 
     Query
 } from "react-apollo";
+import { Navigation } from "react-native-navigation"
 
 import base_style from "./../../styles/base"
 
@@ -21,6 +22,11 @@ import {
 //importing custom components 
 import RoomItemDisplay from "../../custom_components/room_display/room_item_display"
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
+
+//import helpers
+import {
+    constants
+} from "./../../helpers/index"
 
 class CreatePostRoomSelect extends React.Component{
 
@@ -34,7 +40,19 @@ class CreatePostRoomSelect extends React.Component{
         super(props)
         this.state = {
         }
+
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
     }
+
+    //for topBar buttons
+    navigationButtonPressed({ buttonId }) {
+    
+        if(buttonId === constants.navigation.action_buttons.DONE_POST_ROOM_SELECTION){
+            Navigation.dismissModal(this.props.componentId)
+        }
+
+    }   
 
     add_room_to_set = (room_id) => {
         this.props.add_room_to_set(room_id)
@@ -69,6 +87,7 @@ class CreatePostRoomSelect extends React.Component{
                                                 add_to_set={this.add_room_to_set}
                                                 remove_from_set={this.remove_room_from_set}
                                                 selected={this.props.rooms_id_set.has(object.item._id)}
+                                                selection_allowed={true}
                                             />
                                         )
                                     }}

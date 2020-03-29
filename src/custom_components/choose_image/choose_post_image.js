@@ -19,7 +19,6 @@ import {
 import base_style from "./../../styles/base"
 
 //import graphql queries/mutation
-import {GET_LOCAL_USER_INFO} from "./../../apollo_client/apollo_queries/index"
 
 
 
@@ -63,17 +62,11 @@ class ChoosePostImage extends React.PureComponent{
     
 
     //dev 
-    select_image_from_device = (client) => {
+    select_image_from_device = () => {
         ImagePicker.openPicker({
                 includeBase64:true
             }).then(image => {
                 const image_uri = `data:${image.mime};base64,${image.data}`
-                const image_extension = image.mime.split("/")[1]
-
-                //getting user_info
-                const {user_info} = client.readQuery({
-                    query:GET_LOCAL_USER_INFO
-                })
 
                 //generating image_obj
                 const image_obj = {
@@ -81,7 +74,6 @@ class ChoosePostImage extends React.PureComponent{
                     width:image.width,
                     height:image.height,
                     image_data:image.data,
-                    file_name:`${user_info.username}_${new Date().toISOString()}.${image_extension}`
                 }
 
                 this.props.upload_img_s3(image_obj)

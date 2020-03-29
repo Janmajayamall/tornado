@@ -25,10 +25,6 @@ export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_t
                         topBar: {
                           rightButtons: [
                             {
-                              id: constants.navigation.action_buttons.VIEW_PROFILE,
-                              text:"Me"
-                            },
-                            {
                               id: constants.navigation.action_buttons.ADD_POST,
                               text:"Add post"
                             }

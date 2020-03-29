@@ -18,6 +18,8 @@ import create_post_room_select_screen from "./../screens/create_room_posts/creat
 import add_rooms_screen from "./../screens/add_rooms_screen/add_rooms_screen"
 import profile_screen from "./../screens/profile_screen/profile_screen"
 import edit_profile_screen from "./../screens/edit_profile_screen/edit_profile_screen"
+import joined_rooms_screen from "./../screens/profile_screen/joined_rooms_screen"
+import room_name_list from "../screens/reusable_screens/room_name_list"
 
 //importing apollo client 
 import apollo_client from './../apollo_client/client_configuration'
@@ -38,7 +40,9 @@ import {
     CREATE_POST_ROOM_SELECT_SCREEN,
     ADD_ROOMS_SCREEN,
     PROFILE_SCREEN,
-    EDIT_PROFILE_SCREEN
+    EDIT_PROFILE_SCREEN,
+    JOINED_ROOMS_SCREEN,
+    ROOM_NAME_LIST
 } from './screens'
 
 export default function () {
@@ -55,5 +59,6 @@ export default function () {
     Navigation.registerComponent(ADD_ROOMS_SCREEN, ()=>enhance_provider_hoc(add_rooms_screen, apollo_client, store))
     Navigation.registerComponent(PROFILE_SCREEN, ()=>enhance_provider_hoc(profile_screen, apollo_client, store))
     Navigation.registerComponent(EDIT_PROFILE_SCREEN, ()=>enhance_provider_hoc(edit_profile_screen, apollo_client, store))
-
+    Navigation.registerComponent(JOINED_ROOMS_SCREEN, ()=>enhance_provider_hoc(joined_rooms_screen, apollo_client, store))
+    Navigation.registerComponent(ROOM_NAME_LIST, ()=>enhance_provider_hoc(room_name_list, apollo_client, store))
 }

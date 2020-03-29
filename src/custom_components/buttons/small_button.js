@@ -28,7 +28,7 @@ class SmallButton extends React.PureComponent {
 
     render(){
         return(
-            <TouchableOpacity s
+            <TouchableOpacity 
                 style={[styles.main_container]}
                 onPress={this.props.onPress}
             >
@@ -45,13 +45,15 @@ class SmallButton extends React.PureComponent {
 
 const styles = StyleSheet.create({
     main_container:{
-        backgroundColor:base_style.color.primary_color,
-        borderColor:base_style.color.primary_color_lighter,
-        padding:5,
-        flexWrap:"wrap"
+        flexWrap:"wrap",        
+        backgroundColor:"#84C9FB",
+        padding:2
     },
     button_text:{
-        ...base_style.typography.small_header
+        ...base_style.typography.small_font,
+        color:"black",
+        // textDecorationLine:"underline",
+        // fontStyle:"italic"
     }
 })
 

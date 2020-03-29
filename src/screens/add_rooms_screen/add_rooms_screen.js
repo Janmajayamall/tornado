@@ -24,7 +24,7 @@ import base_style from "./../../styles/base"
 import {
     GET_ALL_JOINED_ROOMS,
     CREATE_ROOM,
-    GET_LOCAL_USER_INFO
+    GET_USER_INFO
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing custom components 
@@ -50,7 +50,8 @@ class AddRooms extends React.Component{
         super(props)
         this.state = {
             name:"",
-            description:""
+            description:"",
+            loading:false
         }
 
         //binding the topBar add post button 
@@ -61,7 +62,7 @@ class AddRooms extends React.Component{
     navigationButtonPressed({ buttonId }) {
 
         //create room action button is triggered
-        if (buttonId===constants.navigation.action_buttons.CREATE_ROOM){
+        if (buttonId===constants.navigation.action_buttons.CREATE_ROOM && !this.state.loading){
             this.generate_create_room_variables()
         }
     }
@@ -70,7 +71,7 @@ class AddRooms extends React.Component{
         return true
     }
 
-    generate_create_room_variables = () => {
+    generate_create_room_variables = async() => {
 
         //TODO:validate the inputs
         if(!this.validate_inputs()){
@@ -81,19 +82,20 @@ class AddRooms extends React.Component{
         }
 
         //considering all inputs are valid
-        const {user_info} = this.props.client.readQuery({
-            query:GET_LOCAL_USER_INFO
+        const {data} = await this.props.client.query({
+            query:GET_USER_INFO
         })
+        const {user_id} = data.get_user_info
 
-        if(user_info.user_id===undefined){
+        if(user_id===undefined){
             return({
                 variables:{},
                 valid:false
             })
-        }
+        } 
         this.create_room_query({
             variables:{
-                creator_id:user_info.user_id,
+                creator_id:user_id,
                 name:this.state.name, 
                 description:this.state.description
             },

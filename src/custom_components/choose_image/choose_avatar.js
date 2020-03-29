@@ -19,7 +19,6 @@ import {
 import base_style from "./../../styles/base"
 
 //import graphql queries/mutation
-import {GET_LOCAL_USER_INFO} from "./../../apollo_client/apollo_queries/index"
 
 
 

@@ -13,6 +13,7 @@ import {Navigation} from "react-native-navigation"
 import { 
     Mutation, Query
  } from "react-apollo";
+ import base_style from "./../../styles/base"
 
 //customer components
 import AsyncImage from '../image/async_image'
@@ -22,12 +23,20 @@ import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
 import {
     CREATE_LIKE,
     UNLIKE_CONTENT,
-    GET_LOCAL_USER_INFO
+    GET_USER_INFO
 } from "./../../apollo_client/apollo_queries/index"
 
 
-// import screens
-import {COMMENT_SCREEN} from "./../../navigation/screens"
+// import screens & navigation functions
+import {
+    COMMENT_SCREEN,
+    ROOM_NAME_LIST
+} from "./../../navigation/screens"
+import {  
+    navigation_push_to_screen
+} from "./../../navigation/navigation_routes/index";
+
+
 
 
 const window = Dimensions.get('window')
@@ -106,9 +115,43 @@ class ContentBox extends React.PureComponent {
 
     }
 
+    generate_room_ids_name = () => {
+        let room_names = ""
+        this.props.post_object.room_objects.forEach((room_object, index)=>{
+
+            if(index!==0){
+                room_names+=" | "
+            }
+            room_names+=room_object.name
+            
+        })
+        return room_names
+    }
+
+    navigate_to_room_list = () => {
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name:ROOM_NAME_LIST,
+            props:{
+                room_objects:this.props.post_object.room_objects
+            }
+        })
+    }
+
     render(){
         return(
             <View style={styles.main_container}>
+
+                <TouchableOpacity 
+                    style={styles.shared_to_name_container}
+                    onPress={this.navigate_to_room_list}
+                >
+                    <Text 
+                        style={styles.shared_to_name_text}
+                        numberOfLines={1}
+                    >
+                        {`${this.generate_room_ids_name()}`}
+                    </Text>
+                </TouchableOpacity>
 
                 {
 
@@ -136,25 +179,31 @@ class ContentBox extends React.PureComponent {
 
                 {/* comment and like */}
                 <View style={styles.like_comment_main_container}>
-                    <Query query={GET_LOCAL_USER_INFO}>
+                    <Query query={GET_USER_INFO}>
                         {({loading, error, data})=>{
-                            const user_info = data.user_info
 
-                            //TODO: do validating for token and user_id and only render the like button if the user is logged in
-
+                            //getting user_id
+                            const {user_id} = data ? data.get_user_info : {}
+                            
                             return (
                                 <Mutation mutation={this.state.user_liked ? UNLIKE_CONTENT : CREATE_LIKE}>
                                     {(create_like, {})=>{    
                                         return(
                                             <TouchableOpacity 
                                                 onPress={()=>{
+                                                                                                                    
+                                                    if(user_id===undefined){
+                                                        return 
+                                                    }
+
                                                     create_like({
                                                         variables:{
-                                                            user_id:user_info.user_id,
+                                                            user_id:user_id,
                                                             like_type:this.props.post_object.post_type,
                                                             content_id:this.props.post_object._id
                                                         }
                                                     })
+
                                                     this.toggle_like()
                                                 }}
                                                 style={styles.like_container}
@@ -225,6 +274,15 @@ const styles = StyleSheet.create({
     },
     comment_container:{
         width:"50%"
+    },
+    shared_to_name_container:{
+        width:"100%",
+        padding:10,
+    },
+    shared_to_name_text:{
+        ...base_style.typography.small_header,
+        // fontStyle:"italic",
+        // textDecorationLine:"underline"
     }
 
 })

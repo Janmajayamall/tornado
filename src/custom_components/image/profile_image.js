@@ -31,15 +31,15 @@ class ProfileImage extends React.PureComponent {
     on_load = () => {
         this.setState({loaded:true})
     }
-
+    
     render(){
 
         return(
             <View>
                 <Image
-                    source={{uri:!this.props.default_avatar?`${this.props.image_object.cdn_url}w/${this.props.image_object.image_name}`:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"}}  
+                    source={{uri:!this.props.default_avatar?`${this.props.image_object.cdn_url}/w${this.props.image_object.image_name}`:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"}}  
                     style={[styles.posted_image_style,this.state.loaded?{width:this.props.width, height:this.props.width, borderRadius:this.props.width/2}:{}]} 
-                    onLoad={this.on_load()}
+                    // onLoad={this.on_load()}
                 />
                 {
                     this.state.loaded===false ?

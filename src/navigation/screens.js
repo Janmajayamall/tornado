@@ -11,6 +11,8 @@ export const SETTER_SCREEN = "screen.setter"
 
 export const EXPLORE_ROOMS_SCREEN = "screen.explore_rooms"
 export const ROOM_DETAILS_SCREEN = "screen.room_details"
+export const JOINED_ROOMS_SCREEN = "screen.joined_rooms"
+export const ROOM_NAME_LIST = "screen.room_name_list"
 
 export const CREATE_ROOM_POSTS_SCREEN = "screen.create_room_posts"
 export const CREATE_POST_ROOM_SELECT_SCREEN = "screen.create_post_room_select"

@@ -22,7 +22,11 @@ import {
 import {Navigation} from "react-native-navigation"
 
 //importing queries/mutations in gql
-import {CREATE_COMMENT, GET_LOCAL_USER_INFO, GET_POST_COMMENTS} from "./../../apollo_client/apollo_queries/index"
+import {
+    CREATE_COMMENT,
+    GET_POST_COMMENTS, 
+    GET_USER_INFO
+} from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
 import CommentList from "./../../custom_components/comments/comment_list"
@@ -165,7 +169,7 @@ class Comment extends React.PureComponent {
                     onLayout={this.on_comment_container_render}
                     style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}
                 >
-                    <Query query={GET_LOCAL_USER_INFO}>
+                    <Query query={GET_USER_INFO}>
                         {({loading, error, data})=>{
 
                             if (loading){
@@ -174,15 +178,16 @@ class Comment extends React.PureComponent {
 
                             if (error){
                                 console.log("Error in getting user_id from cache")
+                                return <Text>ERROR</Text>
                             }
 
                             //don't let the loading stop until data.user_info is not present. 
                             //TODO: also is user_info is not present then log the user out
-                            if (data.user_info){
+                            if (data){
                                 return(
                                     <Mutation mutation={CREATE_COMMENT}>
                                         {mutate => {
-                                            return this.post_comment(mutate, data.user_info)
+                                            return this.post_comment(mutate, data.get_user_info)
                                         }}                        
                                     </Mutation>
                                 )

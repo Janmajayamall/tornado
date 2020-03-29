@@ -38,7 +38,11 @@ import ListItemDivider from "./../../custom_components/common_decorators/list_it
 import BigButton from "./../../custom_components/buttons/big_buttons"
 
 //importing graphql queries
-import { GET_NOT_JOINED_ROOMS, GET_LOCAL_USER_INFO, BULK_ROOM_FOLLOWS } from "./../../apollo_client/apollo_queries/index";
+import { 
+    GET_NOT_JOINED_ROOMS, 
+    BULK_ROOM_FOLLOWS, 
+    GET_USER_INFO
+} from "./../../apollo_client/apollo_queries/index";
 
 
 class ExploreRooms extends React.Component{
@@ -52,7 +56,7 @@ class ExploreRooms extends React.Component{
     }
 
     add_to_set = (room_id) => {
-        if (this.state.selected_set.has(room_id)){
+        if (this.state.selected_set.has(room_id)){''
             return
         }else{
             this.setState((prev_state)=>{
@@ -111,7 +115,7 @@ class ExploreRooms extends React.Component{
                 screen_name:PROFILE_SCREEN,  
                 display_text:"Profile",
                 props:{
-                is_user_profile:true
+                    is_user:true
                 }
             }
         )
@@ -172,9 +176,9 @@ class ExploreRooms extends React.Component{
                                                                             add_to_set={this.add_to_set}
                                                                             remove_from_set={this.remove_from_set}
                                                                             selected={false}
-                                                                            
+                                                                            selection_allowed={true}
                                                                         />
-                                                                    )
+                                                                )
                                                                 }}
                                                                 ItemSeparatorComponent={()=> {
                                                                     return <ListItemDivider/>
@@ -187,9 +191,11 @@ class ExploreRooms extends React.Component{
                                                                     <View style={styles.join_button_main_view}>
                                                                         <BigButton
                                                                             button_text={"Join Rooms"}
-                                                                            onPress={()=> {
+                                                                            onPress={async()=> {
                                                                                 //getting the user_id 
-                                                                                const {user_info} = client.readQuery({query:GET_LOCAL_USER_INFO}) 
+                                                                                const {user_info} = await client.query({
+                                                                                    query:GET_USER_INFO
+                                                                                }) 
                                                                                 const bulk_join_objects = this.generate_selected_rooms_arr(user_info.user_id)
                                                                                                                                                     
                                                                                 //mutation bulk follow rooms

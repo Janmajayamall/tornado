@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import {
     Mutation,
-    ApolloConsumer
+    ApolloConsumer,
+    withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 
@@ -29,7 +30,6 @@ import {
 import BigButton from "../../custom_components/buttons/big_buttons"
 import SmallButton from "../../custom_components/buttons/small_button"
 import ChoosePostImage from "../../custom_components/choose_image/choose_post_image"
-import client from "../../apollo_client/client_configuration";
 
 //importing all screens
 import { 
@@ -39,9 +39,15 @@ import {
 //importing queries and mutations
 import {  
     GET_PRESIGNED_URL,
-    GET_LOCAL_USER_INFO,
-    CREATE_ROOM_POST
+    GET_USER_INFO,
+    CREATE_ROOM_POST,
+    GET_ROOM_FEED
 } from "./../../apollo_client/apollo_queries/index";
+
+//helpers
+import {
+    constants
+} from "./../../helpers/index"
 
 const window = Dimensions.get("window")
 
@@ -59,13 +65,36 @@ class CreateRoomPosts extends React.PureComponent{
 
         //refs
         this.choose_post_image_ref = React.createRef()
+
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
     }
 
-    get_img_object = (img_obj) => {
-        console.log(img_obj)
-        this.setState({
-            image_object:img_obj
-        })
+    //for topBar buttons
+    navigationButtonPressed({ buttonId }) {
+    
+        if(buttonId === constants.navigation.action_buttons.SHARE_POST){
+            this.create_post()
+        }
+
+    }   
+
+    get_img_object = async(img_obj) => {
+
+        //getting user_info and populating image_object with user_id
+        try{
+            const {data} = await this.props.client.query({
+                query:GET_USER_INFO
+            })
+            const get_user_info = data.get_user_info
+        
+            //adding file_name to img_obj
+            img_obj.file_name=`${get_user_info.user_id}_${new Date().toISOString()}.${img_obj.file_mime.split("/")[1]}`
+            this.setState({image_object:img_obj})
+
+        }catch(e){
+            console.log(e, "get_img_object function error in create_room_posts_screen.js")
+        }
     }
 
     add_room_to_set = (room_id) => {
@@ -92,8 +121,8 @@ class CreateRoomPosts extends React.PureComponent{
         }
     }
 
-    choose_post_image = (client) =>{
-        this.choose_post_image_ref.current.select_image_from_device(client)
+    choose_post_image = () =>{
+        this.choose_post_image_ref.current.select_image_from_device()
     }
 
     open_room_select_modal = () => {
@@ -106,6 +135,16 @@ class CreateRoomPosts extends React.PureComponent{
                     add_room_to_set:this.add_room_to_set,
                     remove_room_from_set:this.remove_room_from_set,
                     rooms_id_set:this.state.rooms_id_set,                     
+                  },
+                  options:{
+                      topBar:{
+                          rightButtons:[
+                              {
+                                  id:constants.navigation.action_buttons.DONE_POST_ROOM_SELECTION,
+                                  text:"Done"
+                              }
+                          ]
+                      }
                   }
                 }
               }]
@@ -114,22 +153,23 @@ class CreateRoomPosts extends React.PureComponent{
           
     }
 
-    componentWillUnmount(){
-        console.log("create_room_posts_screen unmounted")
-    }
+    // componentWillUnmount(){
+    //     console.log("create_room_posts_screen unmounted")
+    // }
 
     validate_all_input = () => {
         //TODO: complete the validation
+        return true
     }
 
-    upload_image_to_s3 = async(client) => {
+    upload_image_to_s3 = async() => {
 
         try{
-            const {data} = await client.query({
+            const {data} = await this.props.client.query({
                 query:GET_PRESIGNED_URL,
                 variables:{
-                     file_name:this.state.image_object.file_name,
-                     file_mime:this.state.image_object.file_mime
+                    file_name:this.state.image_object.file_name,
+                    file_mime:this.state.image_object.file_mime
                  }
             })
 
@@ -159,103 +199,142 @@ class CreateRoomPosts extends React.PureComponent{
 
     }
 
-    generate_create_post_variables = async(client) => {
+    generate_create_post_variables = async() => {
 
         //TODO:validate all this inputs
+        if(!this.validate_all_input()){
+            return({
+                valid:false
+            })
+        }
 
         //get the user_id
-        const {user_info} = client.readQuery({
-            query:GET_LOCAL_USER_INFO
+        const {data} = await this.props.client.query({
+            query:GET_USER_INFO
         })
+        const {user_id} = data.get_user_info
 
         //generate room ids 
-        const room_ids = this.generate_room_ids(user_info.user_id)
+        const room_ids = this.generate_room_ids(user_id)
 
         //generating create_post_variables
-        let create_post_object = {
-            creator_id:user_info.user_id,
-            description:this.state.description,
-            room_ids:room_ids,
-            post_type:"ROOM_POST"
+        let variable_object = {
+            create_post_object:{
+                creator_id:user_id,
+                description:this.state.description,
+                room_ids:room_ids,
+                post_type:"ROOM_POST"
+            },
+            valid:true
         }
 
         //if image is added to the post then upload it first
         if(Object.keys(this.state.image_object).length>0){
-            await this.upload_image_to_s3(client)
-            create_post_object.image = {
-                image_name:this.state.image_object.file_name,
-                width:this.state.image_object.width, 
-                height:this.state.image_object.height
+            try{
+                await this.upload_image_to_s3()
+                variable_object.create_post_object.image = {
+                    image_name:this.state.image_object.file_name,
+                    width:this.state.image_object.width, 
+                    height:this.state.image_object.height
+                }
+            }catch(e){
+                console.log(e, "create_room_posts_screen, while image upload to s3")
+                variable_object.valid=false
             }
+            
         }
 
-        return create_post_object
+        return variable_object
+    }
+
+    create_post = async() => {
+
+        //TODO: start loading
+        const variable_object = await this.generate_create_post_variables()
+
+        //checking whether variable_object are valid or not
+        if (!variable_object.valid){
+            console.log("error, encountered")
+            return 
+        }
+
+        const {cache, data} = await this.props.client.mutate({
+            mutation:CREATE_ROOM_POST,
+            variables:variable_object.create_post_object
+        })
+        console.log(cache,"dawda")
+        console.log(data, "post created")
+        //extracting room_post 
+        const {create_room_post} = data
+
+        //updating feed_screen cache (GET_ROOM_FEED query request)
+        const val = this.props.client.readQuery({
+            query:GET_ROOM_FEED
+        }) 
+        console.log(val)
+        await cache.writeQuery({
+            query:GET_ROOM_FEED,
+            data:{
+                get_room_pos3ts_user_id:{
+                    ...get_room_posts_user_id,
+                    room_posts:[
+                        create_room_post,
+                        ...get_room_posts_user_id.room_posts
+                    ]
+                }
+            }
+        })
+
+        //TODO: stop loading & and go back
+
     }
 
     render(){
         return(
-            <ApolloConsumer>
-                {
-                    client=>{
-                        return(
-                            <ScrollView style={styles.main_container}>
-                                <SafeAreaView >
-                
-                                    <ChoosePostImage
-                                        upload_img_s3={this.get_img_object}
-                                        ref={this.choose_post_image_ref}
-                                        width={window.width}
-                                    />
-                                    <View style={styles.description_container}>
-                                        <TextInput
-                                            style={styles.description_text_input}
-                                            multiline={true}
-                                            value={this.state.description}
-                                            onChangeText={(val)=>{this.setState({description:val})}}
-                                            placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
-                                            placeholderTextColor={"#ffffff"}
-                                        />
-                                    </View>
-                                    <View style={styles.choose_container}>
-                                        <SmallButton
-                                            button_text="Add Image"
-                                            // width={window.width/3}
-                                            onPress={()=>{this.choose_post_image(client)}}
-                                        />
-                                        <SmallButton
-                                            button_text="Select Rooms"
-                                            // width={window.width/3}
-                                            onPress={this.open_room_select_modal}
-                                        />
-                                    </View>
-                                    <Mutation mutation={CREATE_ROOM_POST}>
-                                        {(create_room_post, {data})=>{
+            <ScrollView style={styles.main_container}>
+                <SafeAreaView >
 
-                                            if(data){
-                                                console.log("post created")
-                                            }
+                    <ChoosePostImage
+                        upload_img_s3={this.get_img_object}
+                        ref={this.choose_post_image_ref}
+                        width={window.width}
+                    />
+                    <View style={styles.description_container}>
+                        <TextInput
+                            style={styles.description_text_input}
+                            multiline={true}
+                            value={this.state.description}
+                            onChangeText={(val)=>{this.setState({description:val})}}
+                            placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
+                            placeholderTextColor={"#ffffff"}
+                        />
+                    </View>
+                    <View style={styles.choose_container}>
+                        <SmallButton
+                            button_text="Add photo"
+                            // width={window.width/3}
+                            onPress={()=>{this.choose_post_image()}}
+                        />
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                            {` to the post?`}
+                        </Text>
+                        
+                    </View>   
+                    <View style={styles.choose_container}>
+                        <SmallButton
+                            button_text="Select rooms"
+                            // width={window.width/3}
+                            onPress={this.open_room_select_modal}
+                        />   
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                            {` to share this post with?`}
+                        </Text>
+                        
+                    </View>
 
-                                            return(
-                                                <BigButton
-                                                    button_text={"Share"}
-                                                    onPress={async ()=> {
-                                                        const post_variables = await this.generate_create_post_variables(client)
-                                                        create_room_post({
-                                                            variables:post_variables
-                                                        })
-                                                    }}
-                                                />
-                                            )
-                                        }}                                                                               
-                                    </Mutation>                                 
-                                </SafeAreaView>
-                            </ScrollView>
-                        )
-                    }
-                }
-            </ApolloConsumer>
-
-
+                                    
+                </SafeAreaView>
+            </ScrollView>
         )
     }
 }
@@ -281,7 +360,7 @@ const styles = StyleSheet.create({
     choose_container:{
         flexDirection:"row",
         width:"100%",
-        padding:20
+        padding:10
     },
     choose_image_container:{
         width:"100%",
@@ -291,6 +370,6 @@ const styles = StyleSheet.create({
 
 })
 
-export default CreateRoomPosts
+export default withApollo(CreateRoomPosts)
 
 //TODO: shift the share button to top right on the navigator bar, because it is more UI friendly

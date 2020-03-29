@@ -18,18 +18,18 @@ const get_jwt_asyncstorage = async() => {
   }
 }
 
-const get_user_info_asyncstorage = async() => {
-  try{
-    const user_info_string = await AsyncStorage.getItem("user_info")
-    if (user_info_string){
-      return JSON.parse(user_info_string)
-    }
-    return {}
-  }catch(e){
-    console.log("AsyncStorage Error(user_info not setup): "+e)
-    return {}
-  }
-}
+// const get_user_info_asyncstorage = async() => {
+//   try{
+//     const user_info_string = await AsyncStorage.getItem("user_info")
+//     if (user_info_string){
+//       return JSON.parse(user_info_string)
+//     }
+//     return {}
+//   }catch(e){
+//     console.log("AsyncStorage Error(user_info not setup): "+e)
+//     return {}
+//   }
+// }
 
 const request = async (operation) => {
     // const token = await AsyncStorage.getItem('token');
@@ -62,18 +62,18 @@ const requestLink = new ApolloLink((operation, forward) =>
 
 const cache = new InMemoryCache()
 
-const load_cache_with_user = async(cache) => {
-  const user_info_obj = await get_user_info_asyncstorage()
-  console.log(user_info_obj)
+// const load_cache_with_user = async(cache) => {
+//   const user_info_obj = await get_user_info_asyncstorage()
+//   console.log(user_info_obj)
 
-  cache.writeData({
-    data:{
-      user_info:user_info_obj
-    }
-  })
-}
+//   cache.writeData({
+//     data:{
+//       user_info:user_info_obj
+//     }
+//   })
+// }
 
-load_cache_with_user(cache)
+// load_cache_with_user(cache)
 
 const client = new ApolloClient({
     link: ApolloLink.from([

@@ -17,8 +17,13 @@ import {
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 import {  
-    FEED_SCREEN
+    FEED_SCREEN,
+    PROFILE_SCREEN
 } from "../../navigation/screens";
+import {
+    navigation_push_to_screen
+} from "./../../navigation/navigation_routes/index"
+import PropTypes from "prop-types"
 
 //importing base style 
 import base_style from "../../styles/base"
@@ -33,6 +38,10 @@ import { GET_ROOM_POSTS } from "../../apollo_client/apollo_queries/index";
 
 class RoomDetails extends React.Component{
 
+    static propTypes = {
+        room_object:PropTypes.any
+    }
+
     constructor(props){
         super(props)
 
@@ -41,8 +50,15 @@ class RoomDetails extends React.Component{
         }
     }
 
-
-
+    navigate_to_creator_profile = (user_info) => {
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name:PROFILE_SCREEN,
+            props:{
+                is_user:false,
+                profile_user_info:user_info
+            }
+        })
+    }
 
     render(){
         return(
@@ -55,24 +71,33 @@ class RoomDetails extends React.Component{
                                 query={GET_ROOM_POSTS}
                                 variables={{
                                     limit:5,
-                                    room_id:"5e67c84ab69762f9dfac7c74"
+                                    room_id:this.props.room_object._id
                                 }}
                             >
                                 {({ loading, error, data, fetchMore }) => {
-                                    // console.log(data, error, loading)
+                                    console.log(error)
+                                    if (error){
+                                       return(<Text>Errrrooorr</Text>)
+                                    }
+
+                                    if(loading){
+                                        return(<Text>Loading....</Text>)
+                                    }
+                                                                    
                                     return(
                                         <ContentList
                                             componentId={this.props.componentId}
                                             loading={loading}
                                             room_posts={data ? data.get_room_posts_room_id.room_posts : []}
                                             on_load_more={()=>{
+                                                console.log(data, "this is here")
                                                 fetchMore({
                                                     //getting more posts using cursor
                                                     query:GET_ROOM_POSTS,
                                                     variables:{
                                                         limit:5,
                                                         room_post_cursor:data.get_room_posts_room_id.room_post_cursor,
-                                                        room_id:"5e67c84ab69762f9dfac7c74" //TODO: replace room_id with passed in props room_id
+                                                        room_id:this.props.room_object._id
                                                     },
                                                     updateQuery: (previous_data, {fetchMoreResult}) => {
                                                         //appending to the previous result 
@@ -100,7 +125,14 @@ class RoomDetails extends React.Component{
                                                     })
                                                 }}  
                                             header_display={true}
-                                            header_component={<RoomDetailsPanel/>}
+                                            header_component={
+                                                <RoomDetailsPanel
+                                                    room_object={this.props.room_object}
+                                                    navigate_to_creator_profile={()=>{                                                                            
+                                                        this.navigate_to_creator_profile(this.props.room_object.creator_info)
+                                                    }}
+                                                />
+                                            }
                                         />
                                     )
                                 }}

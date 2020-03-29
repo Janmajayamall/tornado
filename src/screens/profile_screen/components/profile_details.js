@@ -71,12 +71,12 @@ class ProfileDetails extends React.PureComponent{
                         {this.props.user_info.three_words}
                     </Text>
                     <Text style={styles.three_word_text}>
-                        {` | ${get_relative_time_ago(this.props.user_info.timestamp)}`}
+                        {` | joined ${get_relative_time_ago(this.props.user_info.timestamp)}`}
                     </Text>
                 </View>
                 <View style={styles.third_container}>
                     <Text style={styles.bio_text}>
-                        {"this is a very good bio for the user"}
+                        {this.props.user_info.bio}
                     </Text>
                 </View>
             </View>

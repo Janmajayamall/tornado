@@ -6,13 +6,15 @@ import {
     Keyboard,
     ScrollView,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
 } from "react-native";
 import {
     Mutation,
     ApolloConsumer
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+import PropTypes from "prop-types"
 
 //importing base style 
 import base_style from "./../../../styles/base"
@@ -22,8 +24,15 @@ import {get_relative_time_ago} from "./../../../helpers/index"
 
 //importing custom components
 import BigButton from "./../../../custom_components/buttons/big_buttons"
+import ProfileImage from "./../../../custom_components/image/profile_image"
 
+const window = Dimensions.get("window")
 class RoomDetailsPanel extends React.PureComponent{
+
+    static propTypes = {
+        room_object:PropTypes.object,
+        navigate_to_creator_profile:PropTypes.func
+    }
 
     constructor(props){
         super(props)
@@ -45,35 +54,57 @@ class RoomDetailsPanel extends React.PureComponent{
 
                         <View style={styles.first_container}>    
                             <Text style={styles.room_name_text}>
-                                This is a new room
+                                {this.props.room_object.name}
                             </Text>
                         </View>
 
                         <View style={styles.second_container}>
                             <Text style={styles.description_text}>
-                                C'mon join the room and enjoy everything
+                                {this.props.room_object.description}
                             </Text>
                         </View>
 
                         <View style={styles.third_container}>
                             <View style={styles.second_container_first_col}>
-                                <Text style={[styles.description_text, {fontStyle:"italic"}]}>
-                                    120 Members
+                                <Text style={[styles.description_text, {}]}>
+                                    {`${this.props.room_object.room_members_count} ${this.props.room_object.room_members_count===1?"member":"members"}`}
                                 </Text>
                             </View> 
                             <View style={styles.second_container_second_col}>
-                                <Text style={[styles.description_text, {fontStyle:"italic"}]}>
-                                    Created 10m ago
+                                <Text style={[styles.description_text, {}]}>
+                                    {`Created ${get_relative_time_ago(this.props.room_object.timestamp)}`}
                                 </Text>
                             </View>
                         </View>
 
-                        <View style={styles.fourth_container}>
-                            <BigButton
-                                onPress={()=>{console.log('hua')}}
-                                button_text={"Join the room"}
-                            />
-                        </View>
+                        <TouchableOpacity 
+                            style={styles.fourth_container}
+                            onPress={this.props.navigate_to_creator_profile}
+                        >
+                            <View style={styles.creator_first_col}>
+                                <Text style={[styles.description_text, {fontStyle:"italic"}]}>
+                                    {`Created By: ${this.props.room_object.creator_info.username}`}
+                                </Text>
+                            </View> 
+                            <View style={styles.creator_second_col}>
+                                <ProfileImage
+                                    width={window.width*0.15}
+                                    image_object={this.props.room_object.creator_info.avatar}
+                                    default_avatar={this.props.room_object.creator_info.default_avatar}
+                                />
+                            </View>
+                        </TouchableOpacity>
+
+                        {
+                            !this.props.room_object.user_follows ?
+                                <View style={styles.join_button_container}>
+                                    <BigButton
+                                        onPress={()=>{console.log('hua')}}
+                                        button_text={"Join the room"}
+                                    />
+                                </View>:
+                                undefined
+                        }
 
                     </View>
 
@@ -97,19 +128,21 @@ const styles = StyleSheet.create({
     third_container:{
         width:"100%",
         flexDirection:"row",
-        marginTop:10
+        marginTop:10,
+        justifyContent:"space-between"
     },
     fourth_container:{
         width:"100%",
-        marginTop:10
+        flexDirection:"row",
+        marginTop:10,
     },
     second_container_first_col:{
-        width:"50%",
+        // width:"50%",
         // justifyContent:"center",
         // alignItems:"center"
     },
     second_container_second_col:{
-        width:"50%",
+        // width:"50%",
         // justifyContent:"center",
         // alignItems:"center"
     },
@@ -119,6 +152,18 @@ const styles = StyleSheet.create({
     description_text:{
         ...base_style.typography.small_font_paragraph,
         fontWeight:"bold"
+    },
+    creator_first_col:{
+        width:"70%",
+        justifyContent:"center"
+    },
+    creator_second_col:{
+        width:"30%",
+        alignItems:"flex-end"
+    },
+    join_button_container:{
+        width:"100%",
+        marginTop:10
     }
 })
 

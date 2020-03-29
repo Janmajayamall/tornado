@@ -9,6 +9,7 @@ import {
     Keyboard
 } from "react-native";
 import { Navigation } from "react-native-navigation"
+import PropTypes from "prop-types"
 
 //importing custom components
 import ChooseAvatar from "./../../custom_components/choose_image/choose_avatar"
@@ -24,7 +25,8 @@ import {
 } from "./../../apollo_client/apollo_queries/index";
 
 //importing helpers
-import {  
+import { 
+    //validations 
     validate_three_words,
     validate_username,
     validate_name,
@@ -33,13 +35,22 @@ import {
     //aws s3 related
     get_presigned_url,
     upload_image_to_s3,
-    constants    
+    
+    constants,
+
+    //authentication
+    setting_up_the_user
+    
 } from "./../../helpers/index";
 import { EDIT_PROFILE_SCREEN } from "../../navigation/screens";
 
 const window = Dimensions.get("window")
 
 class EditProfile extends React.PureComponent {
+
+    static propTypes = {
+        render_edit_profile_screen:PropTypes.func
+    }
 
     constructor(props){
         super(props)
@@ -149,7 +160,6 @@ class EditProfile extends React.PureComponent {
         //upload the image, if image has been changed
         if (Object.keys(this.state.chosen_avatar).length > 0){
             try{
-                console.log(this.props.client, this.state.chosen_avatar.file_name, this.state.chosen_avatar.file_mime)
                 //get presigned url 
                 const presigned_upload_url = await get_presigned_url(this.props.client, this.state.chosen_avatar.file_name, this.state.chosen_avatar.file_mime)
                 //uploading the image to s3
@@ -171,13 +181,13 @@ class EditProfile extends React.PureComponent {
         }
 
         // mutating the user_profile
-        const data = await this.props.client.mutate({
+        const {data} = await this.props.client.mutate({
             mutation:EDIT_USER_PROFILE,
             variables:edit_user_profile_variables
         })
 
-        console.log(data, "user_profile edit")
-        
+        //re-rendering the profile screen
+        this.props.render_edit_profile_screen()
     }
 
 

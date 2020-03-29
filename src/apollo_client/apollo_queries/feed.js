@@ -29,7 +29,12 @@ export const GET_ROOM_FEED = gql`
                 }, 
                 description,
                 timestamp,
-                post_type
+                post_type,
+                room_objects{
+                    _id,
+                    name,
+                    timestamp
+                }
             },
             next_page,
             room_post_cursor, 

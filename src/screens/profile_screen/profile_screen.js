@@ -20,9 +20,8 @@ import PropTypes from "prop-types"
 
 //importing queries/mutations in gql
 import {
-    GET_ROOM_FEED,
-    GET_LOCAL_USER_INFO,
-    GET_USER_PROFILE_POSTS
+    GET_USER_PROFILE_POSTS,
+    GET_USER_INFO
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
@@ -39,7 +38,8 @@ import {
 import { navigation_push_to_screen } from '../../navigation/navigation_routes';
 import {  
     ADD_ROOMS_SCREEN,
-    EDIT_PROFILE_SCREEN
+    EDIT_PROFILE_SCREEN,
+    JOINED_ROOMS_SCREEN
 } from "./../../navigation/screens";
 
 const window = Dimensions.get("window")
@@ -48,8 +48,10 @@ const window = Dimensions.get("window")
 class ProfileScreen extends React.PureComponent {
 
     static propTypes = {
-        is_user_profile:PropTypes.bool,
-        profile_user_id:PropTypes.string
+        is_user:PropTypes.bool,
+
+        //profile_user_info is only required when is_user is false
+        profile_user_info:PropTypes.object,
     }
 
     constructor(props){
@@ -62,8 +64,6 @@ class ProfileScreen extends React.PureComponent {
 
         // //binding the topBar add post button 
         // Navigation.events().bindComponent(this);
-
-
 
     }
 
@@ -90,6 +90,22 @@ class ProfileScreen extends React.PureComponent {
     //     }
 
     // }
+
+
+    componentDidMount(){
+        // // adding event for navigation
+        // this.navigationEventListener = Navigation.events().bindComponent(this);
+    }
+
+    // //triggers whenever component reappears on the screen
+    // componentDidAppear() {
+    //     console.log("reappeared")
+    //     this.forceUpdate()
+    // }
+
+    render_again = () => {
+        this.forceUpdate()
+    }
 
 
     navigate_to_add_new_room = () => {
@@ -124,6 +140,9 @@ class ProfileScreen extends React.PureComponent {
                             }
                         ]
                     }
+                },
+                props:{
+                    render_edit_profile_screen:this.render_again
                 }
             }
         )
@@ -131,22 +150,110 @@ class ProfileScreen extends React.PureComponent {
     
     set_user_info = async(client) => {
 
-        if(!this.props.is_user_profile){
+        if(!this.props.is_user){
             //get the profile of the user
-            console.log("Profile screen of some other user")
+            this.setState({
+                user_info:this.props.profile_user_info
+            })
             return
         }
 
-        const {user_info} = await client.readQuery({
-            query:GET_LOCAL_USER_INFO
+        const {data} = await client.query({
+            query:GET_USER_INFO
         })
-        console.log(user_info)
+        
         this.setState({
-            user_info:user_info
+            user_info:data.get_user_info
 
         })
     }
 
+    navigation_to_joined_rooms = (query_type) => {
+        let screen_vars = {
+            screen_name:JOINED_ROOMS_SCREEN,
+            props:{
+                query_type:query_type,
+                is_user:false
+            }
+        }
+
+        //adding other_user_id or other_user_id_arr depending on the query type
+        if(!this.props.is_user){
+
+            //set props is_user to false
+            screen_vars.props.is_user=false
+
+            // get_all_created rooms or get_all_joined_rooms
+            if(query_type===constants.queries.get_all_created_rooms || query_type===constants.queries.get_all_joined_rooms){
+                screen_vars.props.other_user_id=this.props.profile_user_info.user_id
+            }
+
+            // get_common_rooms
+            if(query_type===constants.queries.get_common_rooms){
+                screen_vars.props.other_user_id_arr=[this.props.profile_user_info.user_id]
+            }
+        }
+
+        navigation_push_to_screen(this.props.componentId,screen_vars)
+    }
+
+    navigate_to_
+
+    generate_lower_body = () => {
+        
+        //if not user's profile
+        if (!this.props.is_user ){
+            return(
+                <View style={styles.small_buttons_container}>
+                    <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                        {"Rooms "}
+                    </Text>
+                    <SmallButton
+                        button_text={"Created"}
+                        onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_created_rooms)}}
+                    />
+                    <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                        {" , "}
+                    </Text>
+                    <SmallButton
+                        button_text={"Joined"}
+                        onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_joined_rooms)}}
+                    />
+                    <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                        {" & in "}
+                    </Text>
+                    <SmallButton
+                        button_text={"Common"}
+                        onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_common_rooms)}}
+                    />       
+                </View>
+            )
+        }
+
+        return(
+            <View style={styles.small_buttons_container}>
+                <SmallButton
+                    button_text={"Edit profile"}
+                    onPress={this.navigate_to_edit_profile}
+                />
+                <Text style={{...base_style.typography.small_font, fontStyle:"normal"}}>
+                    {"  |  "}
+                </Text>
+                <SmallButton
+                    button_text={"Create a room"}
+                    onPress={this.navigate_to_add_new_room}
+                />
+                <Text style={{...base_style.typography.small_font, fontStyle:"normal"}}>
+                    {"  |  "}
+                </Text>
+                <SmallButton
+                    button_text={"Joined Rooms"}
+                    onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_joined_rooms)}}
+                />       
+            </View>
+        )
+
+    }
 
     render(){
 
@@ -159,9 +266,16 @@ class ProfileScreen extends React.PureComponent {
                             return(
                                 <Query 
                                     query={GET_USER_PROFILE_POSTS}
-                                    variables={{
-                                        limit:5
-                                    }}
+                                    variables={
+                                        this.props.is_user?
+                                        {
+                                            limit:5,                                            
+                                        }:
+                                        {
+                                            limit:5,
+                                            user_id:this.props.profile_user_info.user_id
+                                        }
+                                    }
                                 >
                                     {({ loading, error, data, fetchMore }) => {
 
@@ -189,13 +303,20 @@ class ProfileScreen extends React.PureComponent {
                                                 loading={loading}
                                                 room_posts={data ? data.get_user_profile_posts.room_posts : []}
                                                 on_load_more={()=>{
+
+                                                    //generating variables
+                                                    const fetch_variables = {
+                                                        limit:5,
+                                                        room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
+                                                    }
+                                                    if(!this.props.is_user){
+                                                        fetch_variables.user_id = this.props.profile_user_info.user_id
+                                                    }
+
                                                     fetchMore({
                                                         //getting more posts using cursor
                                                         query:GET_USER_PROFILE_POSTS,
-                                                        variables:{
-                                                            limit:5,
-                                                            room_post_cursor:data.get_user_profile_posts.room_post_cursor
-                                                        },
+                                                        variables:fetch_variables,
                                                         updateQuery: (previous_data, {fetchMoreResult}) => {
                                                             //appending to the previous result 
                         
@@ -226,19 +347,10 @@ class ProfileScreen extends React.PureComponent {
                                                             width={window.width}
                                                             user_info={this.state.user_info}
                                                         />
-                                                        <View style={styles.small_buttons_container}>
-                                                            <SmallButton
-                                                                button_text={"Edit Profile"}
-                                                                onPress={this.navigate_to_edit_profile}
-                                                            />
-                                                            <SmallButton
-                                                                button_text={"Add Room"}
-                                                                onPress={this.navigate_to_add_new_room}
-                                                            />
-                                                            <SmallButton
-                                                                button_text={"Joined Rooms"}
-                                                            />       
-                                                        </View>
+                                                        {
+                                                            this.generate_lower_body()
+                                                        }
+                                                        
                                                     </View>
                                                 }
                                                 header_display={true}  
@@ -271,8 +383,8 @@ const styles = StyleSheet.create({
     },
     small_buttons_container:{
         flexDirection:"row",
-        justifyContent:"space-around",
-        marginTop:10
+        marginTop:10,
+        justifyContent:"center"
     }
 
 })

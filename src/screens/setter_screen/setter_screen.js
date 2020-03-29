@@ -11,18 +11,18 @@ import {
     Query
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+import AsyncStorage from "@react-native-community/async-storage"
 
 //importing base style 
 import base_style from "../../styles/base"
 
 //importing graphql queries
-import {REGISTER_USER} from "./queries/index"
 import base from "../../styles/base";
 
 //import Queries/mutation graphql
 import {
-    GET_LOCAL_USER_INFO
-} from "./queries/index"
+    GET_USER_INFO
+} from "./../../apollo_client/apollo_queries/index"
 
 // importing screens
 import {
@@ -48,61 +48,58 @@ class Setter extends React.PureComponent{
 
         this.state = {
         }
+
+        this.check_user_jwt()
     }
 
     componentDidMount(){
     }
 
-    navigate_to_screen = (data) => {
-        
-        if (data && data.user_info && data.user_info.jwt && data.user_info.user_id){
-            console.log(data, "kjj")
-            navigation_set_root_two_bottoms_tabs(
-                {
-                    screen_name:FEED_SCREEN,  
-                    display_text:"FEED"
-                }, 
-                { 
-                    screen_name:EXPLORE_ROOMS_SCREEN,  
-                    display_text:"EXPLORE"
-                },
-                {
-                    screen_name:PROFILE_SCREEN,  
-                    display_text:"Profile",
-                    props:{
-                    is_user_profile:true
-                    }
-                }
-            )
-
-        }else{
-            navigation_set_root_one_screen({screen_name:REGISTER_SCREEN})
+    check_user_jwt = async() => {
+        try{
+            const jwt = await AsyncStorage.getItem("token")
+            console.log(jwt, "this is here")
+            if (jwt){
+                this.route_to_feed()
+                return
+            }
+            this.route_to_login()
+        }catch(e){
+            console.log("AsyncStorage Error(jwt token not setup): "+e)     
+            this.route_to_login()    
         }
+    }
+
+    route_to_feed = () => {
+        navigation_set_root_two_bottoms_tabs(
+            {
+                screen_name:FEED_SCREEN,  
+                display_text:"FEED"
+            }, 
+            { 
+                screen_name:EXPLORE_ROOMS_SCREEN,  
+                display_text:"EXPLORE"
+            },
+            {
+                screen_name:PROFILE_SCREEN,  
+                display_text:"Profile",
+                props:{
+                is_user:true
+                }
+            }
+        )
+    }
+    
+    route_to_login = () => {
+        //routing the user to login
+        navigation_set_root_one_screen({screen_name:REGISTER_SCREEN})
     }
 
     render(){
         return(
-            <Query query={GET_LOCAL_USER_INFO}>
-                {({loading, error, data})=>{
-            
-                    if (loading){ //somehow loading is undefined in queries to cached data
-                        return(
-                            <View
-                                style={styles.main_container}
-                            />
-                        )
-                    }
-                
-                    if (!loading){
-                        this.navigate_to_screen(data)
-                    }
-
-                    return(
-                        <View></View>
-                    )
-                    
-                }}
-            </Query>
+            <View
+                style={styles.main_container}
+            />
         )
     }
 }
