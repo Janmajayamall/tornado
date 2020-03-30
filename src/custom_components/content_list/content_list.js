@@ -40,6 +40,17 @@ class ContentList extends React.PureComponent{
             return object.item 
         }
 
+        //if post_type: room_caption_post
+        console.log(object.item.caption_objects, "dadw")
+        if(object.item.caption_objects && object.item.caption_objects.length>0){
+            return (
+                <ContentCaptionBox
+                    post_object={object.item}
+                    on_feed={true}
+                    componentId={this.props.componentId}
+                />
+            )
+        }
 
         return(
             <ContentBox

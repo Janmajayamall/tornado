@@ -34,6 +34,26 @@ export const GET_ROOM_FEED = gql`
                     _id,
                     name,
                     timestamp
+                },
+                caption_objects{
+                    post_id,
+                    creator_info{
+                        user_id, 
+                        username,
+                        avatar{
+                            width,
+                            height,
+                            cdn_url,
+                            image_name
+                        },
+                        three_words,
+                        default_avatar
+                    },
+                    timestamp,
+                    likes_count, 
+                    user_liked,
+                    last_modified,
+                    description
                 }
             },
             next_page,

@@ -18,6 +18,7 @@ import {
 //customer components
 import AsyncImage from '../image/async_image'
 import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
+import CaptionPanel from "./caption_panel"
 
 //importing graphql queries
 import {
@@ -45,7 +46,6 @@ class ContentCaptionBox extends React.PureComponent {
     static propTypes = {
         post_object:PropTypes.object,
         om_feed:PropTypes.bool,
-        toggle_post_like:PropTypes.func,
         componentId:PropTypes.any
     }
 
@@ -142,26 +142,27 @@ class ContentCaptionBox extends React.PureComponent {
         return(
             <TouchableOpacity style={styles.main_container}>
 
-                {
-
-                    this.props.post_object.image ? 
+ 
 
                         <View>
                             <AsyncImage
-                                image_object={this.props.post_object.image}
+                                image_object={{
+                                    width: 512,
+                                    height: 512,
+                                    cdn_url: "https://d99qv6hi77isg.cloudfront.net",
+                                    image_name: "5e7d63e09c33fb6a88ff250c_2020-03-28T20:02:53.005Z.jpeg",
+                                }}
                                 window_dimensions={window}
                             />
-                        </View> : 
+                        </View>
 
-                        undefined
-                }
 
                 <View style={styles.user_content_container}>
                     <AvatarTextPanel
                         avatar={this.props.post_object.creator_info.avatar}
                         default_avatar={this.props.post_object.creator_info.default_avatar}
                         username={this.props.post_object.creator_info.username}
-                        description={this.props.post_object.description}
+                        description={""}
                         is_description={true}
                     />
                 </View>
@@ -223,25 +224,22 @@ class ContentCaptionBox extends React.PureComponent {
                     </TouchableOpacity>
                 </View>
 
-                {/* {
-                    this.props..map(e=>{
-                        console.log("ww")
-                        return(
-                            <View style={[styles.user_content_container]}>
-                                <AvatarTextPanel
-                                    avatar={this.props.post_object.creator_info.avatar}
-                                    default_avatar={this.props.post_object.creator_info.default_avatar}
-                                    username={this.props.post_object.creator_info.username}
-                                    description={this.props.post_object.description}
-                                    is_description={true}
-                                />
-                            </View>
-                        )
-                    })
-                }
-                                     */}
+                <View>
+                        {
+                            this.props.post_object.caption_objects ?
+                            this.props.post_object.caption_objects.map(object=>{
+                                return(
+                                    <CaptionPanel
+                                        caption_object={object}
+                                    />
+                                )
+                            }) :
+                            undefined
+                        }
+                </View>
+
                 <View style={[styles.horizontal_line, this.props.on_feed ? {marginBottom:15} : {}]}/>
-                
+                        
 
                 {/* <View style={styles.horizontal_line}/> */}
 
