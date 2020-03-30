@@ -1,3 +1,4 @@
+
 import React from "react"
 import { 
     View,
@@ -17,7 +18,6 @@ import {
     withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
-import PropTypes from "prop-types"
 
 //importing base style 
 import base_style from "../../styles/base"
@@ -34,8 +34,8 @@ import ChoosePostImage from "../../custom_components/choose_image/choose_post_im
 
 //importing all screens
 import { 
-    CREATE_POST_ROOM_SELECT_SCREEN, 
-    CREATE_CAPTION_ROOM_POSTS_SCREEN
+    CREATE_POST_ROOM_SELECT_SCREEN,
+    CREATE_ROOM_POSTS_SCREEN
  } from "../../navigation/screens";
 import {
     navigation_push_to_screen
@@ -49,7 +49,7 @@ import {
     GET_ROOM_FEED,
     GET_USER_PROFILE_POSTS
 } from "./../../apollo_client/apollo_queries/index";
-
+import PropTypes from "prop-types"
 //helpers
 import {
     constants
@@ -57,7 +57,7 @@ import {
 
 const window = Dimensions.get("window")
 
-class CreateRoomPosts extends React.PureComponent{
+class CreateCaptionRoomPosts extends React.PureComponent{
 
     static propsTypes={
         client:PropTypes.any,
@@ -79,7 +79,7 @@ class CreateRoomPosts extends React.PureComponent{
         this.choose_post_image_ref = React.createRef()
 
     }
-
+ 
 
     get_img_object = async(img_obj) => {
 
@@ -221,7 +221,7 @@ class CreateRoomPosts extends React.PureComponent{
                 creator_id:user_id,
                 description:this.state.description,
                 room_ids:room_ids,
-                post_type:"ROOM_POST"
+                post_type:"ROOM_CAPTION_POST"
             },
             valid:true
         }
@@ -288,7 +288,7 @@ class CreateRoomPosts extends React.PureComponent{
                 <SafeAreaView >
 
                     <BigButton
-                        button_text={"Switch to Caption Post"}
+                        button_text={"Switch to Normal Post"}
                         onPress={()=>{
                             this.props.switch_screen_func()
                         }}
@@ -299,16 +299,6 @@ class CreateRoomPosts extends React.PureComponent{
                         ref={this.choose_post_image_ref}
                         width={window.width}
                     />
-                    <View style={styles.description_container}>
-                        <TextInput
-                            style={styles.description_text_input}
-                            multiline={true}
-                            value={this.state.description}
-                            onChangeText={(val)=>{this.setState({description:val})}}
-                            placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
-                            placeholderTextColor={"#ffffff"}
-                        />
-                    </View>
                     <View style={styles.choose_container}>
                         <SmallButton
                             button_text="Add photo"
@@ -316,7 +306,7 @@ class CreateRoomPosts extends React.PureComponent{
                             onPress={()=>{this.choose_post_image()}}
                         />
                         <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
-                            {` to the post?`}
+                            {` to the caption Post`}
                         </Text>
                         
                     </View>   
@@ -370,6 +360,6 @@ const styles = StyleSheet.create({
 
 })
 
-export default CreateRoomPosts
+export default CreateCaptionRoomPosts
 
 //TODO: shift the share button to top right on the navigator bar, because it is more UI friendly

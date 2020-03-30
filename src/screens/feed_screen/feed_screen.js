@@ -30,7 +30,7 @@ import {
 //importing screens and navigation functions
 import { navigation_push_to_screen } from '../../navigation/navigation_routes';
 import {  
-    CREATE_ROOM_POSTS_SCREEN
+    COMMON_CREATE_POSTS_SCREEN
 } from "./../../navigation/screens";
 
 
@@ -56,16 +56,19 @@ class FeedScreen extends React.Component {
         if (buttonId===constants.navigation.action_buttons.ADD_POST){
             navigation_push_to_screen(this.props.componentId,
                     {
-                        screen_name:CREATE_ROOM_POSTS_SCREEN,
+                        screen_name:COMMON_CREATE_POSTS_SCREEN,
                         options:{
                             topBar: {
                                 rightButtons: [
                                     {
                                         id: constants.navigation.action_buttons.SHARE_POST,
-                                        text:"Share"
+                                        text:"New Post"
                                     }
                                 ]
                             }
+                        },
+                        props:{
+                            
                         }
                     }
                 )

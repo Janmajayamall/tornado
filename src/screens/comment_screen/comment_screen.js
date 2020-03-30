@@ -12,7 +12,6 @@ import {
     Dimensions
 } from 'react-native'
 import base_style from './../../styles/base'
-import gql from 'graphql-tag';
 import {
     Query,
     Mutation,
@@ -20,12 +19,14 @@ import {
     ApolloConsumer
 } from 'react-apollo'
 import {Navigation} from "react-native-navigation"
+import PropTypes from "prop-types"
 
 //importing queries/mutations in gql
 import {
     CREATE_COMMENT,
     GET_POST_COMMENTS, 
-    GET_USER_INFO
+    GET_USER_INFO,
+    POST_OBJECT
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
@@ -37,6 +38,10 @@ import base from './../../styles/base';
 const window = Dimensions.get("window")
 
 class Comment extends React.PureComponent {
+
+    static propTypes = {
+        post_id: PropTypes.any
+    }
 
     constructor(props){
         super(props)
@@ -81,15 +86,15 @@ class Comment extends React.PureComponent {
         this.keyboard_will_hide_listener.remove()
     }
 
-    post_comment = (mutate, user_info) => {
+    post_comment = (mutate, user_info, post_object) => {
         
         return (
             <AvatarTextPanel
-                avatar={this.props.post_object.creator_info.avatar}
-                default_avatar={this.props.post_object.creator_info.default_avatar}
+                avatar={post_object.creator_info.avatar}
+                default_avatar={post_object.creator_info.default_avatar}
                 is_description={false}                                    
-                content_id={this.props.post_object._id}
-                content_type={this.props.post_object.post_type}
+                content_id={post_object._id}
+                content_type={post_object.post_type}
                 create_comment_func={(comment_obj)=>{
             
                     //populating comment object with user_id of the user 
@@ -125,7 +130,7 @@ class Comment extends React.PureComponent {
                             const cache_query = {
                                 query:GET_POST_COMMENTS,
                                 variables:{
-                                    content_id:this.props.post_object._id,
+                                    content_id:post_object._id,
                                     content_type:"ROOM_POST"
                                 }
                             }
@@ -151,53 +156,73 @@ class Comment extends React.PureComponent {
     render(){
 
         return(
-            <SafeAreaView
-                style={styles.main_container}
+
+            <Query
+                query={POST_OBJECT}
+                variables={{
+                    _id:this.props.post_id
+                }}
             >
-                <View style={{height:this.state.comment_list_height}}>
-                    <QueryComments
-                        content_id={this.props.post_object._id}
-                        content_type={this.props.post_object.post_type}
-                        bottom_padding={this.state.comment_list_padding}
-                        post_object={this.props.post_object}
-                        toggle_post_like={this.props.toggle_post_like}                        
-                    />
-                </View>
+                {({loading, error, data})=>{
+                    const post_object = data ? data.post_detailed_screen : undefined
+                    if(data && !loading){
+                        return(
+                            <SafeAreaView
+                                style={styles.main_container}
+                            >   
+                                <View style={{height:this.state.comment_list_height}}>                                    
+                                    <QueryComments
+                                        bottom_padding={this.state.comment_list_padding}
+                                        post_object={post_object}
+                                    />                                                              
+                                </View>
+            
+                                {/* creating comment section */}
+                                <View 
+                                    onLayout={this.on_comment_container_render}
+                                    style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}
+                                >
+                                    <Query query={GET_USER_INFO}>
+                                        {({loading, error, data})=>{
+                                            const user_info = data ? data.get_user_info : undefined
+                                            if (loading){
+                                                return <Text>Loadingggg</Text>
+                                            }
+            
+                                            if (error){
+                                                console.log("Error in getting user_id from cache")
+                                                return <Text>ERROR</Text>
+                                            }
+            
+                                            //don't let the loading stop until data.user_info is not present. 
+                                            //TODO: also is user_info is not present then log the user out
+                                            if (data){
+                                                return(
+                                                    <Mutation mutation={CREATE_COMMENT}>
+                                                        {mutate => {
+                                                            return this.post_comment(mutate, user_info, post_object)
+                                                        }}                        
+                                                    </Mutation>
+                                                )
+                                            }    
+                                            
+                                        }}
+                                    </Query>                    
+                                </View>
+            
+                            </SafeAreaView>
+                    
+                        )
+                    }
 
-                {/* creating comment section */}
-                <View 
-                    onLayout={this.on_comment_container_render}
-                    style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}
-                >
-                    <Query query={GET_USER_INFO}>
-                        {({loading, error, data})=>{
+                    return(
+                        <Text>
+                            Loading!!
+                        </Text>
+                    )
 
-                            if (loading){
-                                return <Text>Loadingggg</Text>
-                            }
-
-                            if (error){
-                                console.log("Error in getting user_id from cache")
-                                return <Text>ERROR</Text>
-                            }
-
-                            //don't let the loading stop until data.user_info is not present. 
-                            //TODO: also is user_info is not present then log the user out
-                            if (data){
-                                return(
-                                    <Mutation mutation={CREATE_COMMENT}>
-                                        {mutate => {
-                                            return this.post_comment(mutate, data.get_user_info)
-                                        }}                        
-                                    </Mutation>
-                                )
-                            }    
-                            
-                        }}
-                    </Query>                    
-                </View>
-
-            </SafeAreaView>
+                }}
+            </Query>
 
         )
     }

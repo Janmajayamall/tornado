@@ -117,23 +117,3 @@ const styles = StyleSheet.create({
 })
 
 
-// generate_selected_rooms_arr = (rooms_arr, user_id) => {
-
-//     //TODO: inform the user they haven't selected any room if rooms_arr length is 0
-
-//     if (user_id===undefined || rooms_arr===undefined){
-//         return
-//     }
-    
-//     let final_selected_arr = []
-//     //iterating through selected indexes
-//     for(let index of this.state.selected_set){
-//         final_selected_arr.push({
-//             room_id:rooms_arr[index]._id,
-//             follower_id:user_id,
-//         })
-//     }
-
-//     return final_selected_arr
-
-// }

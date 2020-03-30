@@ -60,7 +60,16 @@ const requestLink = new ApolloLink((operation, forward) =>
   })
 )
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  cacheRedirects:{
+    Query:{
+      post_detailed_screen:(parent, args, {getCacheKey})=>{
+        console.log(args._id, "a")
+        return getCacheKey({__typename:"Room_post_feed", _id:args._id})
+      }
+    }
+  }
+})
 
 // const load_cache_with_user = async(cache) => {
 //   const user_info_obj = await get_user_info_asyncstorage()

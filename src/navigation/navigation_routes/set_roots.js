@@ -97,7 +97,8 @@ export const navigation_set_root_one_screen = (screen_object) => {
             children: [{
               component: {
                 name: screen_object.screen_name,
-                options: screen_object.options
+                options: screen_object.options,
+                props:screen_object.props
               }
             }]
           }

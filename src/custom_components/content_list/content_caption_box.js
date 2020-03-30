@@ -23,8 +23,7 @@ import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
 import {
     CREATE_LIKE,
     UNLIKE_CONTENT,
-    GET_USER_INFO,
-    GET_ROOM_FEED
+    GET_USER_INFO
 } from "./../../apollo_client/apollo_queries/index"
 
 
@@ -37,47 +36,65 @@ import {
     navigation_push_to_screen
 } from "./../../navigation/navigation_routes/index";
 
-//importing helpers
-import {
-    constants
-} from "./../../helpers/index"
-
-
 
 
 const window = Dimensions.get('window')
-class ContentBox extends React.PureComponent {
+
+class ContentCaptionBox extends React.PureComponent {
 
     static propTypes = {
         post_object:PropTypes.object,
         om_feed:PropTypes.bool,
+        toggle_post_like:PropTypes.func,
         componentId:PropTypes.any
     }
 
     constructor(props){
 
         super(props)
-
+        console.log(this.props.post_object, "w")
         this.state={
             img_width:window.width,
             img_height:window.width*1.2,
 
             //for like functionality
-            user_liked:this.props.post_object.user_liked,
-            likes_count:this.props.post_object.likes_count
+            user_liked:false,
+            likes_count:2
         }
+
     }
 
     // componentDidMount(){
     //     console.log("rendered: ContentBox")
     // }
 
+    toggle_like = () => {
+
+        if (this.props.toggle_post_like){
+            this.props.toggle_post_like()
+        }
+
+        // check for clarity
+        if (this.state.likes_count === 0 && this.state.user_liked === true){
+            return
+        }
+
+        this.setState((prev_state)=>{
+            const temp_likes_count = prev_state.user_liked ? prev_state.likes_count-1 : prev_state.likes_count+1
+            return({
+                likes_count:temp_likes_count,
+                user_liked:!prev_state.user_liked
+            })
+        })
+    }
+
     navigate_to_comment_screen = () => {
         Navigation.push(this.props.componentId, {
             component: {
                 name: COMMENT_SCREEN,
                 passProps: {
-                    post_id:this.props.post_object._id,
+                    post_object:{...this.props.post_object, user_liked:this.state.user_liked, likes_count:this.state.likes_count},
+                    toggle_post_like:this.toggle_like
                 },
                 options: {
                     bottomTabs:{
@@ -123,19 +140,7 @@ class ContentBox extends React.PureComponent {
 
     render(){
         return(
-            <View style={styles.main_container}>
-
-                <TouchableOpacity 
-                    style={styles.shared_to_name_container}
-                    onPress={this.navigate_to_room_list}
-                >
-                    <Text 
-                        style={styles.shared_to_name_text}
-                        numberOfLines={1}
-                    >
-                        {`${this.generate_room_ids_name()}`}
-                    </Text>
-                </TouchableOpacity>
+            <TouchableOpacity style={styles.main_container}>
 
                 {
 
@@ -170,69 +175,7 @@ class ContentBox extends React.PureComponent {
                             const {user_id} = data ? data.get_user_info : {}
                             
                             return (
-                                <Mutation 
-                                    mutation={this.props.post_object.user_liked ? UNLIKE_CONTENT : CREATE_LIKE}
-                                    update={(cache, {data})=>{
-                                        
-                                        const {get_room_posts_user_id} = cache.readQuery({
-                                            query:GET_ROOM_FEED,
-                                            variables:{
-                                                limit:5
-                                            }
-                                        })
-                                        
-                                        //getting toggle like result
-                                        const toggle_result = data[`${Object.keys(data)[0]}`]
-                                    
-                                        //taking care of the liked/unliked post & the likes count
-                                        const updated_room_posts_arr = []
-                                        get_room_posts_user_id.room_posts.forEach(post=>{
-                                            if(post._id===toggle_result.content_id){
-                                                const new_post_obj = {
-                                                    ...post
-                                                }
-                                    
-                                    
-                                                if(toggle_result.status===constants.status.active){
-                                                    new_post_obj.user_liked=true
-                                                    new_post_obj.likes_count+=1
-                                                }else{
-                                                    new_post_obj.user_liked=false
-                                                    new_post_obj.likes_count-=1
-                                                }
-                                    
-                                                //pushing it into the arr
-                                                updated_room_posts_arr.push(new_post_obj)
-                                            }else{
-                                                updated_room_posts_arr.push(post)
-                                            }
-                                        })
-                                    
-                                        //updated get_room_posts_user_id object
-                                        const updated_get_room_posts = {
-                                            ...get_room_posts_user_id,
-                                            room_posts:updated_room_posts_arr
-                                        }
-                                    
-                                        //writing it to the cache
-                                        cache.writeQuery({
-                                            query:GET_ROOM_FEED,
-                                            variables:{
-                                                limit:5
-                                            },
-                                            data:{                                            
-                                                get_room_posts_user_id:updated_get_room_posts
-                                            }
-                                        })
-                                    
-                                        this.setState({
-                                            user_liked:!this.state.user_liked,
-                                            likes_count:this.state.user_liked ? this.state.likes_count-1 : this.state.likes_count+1
-                                        })
-                                    
-                                    }}
-
-                                >
+                                <Mutation mutation={this.state.user_liked ? UNLIKE_CONTENT : CREATE_LIKE}>
                                     {(create_like, {})=>{    
                                         return(
                                             <TouchableOpacity 
@@ -250,14 +193,12 @@ class ContentBox extends React.PureComponent {
                                                         }
                                                     })
 
-                                                    // this.setState({
-                                                    //     user
-                                                    // })
+                                                    this.toggle_like()
                                                 }}
                                                 style={styles.like_container}
                                             >
-                                                <Text style={{backgroundColor:this.props.post_object.user_liked ? "white":"red"}}>
-                                                    {this.props.post_object.likes_count}
+                                                <Text style={{backgroundColor:this.state.user_liked ? "white":"red"}}>
+                                                    {this.state.likes_count}
                                                 </Text>
                                             </TouchableOpacity>
                                         )
@@ -282,9 +223,29 @@ class ContentBox extends React.PureComponent {
                     </TouchableOpacity>
                 </View>
 
+                {/* {
+                    this.props..map(e=>{
+                        console.log("ww")
+                        return(
+                            <View style={[styles.user_content_container]}>
+                                <AvatarTextPanel
+                                    avatar={this.props.post_object.creator_info.avatar}
+                                    default_avatar={this.props.post_object.creator_info.default_avatar}
+                                    username={this.props.post_object.creator_info.username}
+                                    description={this.props.post_object.description}
+                                    is_description={true}
+                                />
+                            </View>
+                        )
+                    })
+                }
+                                     */}
                 <View style={[styles.horizontal_line, this.props.on_feed ? {marginBottom:15} : {}]}/>
                 
-            </View>
+
+                {/* <View style={styles.horizontal_line}/> */}
+
+            </TouchableOpacity>
         )
     }
 
@@ -332,6 +293,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default ContentBox
-
-
+export default ContentCaptionBox

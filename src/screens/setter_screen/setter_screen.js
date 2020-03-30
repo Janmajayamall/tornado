@@ -65,7 +65,6 @@ class Setter extends React.PureComponent{
             }
             this.route_to_login()
         }catch(e){
-            console.log("AsyncStorage Error(jwt token not setup): "+e)     
             this.route_to_login()    
         }
     }
@@ -92,7 +91,7 @@ class Setter extends React.PureComponent{
     
     route_to_login = () => {
         //routing the user to login
-        navigation_set_root_one_screen({screen_name:REGISTER_SCREEN})
+        navigation_set_root_one_screen({screen_name:FEED_SCREEN}) //change this to REGISTER_SCREEN
     }
 
     render(){

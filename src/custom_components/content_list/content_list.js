@@ -11,6 +11,7 @@ import PropTypes from 'prop-types'
 
 //custom components
 import ContentBox from "./content_box"
+import ContentCaptionBox from "./content_caption_box"
 
 
 class ContentList extends React.PureComponent{
@@ -36,8 +37,9 @@ class ContentList extends React.PureComponent{
     render_item_list = (object) => {
 
         if (this.props.header_display===true && object.index===0){
-            return object.item
+            return object.item 
         }
+
 
         return(
             <ContentBox

@@ -64,7 +64,9 @@ export const CREATE_COMMENT = gql`
             _id, 
             content_id, 
             comment_body,
-            content_type
+            content_type,
+            user_id,
+            status
         }
     }
 `;

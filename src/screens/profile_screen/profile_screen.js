@@ -325,14 +325,14 @@ class ProfileScreen extends React.PureComponent {
                                                             }
                         
                                                             const new_posts_arr = [
-                                                                ...previous_data.get_room_posts_user_id.room_posts,
-                                                                ...fetchMoreResult.get_room_posts_user_id.room_posts
+                                                                ...previous_data.get_user_profile_posts.room_posts,
+                                                                ...fetchMoreResult.get_user_profile_posts.room_posts
                                                             ]
                         
                                                             const new_data_object = {
                                                                 ...fetchMoreResult, 
-                                                                get_room_posts_user_id:{
-                                                                    ...fetchMoreResult.get_room_posts_user_id,
+                                                                get_user_profile_posts:{
+                                                                    ...fetchMoreResult.get_user_profile_posts,
                                                                     room_posts:new_posts_arr
                                                                 }
                                                             }

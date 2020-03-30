@@ -14,5 +14,13 @@ export const constants = {
         get_all_joined_rooms:"GET_ALL_JOINED_ROOMS",
         get_all_created_rooms:"GET_ALL_CREATED_ROOMS",
         get_common_rooms:"GET_COMMON_ROOMS"
+    },
+    create_post_type:{
+        room_post:"ROOM_POST",
+        room_caption_post:"ROOM_CAPTION_POST"
+    },
+    status:{
+        active:"ACTIVE",
+        not_active:"NOT_ACTIVE"
     }
 }

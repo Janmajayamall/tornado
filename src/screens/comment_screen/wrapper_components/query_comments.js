@@ -17,8 +17,8 @@ const QueryComments = (props) => {
         <Query
             query={GET_POST_COMMENTS}
             variables={{
-                content_id:props.content_id,
-                content_type:props.content_type,
+                content_id:props.post_object._id,
+                content_type:props.post_object.post_type,
             }}
         >
             {({loading, error, data, refetch, networkStatus}) => {
@@ -34,7 +34,6 @@ const QueryComments = (props) => {
                         }}
                         network_status={networkStatus}
                         bottom_padding={props.bottom_padding}
-                        toggle_post_like={props.toggle_post_like}
                     />
                 )
 
