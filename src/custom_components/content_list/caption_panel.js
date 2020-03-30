@@ -7,11 +7,13 @@ import PropTypes from "prop-types"
 
 //importing components
 import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
+import { constants } from "../../helpers";
 
 class CaptionPanel extends React.PureComponent{
 
     static propTypes = {
-        caption_object:PropTypes.any
+        caption_object:PropTypes.any,
+        caption_index:PropTypes.any
     }
 
     constructor(props){
@@ -26,11 +28,10 @@ class CaptionPanel extends React.PureComponent{
         return(
             <View style={styles.main_container}>
                 <AvatarTextPanel
-                    avatar={this.props.caption_object.creator_info.avatar}
-                    default_avatar={this.props.caption_object.creator_info.default_avatar}
-                    username={this.props.caption_object.creator_info.username}
-                    description={`${this.props.caption_object.description}. \n this is a very new thing, \n and I think that people want it`}
-                    is_description={true}
+                    user_object={this.props.caption_object.creator_info}
+                    panel_type={constants.avatar_text_panel_type.caption}
+                    caption_object={this.props.caption_object}
+                    caption_index={this.props.caption_index}
                 />            
             </View>                                          
         )

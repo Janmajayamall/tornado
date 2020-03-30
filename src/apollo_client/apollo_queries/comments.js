@@ -20,6 +20,7 @@ export const GET_POST_COMMENTS = gql`
                     image_name, 
                     cdn_url
                 }
+                default_avatar
             }, 
             comment_body,
             timestamp,
@@ -65,8 +66,6 @@ export const CREATE_COMMENT = gql`
             content_id, 
             comment_body,
             content_type,
-            user_id,
-            status
         }
     }
 `;

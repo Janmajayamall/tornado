@@ -22,5 +22,11 @@ export const constants = {
     status:{
         active:"ACTIVE",
         not_active:"NOT_ACTIVE"
+    },
+    avatar_text_panel_type:{
+        user:"USER",
+        comment_display:"COMMENT_DISPLAY",
+        comment_input:"COMMENT_INPUT",
+        caption:"CAPTION"
     }
 }

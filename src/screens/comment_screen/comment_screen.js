@@ -34,6 +34,7 @@ import CommentList from "./../../custom_components/comments/comment_list"
 import AvatarTextPanel from "./../../custom_components/user_attributes/avatar_text_panel"
 import QueryComments from "./wrapper_components/query_comments"
 import base from './../../styles/base';
+import { constants } from '../../helpers'
 
 const window = Dimensions.get("window")
 
@@ -90,41 +91,27 @@ class Comment extends React.PureComponent {
         
         return (
             <AvatarTextPanel
-                avatar={post_object.creator_info.avatar}
-                default_avatar={post_object.creator_info.default_avatar}
-                is_description={false}                                    
-                content_id={post_object._id}
-                content_type={post_object.post_type}
-                create_comment_func={(comment_obj)=>{
-            
-                    //populating comment object with user_id of the user 
-                    comment_obj.user_id = user_info.user_id
+                user_object={post_object.creator_info}
+                panel_type={constants.avatar_text_panel_type.comment_input}
+                create_comment_func={(comment_body)=>{
+
+                    //generating variables object for comment input
+                    const variables = {
+                        content_id:post_object._id,
+                        content_type:post_object.post_type,
+                        comment_body:comment_body,
+                        user_id:user_info.user_id
+                    }
 
                     mutate({
-                        variables:comment_obj,
-                        optimisticResponse:{
-                            __typename: "Mutation",
-                            create_comment:{
-                                _id:"fake id",
-                                content_id:comment_obj.content_id,
-                                content_type:comment_obj.content_type,
-                                comment_body:comment_obj.comment_body,
-                                __typename:"Comment_with_creator",
-                            }
-                        },
+                        variables:variables,
                         update:(proxy, {data:{create_comment}})=>{
-
-                            //converting create_comment object to get_comments object
+                            //generating comment object temp
                             const get_comment_obj = {
                                 ...create_comment,
                                 timestamp:new Date().toISOString(),
                                 last_modified:new Date().toISOString(),
-                                creator_info:{
-                                    username: user_info.username, 
-                                    avatar: user_info.avatar,
-                                    timestamp: new Date().toISOString(), 
-                                    __typename: "User_account"
-                                }                                                 
+                                creator_info:user_info                                                
                             }
 
                             const cache_query = {
@@ -134,14 +121,24 @@ class Comment extends React.PureComponent {
                                     content_type:"ROOM_POST"
                                 }
                             }
+
+                            //reading query response from cache
                             const data = proxy.readQuery(cache_query)
-                            proxy.writeQuery({...cache_query, data:{
-                                ...data,
-                                get_post_comments:[
-                                    ...data.get_post_comments,
-                                    get_comment_obj
-                                ]
-                            }})
+
+                            //appending it to get_post_comments arr 
+                            data.get_post_comments.push(get_comment_obj)
+
+                            //writing the update get_post_comments data to cache
+                            proxy.writeQuery({
+                                query:GET_POST_COMMENTS,
+                                variables:{
+                                    content_id:post_object._id,
+                                    content_type:post_object.post_type
+                                },
+                                data:{
+                                    ...data
+                                }
+                            })
                         }
                     })
                 }}
@@ -185,6 +182,7 @@ class Comment extends React.PureComponent {
                                     <Query query={GET_USER_INFO}>
                                         {({loading, error, data})=>{
                                             const user_info = data ? data.get_user_info : undefined
+
                                             if (loading){
                                                 return <Text>Loadingggg</Text>
                                             }

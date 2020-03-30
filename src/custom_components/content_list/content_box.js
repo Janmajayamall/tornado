@@ -18,6 +18,7 @@ import {
 //customer components
 import AsyncImage from '../image/async_image'
 import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
+import HyperLinkText from "./../text/hyper_link_text"
 
 //importing graphql queries
 import {
@@ -39,7 +40,8 @@ import {
 
 //importing helpers
 import {
-    constants
+    constants,
+    get_relative_time_ago
 } from "./../../helpers/index"
 
 
@@ -125,6 +127,14 @@ class ContentBox extends React.PureComponent {
         return(
             <View style={styles.main_container}>
 
+                <View style={styles.user_content_container}>
+                    <AvatarTextPanel
+                        user_object={this.props.post_object.creator_info}
+                        panel_type={constants.avatar_text_panel_type.user}
+                    />
+                </View>
+
+                {/* room list container */}
                 <TouchableOpacity 
                     style={styles.shared_to_name_container}
                     onPress={this.navigate_to_room_list}
@@ -137,6 +147,7 @@ class ContentBox extends React.PureComponent {
                     </Text>
                 </TouchableOpacity>
 
+                {/* post image container */}
                 {
 
                     this.props.post_object.image ? 
@@ -151,15 +162,16 @@ class ContentBox extends React.PureComponent {
                         undefined
                 }
 
-                <View style={styles.user_content_container}>
-                    <AvatarTextPanel
-                        avatar={this.props.post_object.creator_info.avatar}
-                        default_avatar={this.props.post_object.creator_info.default_avatar}
-                        username={this.props.post_object.creator_info.username}
-                        description={this.props.post_object.description}
-                        is_description={true}
-                    />
+                {/* description container */}
+                <View style={styles.description_container}>
+                    <HyperLinkText style={base_style.typography.small_font_paragraph}>
+                        {this.props.post_object.description}
+                    </HyperLinkText>
+                    <Text style={[base_style.typography.small_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
+                        {`about ${get_relative_time_ago(this.props.post_object.timestamp)}`}
+                    </Text>
                 </View>
+                
 
                 {/* comment and like */}
                 <View style={styles.like_comment_main_container}>
@@ -322,12 +334,20 @@ const styles = StyleSheet.create({
     },
     shared_to_name_container:{
         width:"100%",
-        padding:10,
+        paddingLeft:10,
+        paddingRight:10,
+        marginTop:5
     },
     shared_to_name_text:{
         ...base_style.typography.small_header,
         // fontStyle:"italic",
         // textDecorationLine:"underline"
+    },
+    description_container:{
+        width:"100%",
+        paddingLeft:10,
+        paddingRight:10,
+        marginTop:5
     }
 
 })

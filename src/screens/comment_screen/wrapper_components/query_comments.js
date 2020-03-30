@@ -23,6 +23,7 @@ const QueryComments = (props) => {
         >
             {({loading, error, data, refetch, networkStatus}) => {
                 //TODO: You don't need this thing
+                console.log(data, "ass")
                 return(
                     <CommentList
                         comment_list={data ? data.get_post_comments : []}

@@ -13,6 +13,11 @@ import PropTypes from 'prop-types'
 import AvatarTextPanel from "./../user_attributes/avatar_text_panel"
 import ContentBox from "./../content_list/content_box"
 
+//importing helpers
+import {
+    constants
+} from "./../../helpers/index"
+
 
 class CommentList extends React.PureComponent{
 
@@ -50,11 +55,9 @@ class CommentList extends React.PureComponent{
 
         return(
             <AvatarTextPanel
-                avatar={object.item.creator_info.avatar}
-                default_avatar={object.item.creator_info.default_avatar}
-                username={object.item.creator_info.username}
-                description={object.item.comment_body}
-                is_description={true}
+                user_object={object.item.creator_info}
+                panel_type={constants.avatar_text_panel_type.comment_display}
+                description={object.item.comment_body}                
             />
         )
     }

@@ -36,6 +36,9 @@ import {
 import {  
     navigation_push_to_screen
 } from "./../../navigation/navigation_routes/index";
+import { 
+    constants 
+} from '../../helpers';
 
 
 
@@ -63,10 +66,6 @@ class ContentCaptionBox extends React.PureComponent {
         }
 
     }
-
-    // componentDidMount(){
-    //     console.log("rendered: ContentBox")
-    // }
 
     toggle_like = () => {
 
@@ -143,6 +142,12 @@ class ContentCaptionBox extends React.PureComponent {
             <TouchableOpacity style={styles.main_container}>
 
  
+            <View style={styles.user_content_container}>
+                <AvatarTextPanel
+                    user_object={this.props.post_object.creator_info}
+                    panel_type={constants.avatar_text_panel_type.user}
+                />
+            </View>
 
                         <View>
                             <AsyncImage
@@ -157,15 +162,6 @@ class ContentCaptionBox extends React.PureComponent {
                         </View>
 
 
-                <View style={styles.user_content_container}>
-                    <AvatarTextPanel
-                        avatar={this.props.post_object.creator_info.avatar}
-                        default_avatar={this.props.post_object.creator_info.default_avatar}
-                        username={this.props.post_object.creator_info.username}
-                        description={""}
-                        is_description={true}
-                    />
-                </View>
 
                 {/* comment and like */}
                 <View style={styles.like_comment_main_container}>
@@ -227,10 +223,11 @@ class ContentCaptionBox extends React.PureComponent {
                 <View>
                         {
                             this.props.post_object.caption_objects ?
-                            this.props.post_object.caption_objects.map(object=>{
+                            this.props.post_object.caption_objects.map((object,index)=>{
                                 return(
                                     <CaptionPanel
                                         caption_object={object}
+                                        caption_index={index}
                                     />
                                 )
                             }) :
