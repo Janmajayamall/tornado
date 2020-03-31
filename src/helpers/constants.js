@@ -28,5 +28,9 @@ export const constants = {
         comment_display:"COMMENT_DISPLAY",
         comment_input:"COMMENT_INPUT",
         caption:"CAPTION"
+    },
+    comment_list_query_type:{
+        caption_query:"CAPTION_QUERY",
+        comment_query:"COMMENT_QUERY"
     }
 }

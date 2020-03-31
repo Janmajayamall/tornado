@@ -18,19 +18,6 @@ const get_jwt_asyncstorage = async() => {
   }
 }
 
-// const get_user_info_asyncstorage = async() => {
-//   try{
-//     const user_info_string = await AsyncStorage.getItem("user_info")
-//     if (user_info_string){
-//       return JSON.parse(user_info_string)
-//     }
-//     return {}
-//   }catch(e){
-//     console.log("AsyncStorage Error(user_info not setup): "+e)
-//     return {}
-//   }
-// }
-
 const request = async (operation) => {
     // const token = await AsyncStorage.getItem('token');
     operation.setContext({
@@ -64,7 +51,6 @@ const cache = new InMemoryCache({
   cacheRedirects:{
     Query:{
       post_detailed_screen:(parent, args, {getCacheKey})=>{
-        console.log(args._id, "a")
         return getCacheKey({__typename:"Room_post_feed", _id:args._id})
       }
     }

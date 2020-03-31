@@ -50,6 +50,35 @@ export const GET_LOCAL_USER_INFO = gql`
     }
 `
 
+export const GET_POST_CAPTIONS = gql`
+    query get_post_caption($post_id:ID!){
+        get_post_captions(post_id:$post_id){
+            _id,
+            post_id,
+            creator_info{
+                user_id,
+                avatar{
+                    image_name,
+                    width, 
+                    height, 
+                    cdn_url
+                }, 
+                username,
+                three_words
+            },
+            timestamp,
+            last_modified,        
+            description,     
+            up_votes_count, 
+            down_votes_count,  
+            user_vote_object{
+                _id, 
+                content_id, 
+                vote_type
+            }
+        }
+    }
+`
 
 //Mutations
 export const CREATE_COMMENT = gql`
@@ -103,5 +132,19 @@ export const UNLIKE_CONTENT = gql`
             status
         }
     }
+`
 
+export const TOGGLE_VOTE = gql`
+
+    mutation toggle_votes($content_id:ID!, $vote_type:String!, $content_type:String!){
+        toggle_vote(user_input:{
+            content_id:$content_id, 
+            vote_type:$vote_type, 
+            content_type:$content_type
+        }){
+            content_id,
+            vote_type,
+            content_type
+        }
+    }
 `

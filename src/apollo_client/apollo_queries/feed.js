@@ -36,6 +36,7 @@ export const GET_ROOM_FEED = gql`
                     timestamp
                 },
                 caption_objects{
+                    _id,
                     post_id,
                     creator_info{
                         user_id, 
@@ -50,10 +51,15 @@ export const GET_ROOM_FEED = gql`
                         default_avatar
                     },
                     timestamp,
-                    likes_count, 
-                    user_liked,
                     last_modified,
-                    description
+                    description,
+                    up_votes_count, 
+                    down_votes_count,
+                    user_vote_object{
+                        _id, 
+                        content_id, 
+                        vote_type
+                    }
                 }
             },
             next_page,

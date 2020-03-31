@@ -37,7 +37,8 @@ import {
     navigation_push_to_screen
 } from "./../../navigation/navigation_routes/index";
 import { 
-    constants 
+    constants,
+    get_relative_time_ago
 } from '../../helpers';
 
 
@@ -55,7 +56,6 @@ class ContentCaptionBox extends React.PureComponent {
     constructor(props){
 
         super(props)
-        console.log(this.props.post_object, "w")
         this.state={
             img_width:window.width,
             img_height:window.width*1.2,
@@ -65,6 +65,7 @@ class ContentCaptionBox extends React.PureComponent {
             likes_count:2
         }
 
+        console.log(this.props, "this is lifesss")
     }
 
     toggle_like = () => {
@@ -92,8 +93,8 @@ class ContentCaptionBox extends React.PureComponent {
             component: {
                 name: COMMENT_SCREEN,
                 passProps: {
-                    post_object:{...this.props.post_object, user_liked:this.state.user_liked, likes_count:this.state.likes_count},
-                    toggle_post_like:this.toggle_like
+                    post_id:this.props.post_object._id,
+                    query_type:constants.comment_list_query_type.caption_query
                 },
                 options: {
                     bottomTabs:{
@@ -139,29 +140,38 @@ class ContentCaptionBox extends React.PureComponent {
 
     render(){
         return(
-            <TouchableOpacity style={styles.main_container}>
+            <View 
+                style={styles.main_container}
+            
+            >
 
- 
-            <View style={styles.user_content_container}>
-                <AvatarTextPanel
-                    user_object={this.props.post_object.creator_info}
-                    panel_type={constants.avatar_text_panel_type.user}
-                />
-            </View>
+                {/* avatar panel */}
+                <View style={styles.user_content_container}>
+                    <AvatarTextPanel
+                        user_object={this.props.post_object.creator_info}
+                        panel_type={constants.avatar_text_panel_type.user}
+                    />
+                </View>
 
-                        <View>
-                            <AsyncImage
-                                image_object={{
-                                    width: 512,
-                                    height: 512,
-                                    cdn_url: "https://d99qv6hi77isg.cloudfront.net",
-                                    image_name: "5e7d63e09c33fb6a88ff250c_2020-03-28T20:02:53.005Z.jpeg",
-                                }}
-                                window_dimensions={window}
-                            />
-                        </View>
+                {/* displaying the post image */}
+                <View>
+                    <AsyncImage
+                        image_object={{
+                            width: 512,
+                            height: 512,
+                            cdn_url: "https://d99qv6hi77isg.cloudfront.net",
+                            image_name: "5e7d63e09c33fb6a88ff250c_2020-03-28T20:02:53.005Z.jpeg",
+                        }}
+                        window_dimensions={window}
+                    />
+                </View>
 
-
+                {/* time & number of likes */}
+                <View style={styles.time_likes_count_container}>
+                    <Text style={[base_style.typography.small_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
+                        {`about ${get_relative_time_ago(this.props.post_object.timestamp)}`}
+                    </Text>
+                </View>
 
                 {/* comment and like */}
                 <View style={styles.like_comment_main_container}>
@@ -220,6 +230,7 @@ class ContentCaptionBox extends React.PureComponent {
                     </TouchableOpacity>
                 </View>
 
+                {/* displaying top rated captions */}
                 <View>
                         {
                             this.props.post_object.caption_objects ?
@@ -240,7 +251,7 @@ class ContentCaptionBox extends React.PureComponent {
 
                 {/* <View style={styles.horizontal_line}/> */}
 
-            </TouchableOpacity>
+            </View>
         )
     }
 
@@ -284,6 +295,9 @@ const styles = StyleSheet.create({
         ...base_style.typography.small_header,
         // fontStyle:"italic",
         // textDecorationLine:"underline"
+    },
+    time_likes_count_container:{
+        width:"100%"
     }
 
 })

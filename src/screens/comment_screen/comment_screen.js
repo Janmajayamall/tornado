@@ -30,7 +30,6 @@ import {
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
-import CommentList from "./../../custom_components/comments/comment_list"
 import AvatarTextPanel from "./../../custom_components/user_attributes/avatar_text_panel"
 import QueryComments from "./wrapper_components/query_comments"
 import base from './../../styles/base';
@@ -41,7 +40,8 @@ const window = Dimensions.get("window")
 class Comment extends React.PureComponent {
 
     static propTypes = {
-        post_id: PropTypes.any
+        post_id: PropTypes.any,
+        query_type:PropTypes.string
     }
 
     constructor(props){
@@ -52,8 +52,7 @@ class Comment extends React.PureComponent {
             post_comment_box_padding:0,
             comment_container_height:0
         }
-
-        console.log(this.props)
+        console.log(this.props, "lllll")
     }   
 
     componentDidMount(){
@@ -88,7 +87,6 @@ class Comment extends React.PureComponent {
     }
 
     post_comment = (mutate, user_info, post_object) => {
-        
         return (
             <AvatarTextPanel
                 user_object={post_object.creator_info}
@@ -171,6 +169,7 @@ class Comment extends React.PureComponent {
                                     <QueryComments
                                         bottom_padding={this.state.comment_list_padding}
                                         post_object={post_object}
+                                        query_type={this.props.query_type}
                                     />                                                              
                                 </View>
             

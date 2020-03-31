@@ -63,10 +63,6 @@ class ContentBox extends React.PureComponent {
         this.state={
             img_width:window.width,
             img_height:window.width*1.2,
-
-            //for like functionality
-            user_liked:this.props.post_object.user_liked,
-            likes_count:this.props.post_object.likes_count
         }
     }
 
@@ -80,6 +76,7 @@ class ContentBox extends React.PureComponent {
                 name: COMMENT_SCREEN,
                 passProps: {
                     post_id:this.props.post_object._id,
+                    query_type:constants.comment_list_query_type.comment_query
                 },
                 options: {
                     bottomTabs:{

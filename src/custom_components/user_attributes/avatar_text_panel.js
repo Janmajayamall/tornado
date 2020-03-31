@@ -8,10 +8,12 @@ import {
     StyleSheet
 } from "react-native"
 
+
 import ProfileImage from "./../image/profile_image"
 import PropTypes from "prop-types"
-import base from "../../styles/base"
+import base_style from "../../styles/base"
 import HyperLinkText from "../../custom_components/text/hyper_link_text"
+import VotingPanel from "./voting_panel"
 
 //importing helpers
 import {
@@ -70,7 +72,7 @@ class AvatarTextPanel extends React.PureComponent{
             return(
                 <View>
                     <HyperLinkText style={base_style.typography.small_font}>
-                        {this.props.description}
+                        {this.props.comment}
                     </HyperLinkText>
                 </View>
             )
@@ -115,18 +117,29 @@ class AvatarTextPanel extends React.PureComponent{
                 <View style={styles.user_description_container}>
                     <View style={{flexDirection:"row"}}>
                             <Text style={base_style.typography.small_header}>
-                                {`${this.props.user_object.username} `}                            
+                                {`${this.props.user_object.username}`}                            
                             </Text>
-                            <Text style={base_style.typography.small_font}>
-                                {`${this.props.caption_index===0?"// Top rated" : ""}`}
+                            <Text style={[base_style.typography.small_font, {alignSelf:"flex-end"}]}>
+                                {`${this.props.caption_index===0?" // Top rated" : ""}`}
                             </Text>
-                    </View>
+                    </View> 
                     <Text style={base_style.typography.small_font}>
                         {this.props.caption_object.description}
                     </Text>
-                    <Text style={[base_style.typography.small_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
-                        {`about ${get_relative_time_ago(this.props.caption_object.timestamp)}`}
-                    </Text>
+                    <Text style={[base_style.typography.mini_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
+                            {`about ${get_relative_time_ago(this.props.caption_object.timestamp)}`}
+                        </Text>
+                    <View style={styles.vote_container}>
+                        <VotingPanel
+                            caption_object={{
+                                up_votes_count:this.props.caption_object.up_votes_count,
+                                down_votes_count:this.props.caption_object.down_votes_count,
+                                content_id:this.props.caption_object._id,
+                                content_type:"CAPTION"
+                            }}
+                        />
+                    </View> 
+                    
                 </View>
             )
         }
@@ -191,7 +204,10 @@ const styles = StyleSheet.create({
     },
     comment_text_input:{
         width:"100%",
-        ...base.typography.small_font
+        ...base_style.typography.small_font
+    },
+    vote_container:{
+        flexDirection:"row",
 
     }
 })
