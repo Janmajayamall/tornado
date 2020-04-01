@@ -52,7 +52,7 @@ class Comment extends React.PureComponent {
             post_comment_box_padding:0,
             comment_container_height:0
         }
-        console.log(this.props, "lllll")
+        console.log(this.props.post_id, "lllll")
     }   
 
     componentDidMount(){
@@ -159,6 +159,7 @@ class Comment extends React.PureComponent {
                 }}
             >
                 {({loading, error, data})=>{
+                    console.log(error)
                     const post_object = data ? data.post_detailed_screen : undefined
                     if(data && !loading){
                         return(
@@ -214,8 +215,8 @@ class Comment extends React.PureComponent {
 
                     return(
                         <Text>
-                            Loading!!
-                        </Text>
+                            LA
+                        </Text> 
                     )
 
                 }}

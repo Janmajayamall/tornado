@@ -86,6 +86,7 @@ class CommentList extends React.PureComponent{
                     caption_object={object.item}
                     caption_index={object.index-1}
                     panel_type={constants.avatar_text_panel_type.caption}
+                    feed_screen_caption={false}
                 />
             )
         }

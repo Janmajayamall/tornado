@@ -11,7 +11,7 @@ import {
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
 import { 
-    Mutation, Query
+    Mutation, Query, withApollo
  } from "react-apollo";
  import base_style from "./../../styles/base"
 
@@ -22,9 +22,7 @@ import HyperLinkText from "./../text/hyper_link_text"
 
 //importing graphql queries
 import {
-    CREATE_LIKE,
-    UNLIKE_CONTENT,
-    GET_USER_INFO,
+    TOGGLE_LIKE,
     GET_ROOM_FEED
 } from "./../../apollo_client/apollo_queries/index"
 
@@ -43,6 +41,7 @@ import {
     constants,
     get_relative_time_ago
 } from "./../../helpers/index"
+import gql from 'graphql-tag';
 
 
 
@@ -172,110 +171,123 @@ class ContentBox extends React.PureComponent {
 
                 {/* comment and like */}
                 <View style={styles.like_comment_main_container}>
-                    <Query query={GET_USER_INFO}>
-                        {({loading, error, data})=>{
 
-                            //getting user_id
-                            const {user_id} = data ? data.get_user_info : {}
+                    <Mutation 
+                        mutation={TOGGLE_LIKE}
+                        // optimisticResponse={()=>{ TODO: fix optimistic UI later
+                        //     console.log("optimisticResponse trigerred")
+                        //     let optimisitic_response = {
+                        //         // __typename:"Mutation",
+                        //         toggle_like:{
+                        //             _id:new Date().toISOString(),
+                        //             content_id:this.props.post_object._id,                                                                    
+                        //         }                        
+                        //     }
+                        //     if(this.props.post_object.user_liked){
+                        //         optimisitic_response.toggle_like.status=constants.status.not_active
+                        //     }else{
+                        //         optimisitic_response.toggle_like.status=constants.status.active
+                        //     }
+                        //     optimisitic_response.toggle_like.__typename="Like"
+                        //     return optimisitic_response
+                        // }}
+                        update={(cache, {data})=>{
+
+                            const {get_room_posts_user_id} = cache.readQuery({
+                                query:GET_ROOM_FEED,
+                                variables:{
+                                    limit:5
+                                }
+                            })
                             
-                            return (
-                                <Mutation 
-                                    mutation={this.props.post_object.user_liked ? UNLIKE_CONTENT : CREATE_LIKE}
-                                    update={(cache, {data})=>{
-                                        
-                                        const {get_room_posts_user_id} = cache.readQuery({
-                                            query:GET_ROOM_FEED,
-                                            variables:{
-                                                limit:5
-                                            }
-                                        })
-                                        
-                                        //getting toggle like result
-                                        const toggle_result = data[`${Object.keys(data)[0]}`]
-                                    
-                                        //taking care of the liked/unliked post & the likes count
-                                        const updated_room_posts_arr = []
-                                        get_room_posts_user_id.room_posts.forEach(post=>{
-                                            if(post._id===toggle_result.content_id){
-                                                const new_post_obj = {
-                                                    ...post
-                                                }
-                                    
-                                    
-                                                if(toggle_result.status===constants.status.active){
-                                                    new_post_obj.user_liked=true
-                                                    new_post_obj.likes_count+=1
-                                                }else{
-                                                    new_post_obj.user_liked=false
-                                                    new_post_obj.likes_count-=1
-                                                }
-                                    
-                                                //pushing it into the arr
-                                                updated_room_posts_arr.push(new_post_obj)
-                                            }else{
-                                                updated_room_posts_arr.push(post)
-                                            }
-                                        })
-                                    
-                                        //updated get_room_posts_user_id object
-                                        const updated_get_room_posts = {
-                                            ...get_room_posts_user_id,
-                                            room_posts:updated_room_posts_arr
-                                        }
-                                    
-                                        //writing it to the cache
-                                        cache.writeQuery({
-                                            query:GET_ROOM_FEED,
-                                            variables:{
-                                                limit:5
-                                            },
-                                            data:{                                            
-                                                get_room_posts_user_id:updated_get_room_posts
-                                            }
-                                        })
-                                    
-                                        this.setState({
-                                            user_liked:!this.state.user_liked,
-                                            likes_count:this.state.user_liked ? this.state.likes_count-1 : this.state.likes_count+1
-                                        })
-                                    
-                                    }}
+                            //getting toggle like result
+                            const toggle_result = data.toggle_like
 
-                                >
-                                    {(create_like, {})=>{    
-                                        return(
-                                            <TouchableOpacity 
-                                                onPress={()=>{
-                                                                                                                    
-                                                    if(user_id===undefined){
-                                                        return 
-                                                    }
-
-                                                    create_like({
-                                                        variables:{
-                                                            user_id:user_id,
-                                                            like_type:this.props.post_object.post_type,
-                                                            content_id:this.props.post_object._id
-                                                        }
-                                                    })
-
-                                                    // this.setState({
-                                                    //     user
-                                                    // })
-                                                }}
-                                                style={styles.like_container}
-                                            >
-                                                <Text style={{backgroundColor:this.props.post_object.user_liked ? "white":"red"}}>
-                                                    {this.props.post_object.likes_count}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )
-                                    }}
-                                </Mutation>          
-                            )                          
+                            //checking if there is any need to update
+                            if(toggle_result.user_liked===this.props.post_object.user_liked){
+                                return
                             }
-                        }                  
-                    </Query>
+                            
+                            //taking care of the liked/unliked post & the likes count
+                            const updated_room_posts_arr = []
+                            get_room_posts_user_id.room_posts.forEach(post=>{
+                                if(post._id===toggle_result.content_id){
+                                    const new_post_obj = {
+                                        ...post
+                                    }
+                                    if(toggle_result.status===constants.status.active){
+                                        new_post_obj.user_liked=true
+                                        new_post_obj.likes_count+=1
+                                    }else{
+                                        new_post_obj.user_liked=false
+                                        new_post_obj.likes_count-=1
+                                    }
+
+                                    //fixing if user toggles fast
+                                    if(new_post_obj.likes_count<0){
+                                        new_post_obj.likes_count=0
+                                        new_post_obj.user_liked=!new_post_obj.user_liked
+                                    }
+
+                                    //pushing it into the arr
+                                    updated_room_posts_arr.push(new_post_obj)
+                                }else{
+                                    updated_room_posts_arr.push(post)
+                                }
+                            })
+                        
+                            //updated get_room_posts_user_id object
+                            const updated_get_room_posts = {
+                                ...get_room_posts_user_id,
+                                room_posts:updated_room_posts_arr
+                            }
+                            
+                            // return
+                            //writing it to the cache
+                            cache.writeQuery({
+                                query:GET_ROOM_FEED,
+                                variables:{
+                                    limit:5
+                                },
+                                data:{                                            
+                                    get_room_posts_user_id:updated_get_room_posts
+                                }
+                            })
+                        
+                        }}
+
+                    >
+                        {(toggle_like, {})=>{    
+                            return(
+                                <TouchableOpacity 
+                                    onPress={()=>{
+                                                                                                        
+                                        //generating like variables
+                                        let variables = {
+                                            content_id:this.props.post_object._id
+                                        }
+                                        //checking the status of current like
+                                        if (this.props.post_object.user_liked){ //user_liked==true means user wants to unlike
+                                            variables.status=constants.status.not_active
+                                        }else{
+                                            variables.status=constants.status.active //user_liked==false means user wants to like
+                                        }
+                                        //mutating the like object
+                                        toggle_like({
+                                            variables:variables
+                                        })
+
+                                    }}
+                                    style={styles.like_container}
+                                >
+                                    <Text style={{backgroundColor:this.props.post_object.user_liked ? "white":"red"}}>
+                                        {this.props.post_object.likes_count}
+                                    </Text>
+                                </TouchableOpacity>
+                            )
+                        }}
+                    </Mutation>          
+        
                     <TouchableOpacity style={styles.comment_container}
                         onPress={()=>{
                             if(!this.props.on_feed){
@@ -349,6 +361,6 @@ const styles = StyleSheet.create({
 
 })
 
-export default ContentBox
+export default withApollo(ContentBox)
 
 

@@ -25,7 +25,6 @@ class ProfileImage extends React.PureComponent {
         this.state={
             loaded:false,
         }
-        console.log(this.props, "this is new")
     }
 
     on_load = () => {

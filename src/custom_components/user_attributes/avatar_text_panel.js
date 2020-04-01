@@ -35,10 +35,10 @@ class AvatarTextPanel extends React.PureComponent{
         //if panel_type is comment_input, then create_comment_func is required
         create_comment_func:PropTypes.func,
 
-        //if panel_type is caption, then caption_object & caption_index are required
+        //if panel_type is caption, then caption_object,caption_index, feed_screen_caption are required
         caption_object:PropTypes.object,
-        caption_index:PropTypes.any
-
+        caption_index:PropTypes.any,
+        feed_screen_caption:PropTypes.string
     }
 
     constructor(props){
@@ -122,6 +122,9 @@ class AvatarTextPanel extends React.PureComponent{
                             <Text style={[base_style.typography.small_font, {alignSelf:"flex-end"}]}>
                                 {`${this.props.caption_index===0?" // Top rated" : ""}`}
                             </Text>
+                            <Text style={[base_style.typography.small_font, {alignSelf:"flex-end"}]}>
+                                {`${this.props.feed_screen_caption? ` ${this.props.caption_object.up_votes_count} UP && ${this.props.caption_object.down_votes_count} DOWN` : ""}`}
+                            </Text>
                     </View> 
                     <Text style={base_style.typography.small_font}>
                         {this.props.caption_object.description}
@@ -129,16 +132,16 @@ class AvatarTextPanel extends React.PureComponent{
                     <Text style={[base_style.typography.mini_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
                             {`about ${get_relative_time_ago(this.props.caption_object.timestamp)}`}
                         </Text>
-                    <View style={styles.vote_container}>
-                        <VotingPanel
-                            caption_object={{
-                                up_votes_count:this.props.caption_object.up_votes_count,
-                                down_votes_count:this.props.caption_object.down_votes_count,
-                                content_id:this.props.caption_object._id,
-                                content_type:"CAPTION"
-                            }}
-                        />
-                    </View> 
+                    {
+                        !this.props.feed_screen_caption ? 
+                            <View style={styles.vote_container}>
+                                <VotingPanel
+                                    caption_object={this.props.caption_object}
+                                />
+                            </View>:
+                            undefined
+                    }
+                     
                     
                 </View>
             )

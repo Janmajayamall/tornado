@@ -99,36 +99,16 @@ export const CREATE_COMMENT = gql`
     }
 `;
 
-export const CREATE_LIKE = gql`
 
-    mutation create_likes($user_id:ID!, $like_type:String!, $content_id:ID!){
-        create_like(user_input:{
-            user_id:$user_id, 
-            like_type:$like_type,
-            content_id:$content_id        
+export const TOGGLE_LIKE = gql`
+
+    mutation toggle_likes($status:String!, $content_id:ID!){
+        toggle_like(user_input:{
+            content_id:$content_id      
+            status:$status
         }),{
             _id,
-            user_id, 
             content_id, 
-            like_type,
-            status
-        }
-    }
-
-`
-
-export const UNLIKE_CONTENT = gql`
-
-    mutation unlike_contents($user_id:ID!, $like_type:String!, $content_id:ID!){
-        unlike_content(user_input:{
-            user_id:$user_id, 
-            like_type:$like_type,
-            content_id:$content_id        
-        }),{
-            _id,
-            user_id, 
-            content_id, 
-            like_type,
             status
         }
     }

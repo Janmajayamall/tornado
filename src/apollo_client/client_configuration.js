@@ -48,6 +48,7 @@ const requestLink = new ApolloLink((operation, forward) =>
 )
 
 const cache = new InMemoryCache({
+  dataIdFromObject: object => object._id || null,
   cacheRedirects:{
     Query:{
       post_detailed_screen:(parent, args, {getCacheKey})=>{
@@ -57,18 +58,6 @@ const cache = new InMemoryCache({
   }
 })
 
-// const load_cache_with_user = async(cache) => {
-//   const user_info_obj = await get_user_info_asyncstorage()
-//   console.log(user_info_obj)
-
-//   cache.writeData({
-//     data:{
-//       user_info:user_info_obj
-//     }
-//   })
-// }
-
-// load_cache_with_user(cache)
 
 const client = new ApolloClient({
     link: ApolloLink.from([

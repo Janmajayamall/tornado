@@ -32,5 +32,9 @@ export const constants = {
     comment_list_query_type:{
         caption_query:"CAPTION_QUERY",
         comment_query:"COMMENT_QUERY"
+    },
+    vote_type:{
+        up:"UP",
+        down:"DOWN"
     }
 }

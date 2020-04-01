@@ -22,6 +22,7 @@ class CaptionPanel extends React.PureComponent{
         this.state = {
 
         }
+        console.log(this.props, "isaa here")
     }
 
     render(){
@@ -32,6 +33,7 @@ class CaptionPanel extends React.PureComponent{
                     panel_type={constants.avatar_text_panel_type.caption}
                     caption_object={this.props.caption_object}
                     caption_index={this.props.caption_index}
+                    feed_screen_caption={true}
                 />            
             </View>                                          
         )
