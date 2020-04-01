@@ -41,7 +41,6 @@ import {
     constants,
     get_relative_time_ago
 } from "./../../helpers/index"
-import gql from 'graphql-tag';
 
 
 
@@ -65,9 +64,9 @@ class ContentBox extends React.PureComponent {
         }
     }
 
-    // componentDidMount(){
-    //     console.log("rendered: ContentBox")
-    // }
+    componentDidMount(){
+        console.log("rendered: ContentBox")
+    }
 
     navigate_to_comment_screen = () => {
         Navigation.push(this.props.componentId, {
@@ -127,6 +126,7 @@ class ContentBox extends React.PureComponent {
                     <AvatarTextPanel
                         user_object={this.props.post_object.creator_info}
                         panel_type={constants.avatar_text_panel_type.user}
+                        componentId={this.props.componentId}
                     />
                 </View>
 
@@ -174,23 +174,22 @@ class ContentBox extends React.PureComponent {
 
                     <Mutation 
                         mutation={TOGGLE_LIKE}
-                        // optimisticResponse={()=>{ TODO: fix optimistic UI later
-                        //     console.log("optimisticResponse trigerred")
-                        //     let optimisitic_response = {
-                        //         // __typename:"Mutation",
-                        //         toggle_like:{
-                        //             _id:new Date().toISOString(),
-                        //             content_id:this.props.post_object._id,                                                                    
-                        //         }                        
-                        //     }
-                        //     if(this.props.post_object.user_liked){
-                        //         optimisitic_response.toggle_like.status=constants.status.not_active
-                        //     }else{
-                        //         optimisitic_response.toggle_like.status=constants.status.active
-                        //     }
-                        //     optimisitic_response.toggle_like.__typename="Like"
-                        //     return optimisitic_response
-                        // }}
+                        optimisticResponse={()=>{                            
+                            let optimisitic_response = {
+                                __typename:"Mutation",
+                                toggle_like:{
+                                    _id:new Date().toISOString(),
+                                    content_id:this.props.post_object._id,                                                                                                
+                                }                        
+                            }
+                            if(this.props.post_object.user_liked){
+                                optimisitic_response.toggle_like.status=constants.status.not_active
+                            }else{
+                                optimisitic_response.toggle_like.status=constants.status.active
+                            }
+                            optimisitic_response.toggle_like.__typename="Like"
+                            return optimisitic_response
+                        }}
                         update={(cache, {data})=>{
 
                             const {get_room_posts_user_id} = cache.readQuery({
@@ -202,7 +201,10 @@ class ContentBox extends React.PureComponent {
                             
                             //getting toggle like result
                             const toggle_result = data.toggle_like
+                            console.log(toggle_result, data, "kilo d")
 
+
+                            // return
                             //checking if there is any need to update
                             if(toggle_result.user_liked===this.props.post_object.user_liked){
                                 return
@@ -257,7 +259,8 @@ class ContentBox extends React.PureComponent {
                         }}
 
                     >
-                        {(toggle_like, {})=>{    
+                        {(toggle_like, {data})=>{ 
+                            console.log("toggle like mutation")   
                             return(
                                 <TouchableOpacity 
                                     onPress={()=>{
@@ -273,6 +276,7 @@ class ContentBox extends React.PureComponent {
                                             variables.status=constants.status.active //user_liked==false means user wants to like
                                         }
                                         //mutating the like object
+                                        console.log(variables, "like post")
                                         toggle_like({
                                             variables:variables
                                         })
@@ -361,6 +365,6 @@ const styles = StyleSheet.create({
 
 })
 
-export default withApollo(ContentBox)
+export default ContentBox
 
 

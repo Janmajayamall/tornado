@@ -23,7 +23,6 @@ class AsyncImage extends PureComponent {
             image_dimensions:this.calculate_dimensions()
         }
 
-        console.log(this.props.image_object, "image_object")
     }
 
     calculate_dimensions = () => {

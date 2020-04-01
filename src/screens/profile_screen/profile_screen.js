@@ -59,12 +59,13 @@ class ProfileScreen extends React.PureComponent {
         super(props)
 
         this.state={
-            user_info:undefined
+            user_info:undefined,
         }
 
         // //binding the topBar add post button 
         // Navigation.events().bindComponent(this);
-
+        console.log(this.props)
+        this.set_user_info()
     }
 
     //react native navigation event binded function for action buttons //TODO: remove this function as it is not longer needed for adding rooms
@@ -96,12 +97,6 @@ class ProfileScreen extends React.PureComponent {
         // // adding event for navigation
         // this.navigationEventListener = Navigation.events().bindComponent(this);
     }
-
-    // //triggers whenever component reappears on the screen
-    // componentDidAppear() {
-    //     console.log("reappeared")
-    //     this.forceUpdate()
-    // }
 
     render_again = () => {
         this.forceUpdate()
@@ -148,7 +143,7 @@ class ProfileScreen extends React.PureComponent {
         )
     }
     
-    set_user_info = async(client) => {
+    set_user_info = async() => {
 
         if(!this.props.is_user){
             //get the profile of the user
@@ -158,7 +153,7 @@ class ProfileScreen extends React.PureComponent {
             return
         }
 
-        const {data} = await client.query({
+        const {data} = await this.props.client.query({
             query:GET_USER_INFO
         })
         
@@ -197,7 +192,7 @@ class ProfileScreen extends React.PureComponent {
         navigation_push_to_screen(this.props.componentId,screen_vars)
     }
 
-    navigate_to_
+    
 
     generate_lower_body = () => {
         
@@ -259,110 +254,98 @@ class ProfileScreen extends React.PureComponent {
 
         return(
             <SafeAreaView style={styles.main_container}>
-                <ApolloConsumer>
-                    {
-                        client=>{
-
+                <Query 
+                    query={GET_USER_PROFILE_POSTS}
+                    variables={
+                        this.props.is_user?
+                        {
+                            limit:5,                                            
+                        }:
+                        {
+                            limit:5,
+                            user_id:this.props.profile_user_info.user_id
+                        }
+                    }
+                >
+                    {({ loading, error, data, fetchMore }) => {
+                        console.log(loading, error, data)
+                        if (this.state.user_info===undefined){
                             return(
-                                <Query 
-                                    query={GET_USER_PROFILE_POSTS}
-                                    variables={
-                                        this.props.is_user?
-                                        {
-                                            limit:5,                                            
-                                        }:
-                                        {
-                                            limit:5,
-                                            user_id:this.props.profile_user_info.user_id
-                                        }
+                                <Text>
+                                    Loading....sorry
+                                </Text>
+                            )
+                        }
+
+                        if (error){
+                            return(
+                                <Text>
+                                    error sorry
+                                </Text>
+                            )
+                        }
+                        
+                        return(
+                            <ContentList
+                                componentId={this.props.componentId}
+                                loading={loading}
+                                room_posts={data ? data.get_user_profile_posts.room_posts : []}
+                                on_load_more={()=>{
+
+                                    //generating variables
+                                    const fetch_variables = {
+                                        limit:5,
+                                        room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
                                     }
-                                >
-                                    {({ loading, error, data, fetchMore }) => {
+                                    if(!this.props.is_user){
+                                        fetch_variables.user_id = this.props.profile_user_info.user_id
+                                    }
 
-                                        this.set_user_info(client)
-                                        console.log(loading, error, data)
-                                        if (this.state.user_info===undefined){
-                                            return(
-                                                <Text>
-                                                    Loading....sorry
-                                                </Text>
-                                            )
-                                        }
-
-                                        if (error){
-                                            return(
-                                                <Text>
-                                                    error sorry
-                                                </Text>
-                                            )
+                                    fetchMore({
+                                        //getting more posts using cursor
+                                        query:GET_USER_PROFILE_POSTS,
+                                        variables:fetch_variables,
+                                        updateQuery: (previous_data, {fetchMoreResult}) => {
+                                            //appending to the previous result 
+        
+                                            if (!previous_data.get_user_profile_posts.next_page){
+                                                return previous_data
+                                            }
+        
+                                            const new_posts_arr = [
+                                                ...previous_data.get_user_profile_posts.room_posts,
+                                                ...fetchMoreResult.get_user_profile_posts.room_posts
+                                            ]
+        
+                                            const new_data_object = {
+                                                ...fetchMoreResult, 
+                                                get_user_profile_posts:{
+                                                    ...fetchMoreResult.get_user_profile_posts,
+                                                    room_posts:new_posts_arr
+                                                }
+                                            }
+        
+                                            return new_data_object
+                                            }
+                                        })
+                                    }}
+                                header_component={
+                                    <View style={styles.header_container}>
+                                        <ProfileDetails
+                                            width={window.width}
+                                            user_info={this.state.user_info}
+                                        />
+                                        {
+                                            this.generate_lower_body()
                                         }
                                         
-                                        return(
-                                            <ContentList
-                                                componentId={this.props.componentId}
-                                                loading={loading}
-                                                room_posts={data ? data.get_user_profile_posts.room_posts : []}
-                                                on_load_more={()=>{
-
-                                                    //generating variables
-                                                    const fetch_variables = {
-                                                        limit:5,
-                                                        room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
-                                                    }
-                                                    if(!this.props.is_user){
-                                                        fetch_variables.user_id = this.props.profile_user_info.user_id
-                                                    }
-
-                                                    fetchMore({
-                                                        //getting more posts using cursor
-                                                        query:GET_USER_PROFILE_POSTS,
-                                                        variables:fetch_variables,
-                                                        updateQuery: (previous_data, {fetchMoreResult}) => {
-                                                            //appending to the previous result 
-                        
-                                                            if (!previous_data.get_user_profile_posts.next_page){
-                                                                return previous_data
-                                                            }
-                        
-                                                            const new_posts_arr = [
-                                                                ...previous_data.get_user_profile_posts.room_posts,
-                                                                ...fetchMoreResult.get_user_profile_posts.room_posts
-                                                            ]
-                        
-                                                            const new_data_object = {
-                                                                ...fetchMoreResult, 
-                                                                get_user_profile_posts:{
-                                                                    ...fetchMoreResult.get_user_profile_posts,
-                                                                    room_posts:new_posts_arr
-                                                                }
-                                                            }
-                        
-                                                            return new_data_object
-                                                            }
-                                                        })
-                                                    }}
-                                                header_component={
-                                                    <View style={styles.header_container}>
-                                                        <ProfileDetails
-                                                            width={window.width}
-                                                            user_info={this.state.user_info}
-                                                        />
-                                                        {
-                                                            this.generate_lower_body()
-                                                        }
-                                                        
-                                                    </View>
-                                                }
-                                                header_display={true}  
-                                            />
-                                        )
-                                    }}
-                                </Query>
-                        
-                            )
-                    }
-                    }
-                </ApolloConsumer>
+                                    </View>
+                                }
+                                header_display={true}  
+                            />
+                        )
+                    }}
+                </Query>
             </SafeAreaView>
                 
         )
@@ -389,5 +372,5 @@ const styles = StyleSheet.create({
 
 })
 
-export default ProfileScreen
+export default withApollo(ProfileScreen)
 

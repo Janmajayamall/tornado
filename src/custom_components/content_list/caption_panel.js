@@ -22,7 +22,6 @@ class CaptionPanel extends React.PureComponent{
         this.state = {
 
         }
-        console.log(this.props, "isaa here")
     }
 
     render(){

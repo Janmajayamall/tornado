@@ -14,7 +14,8 @@ import {Navigation} from "react-native-navigation"
 import { 
     setting_up_the_user,
     validate_email,
-    validate_password
+    validate_password,
+    setting_up_jwt_token
  } from "./../../helpers/index";
 
 //importing base style 
@@ -125,7 +126,7 @@ class Login extends React.PureComponent{
 
     setting_up_the_user = async(user_data, apollo_client) => {
 
-        await setting_up_the_user(user_data, apollo_client)
+        await setting_up_jwt_token(user_data.jwt)
 
         //routing user to feed screen after authentication
         Navigation.setRoot({

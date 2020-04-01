@@ -5,7 +5,8 @@ import {
     TextInput,
     TouchableOpacity,
     Dimensions,
-    StyleSheet
+    StyleSheet,
+    TouchableHighlight
 } from "react-native"
 
 
@@ -20,6 +21,14 @@ import {
     constants,
     get_relative_time_ago
 } from "./../../helpers/index"
+
+//import screens and navigation functions
+import{
+    PROFILE_SCREEN
+} from "./../../navigation/screens"
+import {
+    navigation_push_to_screen
+} from "./../../navigation/navigation_routes/index"
 
 const window = Dimensions.get("window")
 
@@ -38,7 +47,10 @@ class AvatarTextPanel extends React.PureComponent{
         //if panel_type is caption, then caption_object,caption_index, feed_screen_caption are required
         caption_object:PropTypes.object,
         caption_index:PropTypes.any,
-        feed_screen_caption:PropTypes.string
+        feed_screen_caption:PropTypes.string,
+
+        //for navigating to another screen
+        componentId:PropTypes.any
     }
 
     constructor(props){
@@ -47,7 +59,6 @@ class AvatarTextPanel extends React.PureComponent{
             comment_text_input:"",
             
         }
-
     }
     
     // generating text panel on the basis of value of panel_type
@@ -150,10 +161,25 @@ class AvatarTextPanel extends React.PureComponent{
     
     }
 
+    // navigate to user_profile if panel_type is "USER"
+    navigate_to_user_profile = () => {
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name:PROFILE_SCREEN,
+            props:{
+                is_user:false,
+                profile_user_info:this.props.user_object
+            }
+        })
+    }
+
     render(){
 
         return(
-            <View style={styles.main_container}>
+            <TouchableOpacity
+                style={styles.main_container}
+                disabled={constants.avatar_text_panel_type.user!==this.props.panel_type}
+                onPress={this.navigate_to_user_profile}
+            >
                 <View style={styles.user_profile_pic_container}>                    
                     <ProfileImage
                             width={window.width*0.10}
@@ -167,7 +193,7 @@ class AvatarTextPanel extends React.PureComponent{
                     }   
                 </View>
                          
-            </View>
+            </TouchableOpacity>
         )
 
     }

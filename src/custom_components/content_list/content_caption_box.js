@@ -64,7 +64,6 @@ class ContentCaptionBox extends React.PureComponent {
             likes_count:2
         }
 
-        console.log(this.props, "this is lifesss")
     }
 
     toggle_like = () => {

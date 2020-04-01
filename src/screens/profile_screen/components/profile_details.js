@@ -39,7 +39,6 @@ class ProfileDetails extends React.PureComponent{
 
         this.state = {
         }
-        console.log(this.props)
 
     }
 

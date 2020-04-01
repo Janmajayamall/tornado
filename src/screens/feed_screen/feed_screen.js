@@ -4,7 +4,8 @@ import {
     View,
     StyleSheet,
     Text,
-    ScrollView
+    ScrollView,
+    FlatList
 
 } from 'react-native'
 import base_style from './../../styles/base'
@@ -21,6 +22,8 @@ import {
 
 //importing components 
 import ContentList from "./../../custom_components/content_list/content_list"
+import ContentBox from "./../../custom_components/content_list/content_box"
+import ContentCaptionBox from "./../../custom_components/content_list/content_caption_box"
 
 //importing helpers & constants
 import {
@@ -36,7 +39,7 @@ import {
 
 
 
-class FeedScreen extends React.Component {
+class FeedScreen extends React.PureComponent {
 
     constructor(props){
 
@@ -76,6 +79,45 @@ class FeedScreen extends React.Component {
 
       }
 
+      render_item_list = (object) => {
+
+        // if (this.props.header_display===true && object.index===0){
+        //     return object.item 
+        // }
+
+        //if post_type: room_caption_post
+        if(object.item.caption_objects && object.item.caption_objects.length>0){
+            return (
+                <ContentCaptionBox
+                    post_object={object.item}
+                    on_feed={true}
+                    componentId={this.props.componentId}
+                />
+            )
+        }
+
+        return(
+            <ContentBox
+                post_object={object.item}
+                on_feed={true}
+                componentId={this.props.componentId}
+            />
+        )
+    }
+
+    generate_data_for_list = () => {
+
+        if (this.props.header_display===true){
+            return[
+                this.props.header_component,
+                ...this.props.room_posts
+            ]
+        }else{
+            return this.props.room_posts
+        }
+
+    }
+
     get_room_posts = () => {
     //    in-build pagination
 
@@ -87,8 +129,7 @@ class FeedScreen extends React.Component {
                 limit:5
             }}
         >
-            {({ loading, error, data, fetchMore }) => {
-                console.log(data,error, 'feed screen')
+            {({ loading, error, data, fetchMore }) => {            
                 return(
                     <ContentList
                         componentId={this.props.componentId}
@@ -135,8 +176,6 @@ class FeedScreen extends React.Component {
 
     )
 
-
-
     }
 
 
@@ -172,4 +211,4 @@ const mapDisptachToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDisptachToProps)(FeedScreen)
+export default FeedScreen

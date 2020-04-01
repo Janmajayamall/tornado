@@ -19,7 +19,7 @@ const get_jwt_asyncstorage = async() => {
 }
 
 const request = async (operation) => {
-    // const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem('token');
     operation.setContext({
       headers: {
         authorization: await get_jwt_asyncstorage()
