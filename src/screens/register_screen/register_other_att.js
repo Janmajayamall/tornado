@@ -36,7 +36,8 @@ import ChooseAvatar from "./../../custom_components/choose_image/choose_avatar"
 
 // importing navigation routes
 import {  
-    navigation_push_to_screen
+    navigation_push_to_screen,
+    navigation_set_root_one_screen
 } from "./../../navigation/navigation_routes/index";
 import {  
     EXPLORE_ROOMS_SCREEN
@@ -158,7 +159,7 @@ class RegisterOtherAtt extends React.PureComponent{
         await setting_up_the_user(user_data, apollo_client)
         
         //routing to the explore rooms screen
-        navigation_push_to_screen(this.props.componentId, {screen_name:EXPLORE_ROOMS_SCREEN})
+        navigation_set_root_one_screen({screen_name:EXPLORE_ROOMS_SCREEN})
     }
 
     get_img_object = (img_obj) => {
@@ -166,20 +167,6 @@ class RegisterOtherAtt extends React.PureComponent{
             avatar_img_obj:img_obj
         })
     }
-
-    // get_presigned_url = async(apollo_client) => {
-
-    //     const {data} = await apollo_client.query({
-    //         query:GET_PRESIGNED_URL,
-    //         variables:{
-    //              file_name:this.state.avatar_img_obj.file_name,
-    //              file_mime:this.state.avatar_img_obj.file_mime
-    //          }
-    //     })
-        
-    //     return data.get_image_upload_url
-    // }  
-
 
     render(){
         return(

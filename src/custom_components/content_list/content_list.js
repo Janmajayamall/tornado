@@ -13,6 +13,11 @@ import PropTypes from 'prop-types'
 import ContentBox from "./content_box"
 import ContentCaptionBox from "./content_caption_box"
 
+//importing helpers
+import {
+    constants
+} from "./../../helpers/index"
+
 
 class ContentList extends React.PureComponent{
 
@@ -23,7 +28,10 @@ class ContentList extends React.PureComponent{
         componentId:PropTypes.any,
         on_load_more:PropTypes.func,
         header_display:PropTypes.bool,
-        header_component:PropTypes.any
+        header_component:PropTypes.any,
+
+        //boolean whether avatar text panel for user is clickable or not
+        avatar_navigate_user_profile:PropTypes.any
     }
 
     constructor(props){
@@ -45,12 +53,13 @@ class ContentList extends React.PureComponent{
         }
 
         //if post_type: room_caption_post
-        if(object.item.caption_objects && object.item.caption_objects.length>0){
+        if(object.item.post_type===constants.post_types.room_caption_post){
             return (
                 <ContentCaptionBox
                     post_object={object.item}
                     on_feed={true}
                     componentId={this.props.componentId}
+                    avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
                 />
             )
         }
@@ -60,6 +69,7 @@ class ContentList extends React.PureComponent{
                 post_object={object.item}
                 on_feed={true}
                 componentId={this.props.componentId}
+                avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
             />
         )
     }

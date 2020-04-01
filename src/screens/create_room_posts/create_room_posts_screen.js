@@ -72,7 +72,12 @@ class CreateRoomPosts extends React.PureComponent{
             image_object:{},
             urls:{},
             rooms_id_set:new Set(),
-            description:""
+            description:"",
+            loading:false,
+
+            //image choose phrase
+            choose_image_phrase:"Add Photo",
+            choose_image_subtext:" to your post?"
         }
 
         //refs
@@ -92,7 +97,13 @@ class CreateRoomPosts extends React.PureComponent{
         
             //adding file_name to img_obj
             img_obj.file_name=`${get_user_info.user_id}_${new Date().toISOString()}.${img_obj.file_mime.split("/")[1]}`
-            this.setState({image_object:img_obj})
+            this.setState({
+                image_object:img_obj, 
+
+                //choose photo phrases
+                choose_image_phrase:"Change",
+                choose_image_subtext:" photo?"
+            })
 
         }catch(e){
             console.log(e, "get_img_object function error in create_room_posts_screen.js")
@@ -221,7 +232,7 @@ class CreateRoomPosts extends React.PureComponent{
                 creator_id:user_id,
                 description:this.state.description,
                 room_ids:room_ids,
-                post_type:"ROOM_POST"
+                post_type:constants.post_types.room_post
             },
             valid:true
         }
@@ -247,12 +258,25 @@ class CreateRoomPosts extends React.PureComponent{
 
     create_post = async() => {
 
+        //check if the screen is already in loading state, if yes the create post does not responds
+        if(this.state.loading){
+            return
+        }
+
+        //setting loading to true
+        this.setState({
+            loading:true
+        })
+
         //TODO: start loading
         const variable_object = await this.generate_create_post_variables()
 
         //checking whether variable_object are valid or not
         if (!variable_object.valid){
             console.log("error, encountered")
+            this.setState({
+                loading:false
+            })
             return 
         }
 
@@ -276,6 +300,9 @@ class CreateRoomPosts extends React.PureComponent{
             ]
         })
 
+        this.setState({
+            loading:false
+        })
         
         //going to previous screen in stack
         Navigation.pop(this.props.componentId)
@@ -290,6 +317,9 @@ class CreateRoomPosts extends React.PureComponent{
                     <BigButton
                         button_text={"Switch to Caption Post"}
                         onPress={()=>{
+                            if(this.state.loading){
+                                return
+                            }
                             this.props.switch_screen_func()
                         }}
                     />
@@ -311,12 +341,12 @@ class CreateRoomPosts extends React.PureComponent{
                     </View>
                     <View style={styles.choose_container}>
                         <SmallButton
-                            button_text="Add photo"
+                            button_text={this.state.choose_image_phrase}
                             // width={window.width/3}
                             onPress={()=>{this.choose_post_image()}}
                         />
                         <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
-                            {` to the post?`}
+                            {this.state.choose_image_subtext}
                         </Text>
                         
                     </View>   

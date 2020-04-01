@@ -50,6 +50,8 @@ class VotingPanel extends React.PureComponent{
                     content_type:"CAPTION"
                 },
                 update:(cache, {data})=>{
+
+                    //reaching caption objects for the post from cache
                     const {get_post_captions} = cache.readQuery({
                         query:GET_POST_CAPTIONS,
                         variables:{
@@ -76,8 +78,9 @@ class VotingPanel extends React.PureComponent{
                                 ...caption,
                             }
 
-                            //changing users vote type 
-                            new_post_caption.user_vote_object.vote_type=toggle_result.vote_type
+                            //updating user_vote_object 
+                            new_post_caption.user_vote_object=toggle_result
+
                             
                             //changing the vote counts
                             if(toggle_result.vote_type===constants.vote_type.up){

@@ -26,7 +26,9 @@ import {
     CREATE_COMMENT,
     GET_POST_COMMENTS, 
     GET_USER_INFO,
-    POST_OBJECT
+    POST_OBJECT,
+    CREATE_CAPTION,
+    GET_POST_CAPTIONS
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
@@ -52,18 +54,13 @@ class Comment extends React.PureComponent {
             post_comment_box_padding:0,
             comment_container_height:0
         }
-        console.log(this.props.post_id, "lllll")
     }   
 
     componentDidMount(){
         this.keyboard_did_show_listener = Keyboard.addListener("keyboardWillShow", this._keyboard_did_show)
         this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
-
     }
 
-    // componentDidAppear(ee){
-    //     console.log(ee, "event")
-    // }
 
     _keyboard_did_show = (e) => {
         if (e){
@@ -86,61 +83,137 @@ class Comment extends React.PureComponent {
         this.keyboard_will_hide_listener.remove()
     }
 
-    post_comment = (mutate, user_info, post_object) => {
-        return (
-            <AvatarTextPanel
-                user_object={post_object.creator_info}
-                panel_type={constants.avatar_text_panel_type.comment_input}
-                create_comment_func={(comment_body)=>{
+    //generating input box at the bottom
+    generate_input_box = (user_info, post_object) => {
+        if(this.props.query_type===constants.comment_list_query_type.caption_query){     
+            return this.post_caption(user_info, post_object)
+        }
 
-                    //generating variables object for comment input
-                    const variables = {
-                        content_id:post_object._id,
-                        content_type:post_object.post_type,
-                        comment_body:comment_body,
-                        user_id:user_info.user_id
-                    }
+        if(this.props.query_type===constants.comment_list_query_type.comment_query){
+            return this.post_comment(user_info, post_object)
+        }
 
-                    mutate({
-                        variables:variables,
-                        update:(proxy, {data:{create_comment}})=>{
-                            //generating comment object temp
-                            const get_comment_obj = {
-                                ...create_comment,
-                                timestamp:new Date().toISOString(),
-                                last_modified:new Date().toISOString(),
-                                creator_info:user_info                                                
-                            }
+    }
 
-                            const cache_query = {
-                                query:GET_POST_COMMENTS,
-                                variables:{
+    post_comment = (user_info, post_object) => {
+
+        return(
+            <Mutation mutation={CREATE_COMMENT}>
+                {mutate => {
+                    return(
+                        <AvatarTextPanel
+                            user_object={user_info}
+                            panel_type={constants.avatar_text_panel_type.comment_input}
+                            create_comment_func={(comment_body)=>{
+
+                                //generating variables object for comment input
+                                const variables = {
                                     content_id:post_object._id,
-                                    content_type:"ROOM_POST"
+                                    content_type:post_object.post_type,
+                                    comment_body:comment_body,
+                                    user_id:user_info.user_id
                                 }
-                            }
 
-                            //reading query response from cache
-                            const data = proxy.readQuery(cache_query)
+                                mutate({
+                                    variables:variables,
+                                    update:(proxy, {data:{create_comment}})=>{
+                                        //generating comment object temp
+                                        const get_comment_obj = {
+                                            ...create_comment,
+                                            timestamp:new Date().toISOString(),
+                                            last_modified:new Date().toISOString(),
+                                            creator_info:user_info                                                
+                                        }
 
-                            //appending it to get_post_comments arr 
-                            data.get_post_comments.push(get_comment_obj)
+                                        const cache_query = {
+                                            query:GET_POST_COMMENTS,
+                                            variables:{
+                                                content_id:post_object._id,
+                                                content_type:"ROOM_POST"
+                                            }
+                                        }
 
-                            //writing the update get_post_comments data to cache
-                            proxy.writeQuery({
-                                query:GET_POST_COMMENTS,
-                                variables:{
-                                    content_id:post_object._id,
-                                    content_type:post_object.post_type
-                                },
-                                data:{
-                                    ...data
+                                        //reading query response from cache
+                                        const data = proxy.readQuery(cache_query)
+
+                                        //appending it to get_post_comments arr 
+                                        data.get_post_comments.push(get_comment_obj)
+
+                                        //writing the update get_post_comments data to cache
+                                        proxy.writeQuery({
+                                            query:GET_POST_COMMENTS,
+                                            variables:{
+                                                content_id:post_object._id,
+                                                content_type:post_object.post_type
+                                            },
+                                            data:{
+                                                ...data
+                                            }
+                                        })
+                                    }
+                                })
+                            }}
+                        />
+                    )
+                }}                                               
+            </Mutation>
+        )
+    }
+
+    post_caption = (user_info, post_object) => {
+
+        return(
+            <Mutation mutation={CREATE_CAPTION}>
+                {mutate => {
+                    return(
+                        <AvatarTextPanel
+                            user_object={user_info}
+                            panel_type={constants.avatar_text_panel_type.caption_input}
+                            avatar_navigate_user_profile={false}
+                            create_caption_func={(caption_body)=>{
+
+                                //generating variables object for comment input
+                                const variables = {
+                                    post_id:post_object._id,
+                                    description:caption_body
                                 }
-                            })
-                        }
-                    })
-                }}
-            />
+
+                                mutate({
+                                    variables:variables,
+                                    update:(proxy, {data:{create_caption}})=>{
+
+                                        //reading from cache all the captions of the current post
+                                        const cache_query = {
+                                            query:GET_POST_CAPTIONS,
+                                            variables:{
+                                                post_id:post_object._id,
+                                            }
+                                        }
+                                        const data = proxy.readQuery(cache_query)
+                                        //appending new caption to existing captions & creating new data object
+                                        let new_data = {
+                                            ...data,
+                                            get_post_captions:[
+                                                ...data.get_post_captions,
+                                                create_caption
+                                            ]
+                                        }
+
+                                        //writing the update get_post_comments data to cache
+                                        proxy.writeQuery({
+                                            query:GET_POST_CAPTIONS,
+                                            variables:{
+                                                post_id:post_object._id,
+                                            },
+                                            data:new_data
+                                        })
+                                    }
+                                })
+                            }}
+                        />
+                    )
+                }}                                               
+            </Mutation>
         )
     }
 
@@ -159,7 +232,7 @@ class Comment extends React.PureComponent {
                 }}
             >
                 {({loading, error, data})=>{
-                    console.log(error)
+
                     const post_object = data ? data.post_detailed_screen : undefined
                     if(data && !loading){
                         return(
@@ -171,6 +244,7 @@ class Comment extends React.PureComponent {
                                         bottom_padding={this.state.comment_list_padding}
                                         post_object={post_object}
                                         query_type={this.props.query_type}
+                                        componentId={this.props.componentId}
                                     />                                                              
                                 </View>
             
@@ -195,14 +269,10 @@ class Comment extends React.PureComponent {
                                             //don't let the loading stop until data.user_info is not present. 
                                             //TODO: also is user_info is not present then log the user out
                                             if (data){
-                                                return(
-                                                    <Mutation mutation={CREATE_COMMENT}>
-                                                        {mutate => {
-                                                            return this.post_comment(mutate, user_info, post_object)
-                                                        }}                        
-                                                    </Mutation>
-                                                )
-                                            }    
+                                                return this.generate_input_box(user_info, post_object)
+                                            }
+
+                                            return <Text>ERROR</Text>
                                             
                                         }}
                                     </Query>                    

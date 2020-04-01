@@ -39,6 +39,7 @@ class CreatePostRoomSelect extends React.Component{
     constructor(props){
         super(props)
         this.state = {
+            
         }
 
         //binding the topBar add post button 

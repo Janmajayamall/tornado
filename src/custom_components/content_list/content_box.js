@@ -51,7 +51,11 @@ class ContentBox extends React.PureComponent {
     static propTypes = {
         post_object:PropTypes.object,
         om_feed:PropTypes.bool,
-        componentId:PropTypes.any
+        componentId:PropTypes.any,
+
+        //boolean whether avatar text panel for user is clickable or not
+        avatar_navigate_user_profile:PropTypes.any
+
     }
 
     constructor(props){
@@ -59,14 +63,12 @@ class ContentBox extends React.PureComponent {
         super(props)
 
         this.state={
-            img_width:window.width,
-            img_height:window.width*1.2,
         }
     }
 
-    componentDidMount(){
-        console.log("rendered: ContentBox")
-    }
+    // componentDidMount(){
+    //     console.log("rendered: ContentBox")
+    // }
 
     navigate_to_comment_screen = () => {
         Navigation.push(this.props.componentId, {
@@ -127,6 +129,7 @@ class ContentBox extends React.PureComponent {
                         user_object={this.props.post_object.creator_info}
                         panel_type={constants.avatar_text_panel_type.user}
                         componentId={this.props.componentId}
+                        avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
                     />
                 </View>
 

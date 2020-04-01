@@ -71,8 +71,8 @@ export const GET_POST_CAPTIONS = gql`
             description,     
             up_votes_count, 
             down_votes_count,  
-            user_vote_object{
-                _id, 
+            user_vote_object{     
+                _id,            
                 content_id, 
                 vote_type
             }
@@ -81,6 +81,7 @@ export const GET_POST_CAPTIONS = gql`
 `
 
 //Mutations
+
 export const CREATE_COMMENT = gql`
 
     mutation create_comments($user_id:ID!, $content_id:ID!, $content_type:String!, $comment_body:String!){
@@ -98,6 +99,43 @@ export const CREATE_COMMENT = gql`
         }
     }
 `;
+
+
+export const CREATE_CAPTION = gql`
+
+    mutation create_captions($post_id:ID!, $description:String!){
+        
+        create_caption(user_input:{
+            post_id:$post_id,
+            description:$description
+        }),{
+            _id,
+            post_id,
+            creator_info{
+                user_id,
+                avatar{
+                    image_name,
+                    width, 
+                    height, 
+                    cdn_url
+                }, 
+                username,
+                three_words
+            },
+            timestamp,
+            last_modified,        
+            description,     
+            up_votes_count, 
+            down_votes_count,  
+            user_vote_object{
+                _id, 
+                content_id, 
+                vote_type
+            }
+        }
+    }
+`;
+
 
 
 export const TOGGLE_LIKE = gql`
@@ -122,9 +160,9 @@ export const TOGGLE_VOTE = gql`
             vote_type:$vote_type, 
             content_type:$content_type
         }){
+            _id, 
             content_id,
             vote_type,
-            content_type
         }
     }
 `

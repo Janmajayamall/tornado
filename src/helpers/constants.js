@@ -27,7 +27,8 @@ export const constants = {
         user:"USER",
         comment_display:"COMMENT_DISPLAY",
         comment_input:"COMMENT_INPUT",
-        caption:"CAPTION"
+        caption:"CAPTION",
+        caption_input:"CAPTION_INPUT"
     },
     comment_list_query_type:{
         caption_query:"CAPTION_QUERY",
@@ -36,5 +37,9 @@ export const constants = {
     vote_type:{
         up:"UP",
         down:"DOWN"
+    },
+    post_types:{
+        room_post:"ROOM_POST",
+        room_caption_post:"ROOM_CAPTION_POST"
     }
 }

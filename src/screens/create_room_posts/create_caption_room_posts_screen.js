@@ -24,7 +24,8 @@ import base_style from "../../styles/base"
 
 //importing helpers
 import {  
-    upload_image_to_s3
+    upload_image_to_s3,
+    constants
 } from "./../../helpers/index";
 
 //importing custom components
@@ -50,10 +51,6 @@ import {
     GET_USER_PROFILE_POSTS
 } from "./../../apollo_client/apollo_queries/index";
 import PropTypes from "prop-types"
-//helpers
-import {
-    constants
-} from "./../../helpers/index"
 
 const window = Dimensions.get("window")
 
@@ -72,7 +69,13 @@ class CreateCaptionRoomPosts extends React.PureComponent{
             image_object:{},
             urls:{},
             rooms_id_set:new Set(),
-            description:""
+            description:"",
+            loading:false,
+
+            //image choose phrase
+            choose_image_phrase:"Add Photo",
+            choose_image_subtext:" to your post."
+            
         }
 
         //refs
@@ -92,7 +95,11 @@ class CreateCaptionRoomPosts extends React.PureComponent{
         
             //adding file_name to img_obj
             img_obj.file_name=`${get_user_info.user_id}_${new Date().toISOString()}.${img_obj.file_mime.split("/")[1]}`
-            this.setState({image_object:img_obj})
+            this.setState({
+                image_object:img_obj,
+                choose_image_phrase:"Choose",
+                choose_image_subtext:" some other photo."
+            })
 
         }catch(e){
             console.log(e, "get_img_object function error in create_room_posts_screen.js")
@@ -221,7 +228,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                 creator_id:user_id,
                 description:this.state.description,
                 room_ids:room_ids,
-                post_type:"ROOM_CAPTION_POST"
+                post_type:constants.post_types.room_caption_post
             },
             valid:true
         }
@@ -247,6 +254,16 @@ class CreateCaptionRoomPosts extends React.PureComponent{
 
     create_post = async() => {
 
+        //if loading is true then return (perform no action)
+        if(this.state.loading){
+            return
+        }
+
+        //setting the loading state to true
+        this.setState({
+            loading:true
+        })
+
         //TODO: start loading
         const variable_object = await this.generate_create_post_variables()
 
@@ -254,8 +271,8 @@ class CreateCaptionRoomPosts extends React.PureComponent{
         if (!variable_object.valid){
             console.log("error, encountered")
             return 
-        }
-
+        }   
+        console.log(variable_object)
         //creating the post
         const {data} = await this.props.client.mutate({
             mutation:CREATE_ROOM_POST,
@@ -275,7 +292,6 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                 }
             ]
         })
-
         
         //going to previous screen in stack
         Navigation.pop(this.props.componentId)
@@ -290,6 +306,9 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                     <BigButton
                         button_text={"Switch to Normal Post"}
                         onPress={()=>{
+                            if(this.state.loading){
+                                return
+                            }
                             this.props.switch_screen_func()
                         }}
                     />
@@ -301,12 +320,12 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                     />
                     <View style={styles.choose_container}>
                         <SmallButton
-                            button_text="Add photo"
+                            button_text={this.state.choose_image_phrase}
                             // width={window.width/3}
                             onPress={()=>{this.choose_post_image()}}
                         />
                         <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
-                            {` to the caption Post`}
+                            {this.state.choose_image_subtext}
                         </Text>
                         
                     </View>   

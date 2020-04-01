@@ -45,7 +45,7 @@ import {
 const window = Dimensions.get("window")
 
 
-class ProfileScreen extends React.PureComponent {
+class ProfileScreen extends React.Component {
 
     static propTypes = {
         is_user:PropTypes.bool,
@@ -59,43 +59,19 @@ class ProfileScreen extends React.PureComponent {
         super(props)
 
         this.state={
-            user_info:undefined,
+            user_info:this.props.profile_user_info,
         }
-
-        // //binding the topBar add post button 
-        // Navigation.events().bindComponent(this);
-        console.log(this.props)
         this.set_user_info()
     }
-
-    //react native navigation event binded function for action buttons //TODO: remove this function as it is not longer needed for adding rooms
-    // navigationButtonPressed({ buttonId }) {
-
-    //     if (buttonId===constants.navigation.action_buttons.ADD_ROOM){
-    //         console.log(buttonId)
-    //         navigation_push_to_screen(this.props.componentId,
-    //                 {
-    //                     screen_name:ADD_ROOMS_SCREEN,
-    //                     options:{
-    //                         topBar: {
-    //                             rightButtons: [
-    //                                 {
-    //                                     id: constants.navigation.action_buttons.CREATE_ROOM,
-    //                                     text:"Create Room"
-    //                                 }
-    //                             ]
-    //                         }
-    //                     }
-    //                 }
-    //             )
-    //     }
-
-    // }
 
 
     componentDidMount(){
         // // adding event for navigation
         // this.navigationEventListener = Navigation.events().bindComponent(this);
+    }
+
+    componentDidUpdate(){
+        console.log("ass*daiwo")
     }
 
     render_again = () => {
@@ -145,22 +121,16 @@ class ProfileScreen extends React.PureComponent {
     
     set_user_info = async() => {
 
-        if(!this.props.is_user){
-            //get the profile of the user
-            this.setState({
-                user_info:this.props.profile_user_info
+        if(this.props.is_user){
+            const {data} = await this.props.client.query({
+                query:GET_USER_INFO
             })
-            return
+            
+            this.setState({
+                user_info:data.get_user_info
+    
+            })
         }
-
-        const {data} = await this.props.client.query({
-            query:GET_USER_INFO
-        })
-        
-        this.setState({
-            user_info:data.get_user_info
-
-        })
     }
 
     navigation_to_joined_rooms = (query_type) => {
@@ -251,7 +221,7 @@ class ProfileScreen extends React.PureComponent {
     }
 
     render(){
-
+        console.log(this.state.user_info, "inside render")
         return(
             <SafeAreaView style={styles.main_container}>
                 <Query 
@@ -342,6 +312,7 @@ class ProfileScreen extends React.PureComponent {
                                     </View>
                                 }
                                 header_display={true}  
+                                avatar_navigate_user_profile={false}
                             />
                         )
                     }}

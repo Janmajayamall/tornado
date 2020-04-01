@@ -169,6 +169,7 @@ class FeedScreen extends React.PureComponent {
                             }}
                         header_display={false}
                         header_component={undefined}  
+                        avatar_navigate_user_profile={true}
                     />
                 )
             }}

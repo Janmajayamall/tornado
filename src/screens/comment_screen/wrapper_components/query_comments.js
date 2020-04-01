@@ -22,7 +22,8 @@ class QueryComments extends React.PureComponent{
     static propTypes = {
         post_object:PropTypes.object,
         query_type:PropTypes.string,
-        bottom_padding:PropTypes.any
+        bottom_padding:PropTypes.any,
+        componentId:PropTypes.any
     }
 
     constructor(props){
@@ -70,8 +71,9 @@ class QueryComments extends React.PureComponent{
             >
                 {({loading, error, data, refetch, networkStatus}) => {
                     //TODO: You don't need this thing
+                    console.log(data,error,  "ass")
                     if(data){
-
+                        
                         //getting data array
                         const data_array = data[`${Object.keys(data)[0]}`]
 
@@ -87,6 +89,7 @@ class QueryComments extends React.PureComponent{
                                 }}
                                 network_status={networkStatus}
                                 bottom_padding={this.props.bottom_padding}
+                                componentId={this.props.componentId}
                             />
                         )
 

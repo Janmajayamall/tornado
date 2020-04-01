@@ -31,9 +31,11 @@ class CommentList extends React.PureComponent{
         bottom_padding:PropTypes.any,
         post_object:PropTypes.object,
         network_status:PropTypes.any,
+        componentId:PropTypes.any,
 
         //for identifying avatar_text_panel type CAPTION or COMMENT
         query_type :PropTypes.object
+
     }
 
     constructor(props){
@@ -56,7 +58,8 @@ class CommentList extends React.PureComponent{
                     <ContentCaptionBox
                         post_object={object.item}
                         on_feed={false}
-                        componentId={undefined}//TODO: put in the componentId
+                        componentId={this.props.componentId}//TODO: put in the componentId
+                        avatar_navigate_user_profile={true}
                     />
                 )
             }
@@ -66,7 +69,8 @@ class CommentList extends React.PureComponent{
                     <ContentBox
                         post_object={object.item}
                         on_feed={false}
-                        componentId={undefined}//TODO: put in the componentId
+                        componentId={this.props.componentId}//TODO: put in the componentId
+                        avatar_navigate_user_profile={true} 
                     />
                 )    
             }

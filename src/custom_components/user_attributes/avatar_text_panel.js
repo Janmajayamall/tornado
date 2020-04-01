@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Dimensions,
     StyleSheet,
-    TouchableHighlight
+    TouchableHighlight,
+    Keyboard
 } from "react-native"
 
 
@@ -49,8 +50,14 @@ class AvatarTextPanel extends React.PureComponent{
         caption_index:PropTypes.any,
         feed_screen_caption:PropTypes.string,
 
+        //if panel_type is caption_input, then create_caption_func is required
+        create_caption_func:PropTypes.func,
+
         //for navigating to another screen
-        componentId:PropTypes.any
+        componentId:PropTypes.any,
+
+        //clickable
+        avatar_navigate_user_profile:PropTypes.bool
     }
 
     constructor(props){
@@ -113,6 +120,7 @@ class AvatarTextPanel extends React.PureComponent{
                             }else{
                                 this.props.create_comment_func(this.state.comment_text_input)
                                 this.setState({comment_text_input:""})
+                                Keyboard.dismiss()
                             }
                         }}
                     >
@@ -158,6 +166,41 @@ class AvatarTextPanel extends React.PureComponent{
             )
         }
 
+        if(this.props.panel_type===constants.avatar_text_panel_type.caption_input){
+            return(
+                <View style={styles.input_text_parent_container}>
+                    <View style={styles.input_text_container}>
+                        <TextInput 
+                                style={styles.comment_text_input}
+                                multiline={true}
+                                scrollEnabled={true}
+                                value={this.state.caption_text_input}
+                                onChangeText={(val)=>{
+                                    this.setState({caption_text_input:val})
+                                }}
+                                placeholder={"Describe the image in your words!"}
+                                placeholderTextColor={"white"}
+                        />
+                    </View>
+                    <TouchableOpacity 
+                        style={styles.post_button_container}
+                        onPress={()=>{
+                            if(this.state.caption_text_input.trim()===""){
+                                console.log("Please enter the caption")
+                            }else{
+                                this.props.create_caption_func(this.state.caption_text_input)
+                                this.setState({caption_text_input:""})
+                                Keyboard.dismiss()
+                            }
+                        }}
+                    >
+                        <Text>Post</Text>
+                    </TouchableOpacity>
+                    
+                </View>
+            )
+        }
+
     
     }
 
@@ -177,7 +220,7 @@ class AvatarTextPanel extends React.PureComponent{
         return(
             <TouchableOpacity
                 style={styles.main_container}
-                disabled={constants.avatar_text_panel_type.user!==this.props.panel_type}
+                disabled={!this.props.avatar_navigate_user_profile}
                 onPress={this.navigate_to_user_profile}
             >
                 <View style={styles.user_profile_pic_container}>                    
