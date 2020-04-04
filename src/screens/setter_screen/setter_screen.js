@@ -12,12 +12,11 @@ import {
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
+import Loader from "./../../custom_components/loading/loading_component"
+
 
 //importing base style 
 import base_style from "../../styles/base"
-
-//importing graphql queries
-import base from "../../styles/base";
 
 //import Queries/mutation graphql
 import {
@@ -31,7 +30,8 @@ import {
     EXPLORE_ROOMS_SCREEN,
     PROFILE_SCREEN,
     EDIT_PROFILE_SCREEN,
-    REGISTER_SCREEN
+    REGISTER_SCREEN,
+    TREND_FEED_SCREEN
 } from "../../navigation/screens"
 import {
   navigation_push_to_screen,
@@ -59,6 +59,7 @@ class Setter extends React.PureComponent{
     check_user_jwt = async() => {
         try{
             const jwt = await AsyncStorage.getItem("token")
+            console.log(jwt, "this")
             if (jwt){
                 this.route_to_feed()
                 return
@@ -76,14 +77,14 @@ class Setter extends React.PureComponent{
                 display_text:"FEED"
             }, 
             { 
-                screen_name:EXPLORE_ROOMS_SCREEN,  
+                screen_name:TREND_FEED_SCREEN,  
                 display_text:"EXPLORE"
             },
             {
                 screen_name:PROFILE_SCREEN,  
                 display_text:"Profile",
                 props:{
-                is_user:true
+                    is_user:true
                 }
             }
         )
@@ -96,10 +97,8 @@ class Setter extends React.PureComponent{
 
     render(){
         return(
-            <View
-                style={styles.main_container}
-            />
-        )
+            <Loader/>
+        )   
     }
 }
 

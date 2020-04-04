@@ -50,24 +50,12 @@ class RoomNameList extends React.PureComponent {
 
     navigate_to_details_screen = async(room_id) => {
 
-        //TODO:start loading
-
-        //get room_object
-        const {data} = await this.props.client.query({
-            query:GET_ROOM_DEMOGRAPHICS,
-            variables:{
-                room_id:room_id
-            }
-        })
-
         navigation_push_to_screen(this.props.componentId, {
             screen_name:ROOM_DETAILS_SCREEN,
             props:{
-                room_object:data.get_room_demographics
+                room_id:room_id
             }
         })
-
-        //TODO:stop loading
 
     }
 

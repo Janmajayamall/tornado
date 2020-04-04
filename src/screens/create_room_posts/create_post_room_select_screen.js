@@ -22,11 +22,13 @@ import {
 //importing custom components 
 import RoomItemDisplay from "../../custom_components/room_display/room_item_display"
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
+import Loader from "./../../custom_components/loading/loading_component"
 
 //import helpers
 import {
     constants
 } from "./../../helpers/index"
+import { LOGIN_SCREEN } from "../../navigation/screens";
 
 class CreatePostRoomSelect extends React.Component{
 
@@ -67,14 +69,7 @@ class CreatePostRoomSelect extends React.Component{
         return(
             <Query query={GET_ALL_JOINED_ROOMS}>
                 {({loading, error, data})=>{
-                    if (loading){
-                        return <Text>LOADING.....</Text>
-                    }
-
-                    if (error){
-                        return <Text>ERROR.....</Text>
-                    }
-
+                    
                     if(data.get_all_joined_rooms){
                         return(
                             <SafeAreaView style={styles.main_container}>
@@ -100,6 +95,12 @@ class CreatePostRoomSelect extends React.Component{
                             </SafeAreaView>                   
                         )
                     }
+
+                    return( 
+                        <View style={styles.main_container}>
+                            <Loader/>
+                        </View>
+                    )
                 }}
             </Query>
 

@@ -68,7 +68,7 @@ class JoinedRoomsScreen extends React.PureComponent {
         navigation_push_to_screen(this.props.componentId, {
             screen_name:ROOM_DETAILS_SCREEN,
             props:{
-                room_object:room_object
+                room_id:room_object._id
             }
         })
     }

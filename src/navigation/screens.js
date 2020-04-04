@@ -1,4 +1,5 @@
 export const FEED_SCREEN = 'screen.feed'
+export const TREND_FEED_SCREEN = "screen.trend_feed"
 
 export const COMMENT_SCREEN = "screen.comment"
 
@@ -13,6 +14,7 @@ export const EXPLORE_ROOMS_SCREEN = "screen.explore_rooms"
 export const ROOM_DETAILS_SCREEN = "screen.room_details"
 export const JOINED_ROOMS_SCREEN = "screen.joined_rooms"
 export const ROOM_NAME_LIST = "screen.room_name_list"
+export const SEARCH_ROOMS_SCREEN = "screen.search_rooms"
 
 export const CREATE_ROOM_POSTS_SCREEN = "screen.create_room_posts"
 export const CREATE_POST_ROOM_SELECT_SCREEN = "screen.create_post_room_select"

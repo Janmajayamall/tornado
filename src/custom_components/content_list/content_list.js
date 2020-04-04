@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 //custom components
 import ContentBox from "./content_box"
 import ContentCaptionBox from "./content_caption_box"
+import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
 
 //importing helpers
 import {
@@ -23,8 +24,6 @@ class ContentList extends React.PureComponent{
 
     static propTypes = {
         room_posts:PropTypes.array,
-        loading:PropTypes.any,
-        error:PropTypes.any,
         componentId:PropTypes.any,
         on_load_more:PropTypes.func,
         header_display:PropTypes.bool,
@@ -88,23 +87,6 @@ class ContentList extends React.PureComponent{
     }
 
     render(){
-
-        if (this.props.loading){
-            return(
-                <Text>
-                    Loading....
-                </Text>
-            )
-        }
-
-    
-        if (this.props.error){
-            return(
-                <Text>
-                    Loadssssing....
-                </Text>
-            )
-        }
     
         return(
             <FlatList
@@ -112,6 +94,7 @@ class ContentList extends React.PureComponent{
                 renderItem={this.render_item_list}
                 onEndReached={this.props.on_load_more}
                 onEndReachedThreshold={0.5}
+                ItemSeparatorComponent={()=><ListItemDivider/>}
             />      
         )
     }

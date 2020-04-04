@@ -12,9 +12,9 @@ const ListItemDivider = () => {
 
 const styles = StyleSheet.create({
     main_container:{
-        borderBottomColor:base_style.color.primary_color_lighter,
-        borderBottomWidth:1,
-        width:"100%",
+        backgroundColor:base_style.color.primary_color_lighter,
+        height:2.5,
+        width:"100%",        
     }
 })
 

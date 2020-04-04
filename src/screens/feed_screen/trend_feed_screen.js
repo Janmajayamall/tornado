@@ -34,13 +34,14 @@ import {
 //importing screens and navigation functions
 import { navigation_push_to_screen } from '../../navigation/navigation_routes';
 import {  
-    COMMON_CREATE_POSTS_SCREEN
+    COMMON_CREATE_POSTS_SCREEN,
+    SEARCH_ROOMS_SCREEN
 } from "./../../navigation/screens";
 
 
 
 
-class FeedScreen extends React.PureComponent {
+class TrendFeedScreen extends React.PureComponent {
 
     constructor(props){
 
@@ -57,34 +58,23 @@ class FeedScreen extends React.PureComponent {
 
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
-        if (buttonId===constants.navigation.action_buttons.ADD_POST){
+        if (buttonId===constants.navigation.action_buttons.SEARCH_ROOMS){
             navigation_push_to_screen(this.props.componentId,
                     {
-                        screen_name:COMMON_CREATE_POSTS_SCREEN,
+                        screen_name:SEARCH_ROOMS_SCREEN,
                         options:{
                             topBar: {
-                                rightButtons: [
-                                    {
-                                        id: constants.navigation.action_buttons.SHARE_POST,
-                                        text:"New Post"
-                                    }
-                                ]
-                            }
-                        },
-                        props:{
-                            
+                                visible:false
+                            },
                         }
                     }
                 )
         }
+
     }
 
-
-
-
     get_room_posts = () => {
-    //    in-build pagination
-
+    //    in-built pagination
     return(
 
         <Query 
@@ -172,15 +162,6 @@ const styles = StyleSheet.create({
 
 })
 
-const mapStateToProps = (state) => {
-    return {
-    }
-}
-
-const mapDisptachToProps = (dispatch) => {
-    return {
-    }
-}
 
 
-export default FeedScreen
+export default TrendFeedScreen

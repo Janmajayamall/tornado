@@ -36,6 +36,7 @@ import AvatarTextPanel from "./../../custom_components/user_attributes/avatar_te
 import QueryComments from "./wrapper_components/query_comments"
 import base from './../../styles/base';
 import { constants } from '../../helpers'
+import Loader from "./../../custom_components/loading/loading_component"
 
 const window = Dimensions.get("window")
 
@@ -51,7 +52,7 @@ class Comment extends React.PureComponent {
     
         this.state = {
             comment_list_padding:0,
-            post_comment_box_padding:0,
+            post_comment_box_padding:20,
             comment_container_height:0
         }
     }   
@@ -68,14 +69,14 @@ class Comment extends React.PureComponent {
                 const temp_height_list = prev_state.comment_list_padding+e.endCoordinates.height
                 return({
                     comment_list_padding:temp_height_list, 
-                    post_comment_box_padding:e.endCoordinates.height
+                    post_comment_box_padding:e.endCoordinates.height+prev_state.post_comment_box_padding
                 })
             })
         }
     }   
 
     _keyboard_will_hide = (e) => {
-        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:0})
+        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:20})//padding for input at bottom 
     }
 
     componentWillUnmount(){
@@ -232,14 +233,16 @@ class Comment extends React.PureComponent {
                 }}
             >
                 {({loading, error, data})=>{
-
+                    console.log(loading)
                     const post_object = data ? data.post_detailed_screen : undefined
-                    if(data && !loading){
+
+                    //render the screen after getting the post object from local cache
+                    if(data && post_object){
                         return(
                             <SafeAreaView
                                 style={styles.main_container}
                             >   
-                                <View style={{height:this.state.comment_list_height}}>                                    
+                                <View style={[styles.query_comments_container,{height:this.state.comment_list_height}]}>                                    
                                     <QueryComments
                                         bottom_padding={this.state.comment_list_padding}
                                         post_object={post_object}
@@ -255,24 +258,21 @@ class Comment extends React.PureComponent {
                                 >
                                     <Query query={GET_USER_INFO}>
                                         {({loading, error, data})=>{
-                                            const user_info = data ? data.get_user_info : undefined
-
-                                            if (loading){
-                                                return <Text>Loadingggg</Text>
-                                            }
-            
-                                            if (error){
-                                                console.log("Error in getting user_id from cache")
-                                                return <Text>ERROR</Text>
-                                            }
-            
-                                            //don't let the loading stop until data.user_info is not present. 
-                                            //TODO: also is user_info is not present then log the user out
+                                            const user_info = data ? data.get_user_info : undefined        
+                                            
+                                            //render input area at bottom only is user info is present
                                             if (data){
-                                                return this.generate_input_box(user_info, post_object)
+                                                return (
+                                                    <View>
+                                                        {
+                                                            this.generate_input_box(user_info, post_object)
+                                                        }
+                                                    </View>
+
+                                                )
                                             }
 
-                                            return <Text>ERROR</Text>
+                                            return <Loader/>
                                             
                                         }}
                                     </Query>                    
@@ -283,10 +283,9 @@ class Comment extends React.PureComponent {
                         )
                     }
 
+                    //otherwise load
                     return(
-                        <Text>
-                            LA
-                        </Text> 
+                        <Loader/>
                     )
 
                 }}
@@ -313,6 +312,13 @@ const styles = StyleSheet.create(
             borderTopWidth:1
         },
 
+        query_comments_container:{
+            flex:1,
+            justifyContent:"center",
+            alignItems:"center",
+            width: '100%', 
+        }
+
     });
 
-export default connect(undefined,  undefined)(Comment)
+export default Comment

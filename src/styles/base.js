@@ -1,7 +1,7 @@
 export default base_style = {
     color:{
-        primary_color:'#121212',
-        primary_color_lighter:'#2c2c2c',
+        primary_color:'#000000',
+        primary_color_lighter:'#1C1C1C',
         secondary_color:"#ffffff"
     },
     typography:{
@@ -31,6 +31,27 @@ export default base_style = {
         medium_font:{
             color:'#ffffff',
             fontSize:22,
+        },
+        font_colors:{
+            title_text:{
+                color:"#ffffff"
+            },
+            high_emphasis:{
+                color:"#ffffff",
+            },
+            medium_emphasis:{
+                color:"#ffffff",
+                opacity:0.87
+            },
+            low_emphasis:{
+                color:"#ffffff",
+                opacity:0.60
+            },
+            disabled:{
+                color:"#ffffff",
+                opacity:0.38
+            },
+            text_input_placeholder:"#999999"
         }
     }
 }

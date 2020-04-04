@@ -31,6 +31,7 @@ import {
 import BigButton from "../../custom_components/buttons/big_buttons"
 import SmallButton from "../../custom_components/buttons/small_button"
 import ChoosePostImage from "../../custom_components/choose_image/choose_post_image"
+import Loader from "./../../custom_components/loading/loading_component"
 
 //importing all screens
 import { 
@@ -310,6 +311,17 @@ class CreateRoomPosts extends React.PureComponent{
     }
 
     render(){
+
+        //if loading state is true
+        if(this.state.loading){
+            return(
+                <View style={styles.main_container}>
+                    <Loader/>
+                </View>
+            )
+        }
+
+        //if loading state is false
         return(
             <ScrollView style={styles.main_container}>
                 <SafeAreaView >

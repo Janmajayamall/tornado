@@ -155,6 +155,7 @@ class ContentCaptionBox extends React.PureComponent {
                     <AvatarTextPanel
                         user_object={this.props.post_object.creator_info}
                         panel_type={constants.avatar_text_panel_type.user}
+                        componentId={this.props.componentId}
                         avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
                     />
                 </View>
@@ -174,8 +175,8 @@ class ContentCaptionBox extends React.PureComponent {
 
                 {/* time & number of likes */}
                 <View style={styles.time_likes_count_container}>
-                    <Text style={[base_style.typography.small_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
-                        {`about ${get_relative_time_ago(this.props.post_object.timestamp)}`}
+                    <Text style={[base_style.typography.small_font, {...base_style.typography.font_colors.low_emphasis, alignSelf:"flex-end"}]}>
+                        {`posted ${get_relative_time_ago(this.props.post_object.timestamp)}`}
                     </Text>
                 </View>
 
@@ -270,7 +271,6 @@ class ContentCaptionBox extends React.PureComponent {
 
                 >
                     {(toggle_like, {data})=>{ 
-                        console.log("toggle like mutation")   
                         return(
                             <TouchableOpacity 
                                 onPress={()=>{
@@ -334,11 +334,6 @@ class ContentCaptionBox extends React.PureComponent {
                         }
                 </View>
 
-                <View style={[styles.horizontal_line, this.props.on_feed ? {marginBottom:15} : {}]}/>
-                        
-
-                {/* <View style={styles.horizontal_line}/> */}
-
             </View>
         )
     }
@@ -353,7 +348,6 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         // marginTop:15,
-        marginBottom:15
     },
     user_content_container:{
         
@@ -385,7 +379,7 @@ const styles = StyleSheet.create({
         // textDecorationLine:"underline"
     },
     time_likes_count_container:{
-        width:"100%"
+        width:"100%",
     }
 
 })

@@ -77,25 +77,32 @@ class RoomItemDisplay extends React.PureComponent{
                 >
                     <View style={styles.main_container}>
                         <View style={[styles.description_container, {backgroundColor:!this.state.selected?base_style.color.primary_color:base_style.color.primary_color_lighter}]}>
-                            <View style={styles.name_container}>
-                                <Text style={styles.room_name_text}>
-                                    {this.props.room_object.name}
-                                </Text>
-                            </View>
-                            <View style={styles.room_attribute_container}>
+                        
+                            <Text style={styles.room_name_text}>
+                                {this.props.room_object.name}
+                            </Text>                
+                            <Text style={[styles.room_attributes_text,{marginTop:5}]}>
+                                {this.props.room_object.description}
+                            </Text>      
+                            <View style={styles.members_timestamp_container}>
                                 <Text style={styles.room_attributes_text}>
-                                    {this.props.room_object.description}
-                                </Text>                                
-                                <View>
-                                    <Text style={[styles.room_attributes_text, {fontStyle:"italic",marginTop:5, textDecorationLine:"underline"}]}>
-                                        {`creator: ${this.props.room_object.creator_info.username}`}
-                                    </Text>
-                                </View>
-                                <Text style={[styles.room_attributes_text, {fontStyle:"italic",marginTop:5}]}>
-                                        {`created ${this.get_relative_time_ago(this.props.room_object.timestamp)}`}
+                                {`${this.props.room_object.room_members_count} members`}
                                 </Text>
-                            </View>
-                            
+                                <Text style={{...styles.room_attributes_text, ...base_style.typography.font_colors.low_emphasis}}>
+                                    {`created ${this.get_relative_time_ago(this.props.room_object.timestamp)}`}
+                                </Text>
+                            </View>                                                      
+                            <Text style={[styles.room_attributes_text, {marginTop:5}]}>
+                                {`creator: ${this.props.room_object.creator_info.username}`}
+                            </Text>
+                            {
+                                this.props.room_object.user_follows ?
+                                    <Text style={{...styles.room_attributes_text, ...base_style.typography.font_colors.low_emphasis, alignSelf:"flex-end"}}>
+                                        {`Member`}
+                                    </Text>:
+                                    undefined
+                            }
+                                                                            
                         </View>
                         {/* <View style={styles.button_container}>
                             <Text style={styles.button_text}>
@@ -116,7 +123,7 @@ const styles = StyleSheet.create({
         // justifyContent:"space-between",
     }, 
     room_name_text:{
-        ...base_style.typography.medium_header
+        ...base_style.typography.small_header
     },
     room_attributes_text:{
         ...base_style.typography.small_font_paragraph
@@ -125,15 +132,14 @@ const styles = StyleSheet.create({
         width:"100%",
         padding:20
     },
-    name_container:{
-       flexDirection:"row"
-    },
-    room_attribute_container:{
-        marginTop:5
-    },
     username_container:{
         flexDirection:"row",
         justifyContent:"space-between"
+    },
+    members_timestamp_container:{
+        flexDirection:"row",
+        justifyContent:"space-between",
+        marginTop:5
     }
     // button_container:{
     //     width:"30%",

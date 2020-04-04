@@ -9,6 +9,7 @@ import PropTypes from "prop-types"
 
 //importing custom components
 import CommentList from "../../../custom_components/comments/comment_list"
+import Loader from "./../../../custom_components/loading/loading_component"
 
 //importing queries
 import {
@@ -70,8 +71,8 @@ class QueryComments extends React.PureComponent{
                 variables={this.get_variables()}
             >
                 {({loading, error, data, refetch, networkStatus}) => {
-                    //TODO: You don't need this thing
-                    console.log(data,error,  "ass")
+                    
+                    //render comment list when data is not undefined
                     if(data){
                         
                         //getting data array
@@ -95,10 +96,9 @@ class QueryComments extends React.PureComponent{
 
                     }   
                     
+                    //otherwise keep loading
                     return(
-                        <Text>
-                            Loadinng!!!!!!!
-                        </Text>
+                        <Loader/>
                     )
 
                 }}

@@ -48,7 +48,7 @@ class AvatarTextPanel extends React.PureComponent{
         //if panel_type is caption, then caption_object,caption_index, feed_screen_caption are required
         caption_object:PropTypes.object,
         caption_index:PropTypes.any,
-        feed_screen_caption:PropTypes.string,
+        feed_screen_caption:PropTypes.bool,
 
         //if panel_type is caption_input, then create_caption_func is required
         create_caption_func:PropTypes.func,
@@ -124,7 +124,9 @@ class AvatarTextPanel extends React.PureComponent{
                             }
                         }}
                     >
-                        <Text>Post</Text>
+                        <Text style={styles.post_button_text}>
+                            Post
+                        </Text>
                     </TouchableOpacity>
                     
                 </View>
@@ -134,22 +136,19 @@ class AvatarTextPanel extends React.PureComponent{
         if(this.props.panel_type===constants.avatar_text_panel_type.caption){
             return(
                 <View style={styles.user_description_container}>
-                    <View style={{flexDirection:"row"}}>
+                    <View style={styles.caption_text_container}>
                             <Text style={base_style.typography.small_header}>
                                 {`${this.props.user_object.username}`}                            
                             </Text>
-                            <Text style={[base_style.typography.small_font, {alignSelf:"flex-end"}]}>
-                                {`${this.props.caption_index===0?" // Top rated" : ""}`}
-                            </Text>
-                            <Text style={[base_style.typography.small_font, {alignSelf:"flex-end"}]}>
-                                {`${this.props.feed_screen_caption? ` ${this.props.caption_object.up_votes_count} UP && ${this.props.caption_object.down_votes_count} DOWN` : ""}`}
+                            <Text style={[base_style.typography.small_font, {...base_style.typography.font_colors.low_emphasis, alignSelf:"flex-end"}]}>
+                                {`${this.props.caption_index===0?"Top rated" : ""}`}
                             </Text>
                     </View> 
                     <Text style={base_style.typography.small_font}>
                         {this.props.caption_object.description}
                     </Text>
-                    <Text style={[base_style.typography.mini_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
-                            {`about ${get_relative_time_ago(this.props.caption_object.timestamp)}`}
+                    <Text style={[base_style.typography.small_font, {...base_style.typography.font_colors.low_emphasis, alignSelf:"flex-end"}]}>
+                            {`${get_relative_time_ago(this.props.caption_object.timestamp)}`}
                         </Text>
                     {
                         !this.props.feed_screen_caption ? 
@@ -246,7 +245,8 @@ const styles = StyleSheet.create({
     main_container:{
         flexDirection:"row",
         paddingRight:10,
-        width:"100%"
+        width:"100%",
+        // backgroundColor:base_style.color.primary_color_lighter
     },
     user_profile_pic_container:{
         width:'15%',
@@ -268,11 +268,22 @@ const styles = StyleSheet.create({
         flexDirection:"row"
     },
     input_text_container:{
-        width:"90%",
+        width:"85%",
         height:"100%",
+        // borderRightColor:base_style.color.primary_color_lighter,
+        // borderLeftColor:base_style.color.primary_color_lighter,
+        // borderRightWidth:2,
+        // borderLeftWidth:2,
+        // paddingLeft:5,
+        paddingRight:5
     },
     post_button_container:{
-        width:"10%"
+        width:"15%",
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    post_button_text:{
+        ...base_style.typography.small_font,
     },
     comment_text_input:{
         width:"100%",
@@ -280,7 +291,9 @@ const styles = StyleSheet.create({
     },
     vote_container:{
         flexDirection:"row",
-
+    },
+    caption_text_container:{
+        flexDirection:"row", justifyContent:"space-between"
     }
 })
 

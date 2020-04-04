@@ -61,7 +61,7 @@ class ProfileDetails extends React.PureComponent{
                     {/* display chosen image, initially display default image */}
                     <ProfileImage
                         image_object={this.props.user_info.avatar}
-                        width={(this.props.width*0.6)/2}
+                        width={this.props.width*0.3}
                         default_avatar={this.props.user_info.default_avatar}
                     />
                 </View>
@@ -70,7 +70,7 @@ class ProfileDetails extends React.PureComponent{
                         {this.props.user_info.three_words}
                     </Text>
                     <Text style={styles.three_word_text}>
-                        {` | joined ${get_relative_time_ago(this.props.user_info.timestamp)}`}
+                        {` | Joined ${get_relative_time_ago(this.props.user_info.timestamp)}`}
                     </Text>
                 </View>
                 <View style={styles.third_container}>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         marginBottom:10
     },
     username_text:{
-        ...base_style.typography.medium_font,
+        ...base_style.typography.medium_header,
     },
     second_container:{
         justifyContent:"center",
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     },
     three_word_text:{
         ...base_style.typography.small_font,
-        fontStyle:'italic'
     },
     third_container:{
         justifyContent:"center",

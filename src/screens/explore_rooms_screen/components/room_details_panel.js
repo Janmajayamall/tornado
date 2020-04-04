@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import {
     Mutation,
-    ApolloConsumer
+    ApolloConsumer,
+    withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 import PropTypes from "prop-types"
@@ -46,6 +47,9 @@ class RoomDetailsPanel extends React.PureComponent{
         return get_relative_time_ago(timestamp)
     }
 
+    toggle_join = () => {  
+        
+    }   
     
     render(){
         return(
@@ -95,16 +99,12 @@ class RoomDetailsPanel extends React.PureComponent{
                             </View>
                         </TouchableOpacity>
 
-                        {
-                            !this.props.room_object.user_follows ?
-                                <View style={styles.join_button_container}>
-                                    <BigButton
-                                        onPress={()=>{console.log('hua')}}
-                                        button_text={"Join the room"}
-                                    />
-                                </View>:
-                                undefined
-                        }
+                        <View style={styles.join_button_container}>
+                            <BigButton
+                                onPress={this.toggle_join}
+                                button_text={this.props.room_object.user_follows?"Leave the room":"Join Room"}
+                            />
+                        </View>
 
                     </View>
 
@@ -167,4 +167,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default RoomDetailsPanel
+export default withApollo(RoomDetailsPanel)

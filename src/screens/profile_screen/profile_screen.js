@@ -28,6 +28,7 @@ import {
 import ContentList from "./../../custom_components/content_list/content_list"
 import ProfileDetails from "./components/profile_details"
 import SmallButton from "./../../custom_components/buttons/small_button"
+import Loader from "./../../custom_components/loading/loading_component"
 
 //importing helpers & constants
 import {
@@ -238,83 +239,77 @@ class ProfileScreen extends React.Component {
                     }
                 >
                     {({ loading, error, data, fetchMore }) => {
-                        console.log(loading, error, data)
-                        if (this.state.user_info===undefined){
+
+                        // if data is not undefined then render screen
+                        if(data && this.state.user_info){
                             return(
-                                <Text>
-                                    Loading....sorry
-                                </Text>
-                            )
-                        }
-
-                        if (error){
-                            return(
-                                <Text>
-                                    error sorry
-                                </Text>
-                            )
-                        }
-                        
-                        return(
-                            <ContentList
-                                componentId={this.props.componentId}
-                                loading={loading}
-                                room_posts={data ? data.get_user_profile_posts.room_posts : []}
-                                on_load_more={()=>{
-
-                                    //generating variables
-                                    const fetch_variables = {
-                                        limit:5,
-                                        room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
-                                    }
-                                    if(!this.props.is_user){
-                                        fetch_variables.user_id = this.props.profile_user_info.user_id
-                                    }
-
-                                    fetchMore({
-                                        //getting more posts using cursor
-                                        query:GET_USER_PROFILE_POSTS,
-                                        variables:fetch_variables,
-                                        updateQuery: (previous_data, {fetchMoreResult}) => {
-                                            //appending to the previous result 
-        
-                                            if (!previous_data.get_user_profile_posts.next_page){
-                                                return previous_data
-                                            }
-        
-                                            const new_posts_arr = [
-                                                ...previous_data.get_user_profile_posts.room_posts,
-                                                ...fetchMoreResult.get_user_profile_posts.room_posts
-                                            ]
-        
-                                            const new_data_object = {
-                                                ...fetchMoreResult, 
-                                                get_user_profile_posts:{
-                                                    ...fetchMoreResult.get_user_profile_posts,
-                                                    room_posts:new_posts_arr
-                                                }
-                                            }
-        
-                                            return new_data_object
-                                            }
-                                        })
-                                    }}
-                                header_component={
-                                    <View style={styles.header_container}>
-                                        <ProfileDetails
-                                            width={window.width}
-                                            user_info={this.state.user_info}
-                                        />
-                                        {
-                                            this.generate_lower_body()
+                                <ContentList
+                                    componentId={this.props.componentId}
+                                    loading={loading}
+                                    room_posts={data ? data.get_user_profile_posts.room_posts : []}
+                                    on_load_more={()=>{
+    
+                                        //generating variables
+                                        const fetch_variables = {
+                                            limit:5,
+                                            room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
                                         }
-                                        
-                                    </View>
-                                }
-                                header_display={true}  
-                                avatar_navigate_user_profile={false}
-                            />
+                                        if(!this.props.is_user){
+                                            fetch_variables.user_id = this.props.profile_user_info.user_id
+                                        }
+    
+                                        fetchMore({
+                                            //getting more posts using cursor
+                                            query:GET_USER_PROFILE_POSTS,
+                                            variables:fetch_variables,
+                                            updateQuery: (previous_data, {fetchMoreResult}) => {
+                                                //appending to the previous result 
+            
+                                                if (!previous_data.get_user_profile_posts.next_page){
+                                                    return previous_data
+                                                }
+            
+                                                const new_posts_arr = [
+                                                    ...previous_data.get_user_profile_posts.room_posts,
+                                                    ...fetchMoreResult.get_user_profile_posts.room_posts
+                                                ]
+            
+                                                const new_data_object = {
+                                                    ...fetchMoreResult, 
+                                                    get_user_profile_posts:{
+                                                        ...fetchMoreResult.get_user_profile_posts,
+                                                        room_posts:new_posts_arr
+                                                    }
+                                                }
+            
+                                                return new_data_object
+                                                }
+                                            })
+                                        }}
+                                    header_component={
+                                        <View style={styles.header_container}>
+                                            <ProfileDetails
+                                                width={window.width}
+                                                user_info={this.state.user_info}
+                                            />
+                                            {
+                                                this.generate_lower_body()
+                                            }
+                                            
+                                        </View>
+                                    }
+                                    header_display={true}  
+                                    avatar_navigate_user_profile={false}
+                                />
+                            )
+                        }
+
+                        // if anything goes wrong or loadinng
+                        return(
+                            <Loader/>
                         )
+                        
+
                     }}
                 </Query>
             </SafeAreaView>

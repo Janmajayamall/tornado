@@ -19,6 +19,7 @@ import ContentCaptionBox from "./../content_list/content_caption_box"
 import {
     constants
 } from "./../../helpers/index"
+import ListItemDivider from '../common_decorators/list_item_divider'
 
 
 class CommentList extends React.PureComponent{
@@ -147,6 +148,7 @@ class CommentList extends React.PureComponent{
                 onRefresh={this.refresh_list}
                 refreshing={!this.props.network_status===7}
                 contentContainerStyle={{paddingBottom:this.props.bottom_padding}}
+                ItemSeparatorComponent={()=><ListItemDivider/>}
             />      
         )
     }

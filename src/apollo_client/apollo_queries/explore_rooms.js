@@ -8,17 +8,10 @@ export const GET_NOT_JOINED_ROOMS = gql`
             name,
             status,
             timestamp,
-            last_modified,            
-            creator_info{
-                user_id, 
+            last_modified, 
+            creator_info{                
                 username,
-                avatar{
-                    width, 
-                    height, 
-                    image_name,
-                    cdn_url
-                }
-            }, 
+            },            
             room_members_count,
             user_follows,
             description
@@ -80,18 +73,8 @@ export const GET_ALL_JOINED_ROOMS = gql`
             status,
             timestamp,
             last_modified,            
-            creator_info{
-                user_id, 
+            creator_info{                
                 username,
-                avatar{
-                    width, 
-                    height, 
-                    image_name,
-                    cdn_url
-                },
-                timestamp,
-                bio,
-                three_words
             }, 
             room_members_count,
             user_follows,
@@ -107,20 +90,10 @@ export const GET_ALL_CREATED_ROOMS = gql`
             name,
             status,
             timestamp,
-            last_modified,            
-            creator_info{
-                user_id, 
+            last_modified,   
+            creator_info{                
                 username,
-                avatar{
-                    width, 
-                    height, 
-                    image_name,
-                    cdn_url
-                },
-                timestamp,
-                bio,
-                three_words
-            }, 
+            },          
             room_members_count,
             user_follows,
             description
@@ -135,20 +108,10 @@ export const GET_COMMON_ROOMS = gql`
             name,
             status,
             timestamp,
-            last_modified,            
-            creator_info{
-                user_id, 
+            last_modified,  
+            creator_info{                
                 username,
-                avatar{
-                    width, 
-                    height, 
-                    image_name,
-                    cdn_url
-                },
-                timestamp,
-                bio,
-                three_words
-            }, 
+            },           
             room_members_count,
             user_follows,
             description
@@ -176,6 +139,27 @@ export const GET_ROOM_DEMOGRAPHICS = gql`
                 timestamp,
                 bio,
                 three_words
+            }, 
+            room_members_count,
+            user_follows,
+            description
+        }
+    }
+`
+
+//Query
+export const GET_ROOMS = gql`
+    query get_room($name_filter:String!){
+        get_rooms(user_input:{
+            name_filter:$name_filter
+        }){
+            _id,
+            name,
+            status,
+            timestamp,
+            last_modified,            
+            creator_info{                
+                username,
             }, 
             room_members_count,
             user_follows,
@@ -220,4 +204,6 @@ export const CREATE_ROOM = gql`
         }
     }
 `
+
+// export const FOLLOW
 

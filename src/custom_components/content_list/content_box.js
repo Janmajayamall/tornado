@@ -124,14 +124,6 @@ class ContentBox extends React.PureComponent {
         return(
             <View style={styles.main_container}>
 
-                <View style={styles.user_content_container}>
-                    <AvatarTextPanel
-                        user_object={this.props.post_object.creator_info}
-                        panel_type={constants.avatar_text_panel_type.user}
-                        componentId={this.props.componentId}
-                        avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
-                    />
-                </View>
 
                 {/* room list container */}
                 <TouchableOpacity 
@@ -145,6 +137,15 @@ class ContentBox extends React.PureComponent {
                         {`${this.generate_room_ids_name()}`}
                     </Text>
                 </TouchableOpacity>
+
+                <View style={styles.user_content_container}>
+                    <AvatarTextPanel
+                        user_object={this.props.post_object.creator_info}
+                        panel_type={constants.avatar_text_panel_type.user}
+                        componentId={this.props.componentId}
+                        avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
+                    />
+                </View>
 
                 {/* post image container */}
                 {
@@ -166,7 +167,7 @@ class ContentBox extends React.PureComponent {
                     <HyperLinkText style={base_style.typography.small_font_paragraph}>
                         {this.props.post_object.description}
                     </HyperLinkText>
-                    <Text style={[base_style.typography.small_font, {fontStyle:"italic", alignSelf:"flex-end"}]}>
+                    <Text style={styles.timestamp_text}>
                         {`about ${get_relative_time_ago(this.props.post_object.timestamp)}`}
                     </Text>
                 </View>
@@ -263,7 +264,6 @@ class ContentBox extends React.PureComponent {
 
                     >
                         {(toggle_like, {data})=>{ 
-                            console.log("toggle like mutation")   
                             return(
                                 <TouchableOpacity 
                                     onPress={()=>{
@@ -310,7 +310,6 @@ class ContentBox extends React.PureComponent {
                     </TouchableOpacity>
                 </View>
 
-                <View style={[styles.horizontal_line, this.props.on_feed ? {marginBottom:15} : {}]}/>
                 
             </View>
         )
@@ -326,7 +325,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         // marginTop:15,
-        marginBottom:15
+        // marginBottom:15
     },
     user_content_container:{
         
@@ -352,7 +351,9 @@ const styles = StyleSheet.create({
         width:"100%",
         paddingLeft:10,
         paddingRight:10,
-        marginTop:5
+        marginTop:10,
+        marginBottom:10
+        // backgroundColor:base_style.color.primary_color_lighter
     },
     shared_to_name_text:{
         ...base_style.typography.small_header,
@@ -364,6 +365,11 @@ const styles = StyleSheet.create({
         paddingLeft:10,
         paddingRight:10,
         marginTop:5
+    },
+    timestamp_text:{
+        ...base_style.typography.small_font, 
+        ...base_style.typography.font_colors.low_emphasis,
+        alignSelf:"flex-end"
     }
 
 })

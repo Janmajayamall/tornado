@@ -46,6 +46,14 @@ export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_t
                           text: screen_two_object.display_text,
                           fontSize: 20,
                           drawBehind:true
+                        },
+                        topBar: {
+                          rightButtons: [
+                            {
+                              id: constants.navigation.action_buttons.SEARCH_ROOMS,
+                              text:"Search"
+                            }
+                          ]
                         }
                       }
                     }
