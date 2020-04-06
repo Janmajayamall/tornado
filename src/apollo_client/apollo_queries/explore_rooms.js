@@ -147,7 +147,6 @@ export const GET_ROOM_DEMOGRAPHICS = gql`
     }
 `
 
-//Query
 export const GET_ROOMS = gql`
     query get_room($name_filter:String!){
         get_rooms(user_input:{
@@ -167,8 +166,6 @@ export const GET_ROOMS = gql`
         }
     }
 `
-
-
 
 
 // 
@@ -205,5 +202,16 @@ export const CREATE_ROOM = gql`
     }
 `
 
-// export const FOLLOW
+export const TOGGLE_FOLLOW_ROOM = gql`
+    mutation toggle_follow_rooms($room_id:ID!, $status:String!){
+        toggle_follow_room(user_input:{
+            room_id:$room_id, 
+            status:$status
+        }){
+            room_id,
+            status
+        }
+    }    
+`
+
 

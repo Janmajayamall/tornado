@@ -10,7 +10,7 @@ import PropTypes from "prop-types"
 import base_style from "./../../styles/base"
 
 
-class CaptionPanel extends React.PureComponent{
+class LoadingComponent extends React.PureComponent{
 
     static propTypes = {
     }
@@ -36,7 +36,7 @@ class CaptionPanel extends React.PureComponent{
 
 }
 
-export default CaptionPanel
+export default LoadingComponent
 
 const styles = StyleSheet.create({
     main_container:{

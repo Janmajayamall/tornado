@@ -157,7 +157,11 @@ class CreateRoomPosts extends React.PureComponent{
                                   id:constants.navigation.action_buttons.DONE_POST_ROOM_SELECTION,
                                   text:"Done"
                               }
-                          ]
+                          ],
+                          rightButtonColor:base_style.color.icon_selected,
+                          background:{
+                              color:base_style.color.primary_color
+                          }
                       }
                   }
                 }
@@ -334,6 +338,7 @@ class CreateRoomPosts extends React.PureComponent{
                             }
                             this.props.switch_screen_func()
                         }}
+                        active={true}
                     />
 
                     <ChoosePostImage
@@ -394,10 +399,11 @@ const styles = StyleSheet.create({
     description_text_input:{
         height:"100%",
         width:"100%",
-        backgroundColor:base_style.color.primary_color_lighter,
-        elevation:5,
         ...base_style.typography.small_font_paragraph,
-        color:"#ffffff"
+        color:"#ffffff",
+        borderColor:base_style.color.primary_color_lighter,
+        borderWidth:2.5,
+        padding:5,
     },
     choose_container:{
         flexDirection:"row",

@@ -39,6 +39,7 @@ import {
 //importing custom components
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
 import RoomItemDisplay from "./../../custom_components/room_display/room_item_display"
+import Loader from "./../../custom_components/loading/loading_component"
 
 const window = Dimensions.get("window")
 
@@ -61,7 +62,7 @@ class JoinedRoomsScreen extends React.PureComponent {
         this.state={
         }
 
-        console.log(this.props)
+
     }
 
     navigate_to_room_details = (room_object) => {
@@ -122,18 +123,6 @@ class JoinedRoomsScreen extends React.PureComponent {
             >
                 {({loading, error, data})=>{
 
-                    if (error){
-                        console.log(`Error with query, ${this.props.query_type}`, error)
-                    }
-
-                    if (loading){
-                        return <Text>LOADING.....</Text>
-                    }
-
-                    if (error){
-                        return <Text>Error.....</Text>
-                    }
-
                     if(data){
 
                         return(
@@ -163,6 +152,12 @@ class JoinedRoomsScreen extends React.PureComponent {
                         )
 
                     }
+
+                    return(
+                        <View style={styles.main_container}>
+                            <Loader/>
+                        </View>
+                    )
                 }}
             </Query>
         )

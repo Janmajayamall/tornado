@@ -2,33 +2,75 @@ import { Navigation } from "react-native-navigation"
 import {
   constants
 } from "./../../helpers/index"
+import base_style from "./../../styles/base"
+import Icon from 'react-native-vector-icons/AntDesign'
+// importing screens
+import {  
+  FEED_SCREEN, 
+  SEARCH_ROOMS_SCREEN, 
+  PROFILE_SCREEN
+} from "./../../navigation/screens";
 
-export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_two_object, screen_three_object)=>{
-    console.log(screen_three_object)
-    Navigation.setRoot({
+export const navigation_set_root_two_bottoms_tabs = async ()=>{
+    Promise.all([
+      Icon.getImageSource("home",size=40),
+      Icon.getImageSource("search1",size=40),
+      Icon.getImageSource("smileo",size=40)
+    ]).then(icons=>{
+      Navigation.setRoot({
         root: {
           bottomTabs: {
             id: 'BottomTabsId',
             children: [
               {
+                // feed screen
                 stack: {
                   children: [{
                     component: {
-                      name: screen_one_object.screen_name,
-                      passProps:screen_one_object.props,
+                      name: FEED_SCREEN,
+                      passProps:{},
                       options: {
                         bottomTab: {
-                          text: screen_one_object.display_text,
-                          fontSize: 20,
-                          drawBehind:true
+                          drawBehind:true,
+                          icon: icons[0],  
+                          iconInsets: { top: 20, left: 0, bottom: -20, right: 0 },
+                          iconColor:base_style.color.icon_not_selected,
+                          selectedIconColor:base_style.color.icon_selected                          
                         },
                         topBar: {
                           rightButtons: [
                             {
                               id: constants.navigation.action_buttons.ADD_POST,
-                              text:"Add post"
-                            }
-                          ]
+                              text:"Add post",                                                       
+                            },                          
+                          ],
+                          rightButtonColor:base_style.color.icon_selected,
+                          background: {
+                            color: base_style.color.primary_color,
+                          }                           
+                        },                      
+                      }
+                    }
+                  }]
+                }
+              },
+              {
+                // search screen
+                stack: {
+                  children: [{
+                    component: {
+                      name: SEARCH_ROOMS_SCREEN,
+                      passProps:{},
+                      options: {
+                        bottomTab: {
+                          drawBehind:true,
+                          icon: icons[1],  
+                          iconInsets: { top: 20, left: 0, bottom: -20, right: 0 },
+                          iconColor:base_style.color.icon_not_selected,
+                          selectedIconColor:base_style.color.icon_selected                          
+                        },
+                        topBar: {
+                          visible:false                          
                         }
                       }
                     }
@@ -36,53 +78,27 @@ export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_t
                 }
               },
               {
+                // profile screen
                 stack: {
                   children: [{
                     component: {
-                      name: screen_two_object.screen_name,
-                      passProps:screen_two_object.props,
+                      name:PROFILE_SCREEN,
+                      passProps:{
+                        is_user:true
+                      },
                       options: {
                         bottomTab: {
-                          text: screen_two_object.display_text,
-                          fontSize: 20,
-                          drawBehind:true
+                          drawBehind:true,
+                          icon: icons[2],  
+                          iconInsets: { top: 20, left: 0, bottom: -20, right: 0 },
+                          iconColor:base_style.color.icon_not_selected,
+                          selectedIconColor:base_style.color.icon_selected                          
                         },
                         topBar: {
-                          rightButtons: [
-                            {
-                              id: constants.navigation.action_buttons.SEARCH_ROOMS,
-                              text:"Search"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  }]
-                }
-              },
-              {
-                stack: {
-                  children: [{
-                    component: {
-                      name: screen_three_object.screen_name,
-                      passProps:screen_three_object.props,
-                      options: {
-                        bottomTab: {
-                          text: screen_three_object.display_text,
-                          fontSize: 20,
-                          drawBehind:true
-                        },
-                        topBar: {
-                          // rightButtons: [
-                          //   {
-                          //     id: constants.navigation.action_buttons.ADD_ROOM,
-                          //     text:"Add New Room"
-                          //   },
-                          //   {
-                          //     id: constants.navigation.action_buttons.EDIT_PROFILE,
-                          //     text:"Edit Profile"
-                          //   }
-                          // ]
+                          visible:false,
+                          background: {
+                            color: base_style.color.primary_color,
+                          }  
                         }
                       }
                     }
@@ -90,10 +106,16 @@ export const navigation_set_root_two_bottoms_tabs = (screen_one_object, screen_t
                 }
               },
             ],
+            options:{
+              bottomTabs:{
+                backgroundColor: base_style.color.primary_color,
+                titleDisplayMode:"alwaysHide"
+              },
+            }
           },
-    
         }
       });
+    })
 
 }
 
@@ -105,7 +127,7 @@ export const navigation_set_root_one_screen = (screen_object) => {
             children: [{
               component: {
                 name: screen_object.screen_name,
-                options: screen_object.options,
+              options: screen_object.options,
                 props:screen_object.props
               }
             }]

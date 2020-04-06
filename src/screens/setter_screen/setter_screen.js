@@ -71,23 +71,7 @@ class Setter extends React.PureComponent{
     }
 
     route_to_feed = () => {
-        navigation_set_root_two_bottoms_tabs(
-            {
-                screen_name:FEED_SCREEN,  
-                display_text:"FEED"
-            }, 
-            { 
-                screen_name:TREND_FEED_SCREEN,  
-                display_text:"EXPLORE"
-            },
-            {
-                screen_name:PROFILE_SCREEN,  
-                display_text:"Profile",
-                props:{
-                    is_user:true
-                }
-            }
-        )
+        navigation_set_root_two_bottoms_tabs()
     }
     
     route_to_login = () => {

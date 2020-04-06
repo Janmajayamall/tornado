@@ -7,13 +7,16 @@ import {
     Dimensions,
     Image,
     TouchableOpacity,
+    Keyboard,
 } from 'react-native'
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
 import { 
     Mutation, Query, withApollo
  } from "react-apollo";
- import base_style from "./../../styles/base"
+import base_style from "./../../styles/base"
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 //customer components
 import AsyncImage from '../image/async_image'
@@ -41,6 +44,7 @@ import {
     constants,
     get_relative_time_ago
 } from "./../../helpers/index"
+import base from './../../styles/base';
 
 
 
@@ -71,30 +75,18 @@ class ContentBox extends React.PureComponent {
     // }
 
     navigate_to_comment_screen = () => {
-        Navigation.push(this.props.componentId, {
-            component: {
-                name: COMMENT_SCREEN,
-                passProps: {
-                    post_id:this.props.post_object._id,
-                    query_type:constants.comment_list_query_type.comment_query
-                },
-                options: {
-                    bottomTabs:{
-                        visible:false
-                    }
-                },
-                topBar:{
-                    leftButtons: [
-                        {
-                            id: 'back',
-                            icon: {
-                                uri: 'back',
-                            },
-                        },
-                    ],
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name: COMMENT_SCREEN, 
+            props:{
+                post_id:this.props.post_object._id,
+                query_type:constants.comment_list_query_type.comment_query
+            },
+            options: {
+                bottomTabs:{
+                    visible:false
                 }
             }
-        });
+        })
 
     }
 
@@ -116,7 +108,7 @@ class ContentBox extends React.PureComponent {
             screen_name:ROOM_NAME_LIST,
             props:{
                 room_objects:this.props.post_object.room_objects
-            }
+            },
         })
     }
 
@@ -138,6 +130,7 @@ class ContentBox extends React.PureComponent {
                     </Text>
                 </TouchableOpacity>
 
+                {/* avatar panel */}
                 <View style={styles.user_content_container}>
                     <AvatarTextPanel
                         user_object={this.props.post_object.creator_info}
@@ -168,12 +161,12 @@ class ContentBox extends React.PureComponent {
                         {this.props.post_object.description}
                     </HyperLinkText>
                     <Text style={styles.timestamp_text}>
-                        {`about ${get_relative_time_ago(this.props.post_object.timestamp)}`}
+                        {`posted ${get_relative_time_ago(this.props.post_object.timestamp)}`}
                     </Text>
                 </View>
                 
 
-                {/* comment and like */}
+                {/* comment and likes count */}
                 <View style={styles.like_comment_main_container}>
 
                     <Mutation 
@@ -205,10 +198,7 @@ class ContentBox extends React.PureComponent {
                             
                             //getting toggle like result
                             const toggle_result = data.toggle_like
-                            console.log(toggle_result, data, "kilo d")
 
-
-                            // return
                             //checking if there is any need to update
                             if(toggle_result.user_liked===this.props.post_object.user_liked){
                                 return
@@ -279,38 +269,43 @@ class ContentBox extends React.PureComponent {
                                             variables.status=constants.status.active //user_liked==false means user wants to like
                                         }
                                         //mutating the like object
-                                        console.log(variables, "like post")
                                         toggle_like({
                                             variables:variables
                                         })
 
                                     }}
                                     style={styles.like_container}
-                                >
-                                    <Text style={{backgroundColor:this.props.post_object.user_liked ? "white":"red"}}>
-                                        {this.props.post_object.likes_count}
-                                    </Text>
-                                </TouchableOpacity>
+                                >                                        
+                                        {
+                                            this.props.post_object.user_liked ?
+                                                <Icon name="heart" size={base_style.icons.icon_size} color="#900"/>  :
+                                                <Icon name="hearto" size={base_style.icons.icon_size} color={base_style.color.icon_not_selected}/>          
+                                        }                                                                                                                      
+                                </TouchableOpacity>                                       
                             )
                         }}
                     </Mutation>          
-        
+                    <View style={styles.likes_count_container}>
+                        <Text style={[base_style.typography.small_font, {alignSelf:"center", color:base_style.color.icon_not_selected}]}>
+                            {`${this.props.post_object.likes_count} ${this.props.post_object.likes_count===1?"like":"likes"}`}
+                        </Text>   
+                    </View>
                     <TouchableOpacity style={styles.comment_container}
                         onPress={()=>{
                             if(!this.props.on_feed){
-                                console.log("open comment")
+                                
                             }else{
                                 this.navigate_to_comment_screen()
                             }
                         }}
-                    >
-                        <Text>
-                            comment
-                        </Text>
+                    >                        
+                        <Icon name="message1" size={base_style.icons.icon_size} color={base_style.color.icon_not_selected}/> 
+                        <Text style={[base_style.typography.small_font, {alignSelf:"center", paddingLeft:5, color:base_style.color.icon_not_selected}]}>
+                            Comments
+                        </Text>                        
                     </TouchableOpacity>
-                </View>
-
-                
+                </View>    
+            
             </View>
         )
     }
@@ -325,33 +320,39 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         // marginTop:15,
-        // marginBottom:15
     },
     user_content_container:{
         
     },
-    horizontal_line:{
-        borderBottomColor:base_style.color.primary_color_lighter,
-        borderBottomWidth:1,
-        width:"100%",
-    },
     like_comment_main_container:{
-        flexDirection:"row"
+        flexDirection:"row",
+        justifyContent:"center",
+        marginTop:10,
+        marginBottom:15
     },
     like_container:{
-        width:"50%",
-        // borderRightWidth:2,
-        // borderRightColor:base_style.color.primary_color_lighter
-
+        width:"20%",
+        justifyContent:"flex-end",
+        alignItems:"center",
+        flexDirection:"row"
     },
     comment_container:{
-        width:"50%"
+        width:"50%",
+        flexDirection:"row",
+        justifyContent:"center" 
+    },
+    likes_count_container:{
+        width:"30%",
+        // justifyContent:"flex-start",
+        // alignItems:"flex-start",
+        flexDirection:"row",
+        paddingLeft:5
     },
     shared_to_name_container:{
         width:"100%",
         paddingLeft:10,
         paddingRight:10,
-        marginTop:10,
+        marginTop:20,
         marginBottom:10
         // backgroundColor:base_style.color.primary_color_lighter
     },

@@ -247,6 +247,8 @@ PODS:
     - React-Core
     - React-RCTImage
     - RSKImageCropper
+  - RNVectorIcons (6.6.0):
+    - React
   - RSKImageCropper (2.2.3)
   - SDWebImage (5.6.1):
     - SDWebImage/Core (= 5.6.1)
@@ -289,6 +291,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -358,6 +361,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fast-image"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -393,11 +398,12 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 157eb591c25f7f426a9c04220bcd67275a18907e
   RNFastImage: 3aed2a7be32ca8427afa4f05e9d0338a8ce97e17
   RNImageCropPicker: e25c5293e9c8cbc04e34677ea81ec50a40895ec3
+  RNVectorIcons: 66af4d5c8ff4f584c7b7cd9c4b0780920f27fce2
   RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   SDWebImage: 7edb9c3ea661e77a66661f7f044de8c1b55d1120
   SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8
   Yoga: 6af72bedeaea291a3a3717772d6d41836f23a1b9
 
-PODFILE CHECKSUM: 9346d37841077be46d206c4364cd2d88964cfb83
+PODFILE CHECKSUM: 77b969355908a4d6c04c8e6de6cfa7573400dc2f
 
 COCOAPODS: 1.5.3

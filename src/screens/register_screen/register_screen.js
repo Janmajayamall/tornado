@@ -208,6 +208,7 @@ class Register extends React.PureComponent{
                         <BigButton
                             button_text={"Next"}
                             onPress={this.register_other_att}
+                            active={true}
                         />  
                     </View>
                 </ScrollView>

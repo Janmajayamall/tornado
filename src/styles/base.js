@@ -1,8 +1,14 @@
+import {
+    Platform
+} from "react-native"
+
 export default base_style = {
     color:{
-        primary_color:'#000000',
-        primary_color_lighter:'#1C1C1C',
-        secondary_color:"#ffffff"
+        primary_color:Platform.OS==="ios"?"#000000":'#121212',
+        primary_color_lighter:Platform.OS==="ios"?"#1C1C1C":'#1C1C1C',
+        secondary_color:"#ffffff",
+        icon_not_selected:"#98989d",
+        icon_selected:"#FFD600"
     },
     typography:{
         small_header:{
@@ -53,5 +59,8 @@ export default base_style = {
             },
             text_input_placeholder:"#999999"
         }
+    },
+    icons:{
+        icon_size:25
     }
 }

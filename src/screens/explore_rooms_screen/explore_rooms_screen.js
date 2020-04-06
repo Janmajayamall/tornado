@@ -36,6 +36,7 @@ import base_style from "./../../styles/base"
 import RoomItemDisplay from "./../../custom_components/room_display/room_item_display"
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
 import BigButton from "./../../custom_components/buttons/big_buttons"
+import Loader from "./../../custom_components/loading/loading_component"
 
 //importing graphql queries
 import { 
@@ -135,18 +136,8 @@ class ExploreRooms extends React.Component{
                                 query={GET_NOT_JOINED_ROOMS}
                             >
                                 {({loading, error, data})=>{
-                                    let not_joined_rooms = undefined
-                                    if (data){
-                                        not_joined_rooms = data.get_not_joined_rooms
-                                    }
-                                    if (loading){
-                                        return <Text>LOADING.....</Text>
-                                    }
-        
-                                    if (error){
-                                        return <BigButton onPress={this.select_image_from_device} button_tex="IMAGE"/>
-                                    }
-        
+                                    let not_joined_rooms = data ? data.not_joined_rooms : undefined
+
                                     if (not_joined_rooms){
                                         return(
                                             <Mutation mutation={BULK_ROOM_FOLLOWS}>
@@ -214,6 +205,10 @@ class ExploreRooms extends React.Component{
                                             </Mutation>
                                         )
                                     }
+
+                                    return(
+                                        <Loader/>
+                                    )
                                 }}
                             </Query>
                         </TouchableWithoutFeedback>                

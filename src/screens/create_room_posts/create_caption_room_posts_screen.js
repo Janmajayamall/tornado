@@ -327,6 +327,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                             }
                             this.props.switch_screen_func()
                         }}
+                        active={true}
                     />
 
                     <ChoosePostImage

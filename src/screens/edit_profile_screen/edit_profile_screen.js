@@ -188,6 +188,9 @@ class EditProfile extends React.PureComponent {
 
         //re-rendering the profile screen
         this.props.render_edit_profile_screen()
+
+        //go back
+        Navigation.pop(this.props.componentId)
     }
 
 
@@ -320,22 +323,22 @@ class EditProfile extends React.PureComponent {
                     </View>
                     <View style={styles.input_box}>
                         <BigTextInput
-                            placeholder={"Something about you..."}
+                            placeholder={"You in 3-4 words?"}
                             type="TEXT"
-                            value={this.state.bio.value}
-                            onChangeText={this.change_bio}
-                            error_state={this.state.bio.error}
-                            error_text={this.state.bio.error_text}
+                            value={this.state.three_words.value}
+                            onChangeText={this.change_three_words}
+                            error_state={this.state.three_words.error}
+                            error_text={this.state.three_words.error_text}                            
                         />
                     </View>
                     <View style={styles.input_box}>
                         <BigTextInput
-                            placeholder={"You in 3-4 words?"}
+                            placeholder={"Something about you..."}
                             type="PARAGRAPH"
-                            value={this.state.three_words.value}
-                            onChangeText={this.change_three_words}
-                            error_state={this.state.three_words.error}
-                            error_text={this.state.three_words.error_text}
+                            value={this.state.bio.value}
+                            onChangeText={this.change_bio}
+                            error_state={this.state.bio.error}
+                            error_text={this.state.bio.error_text}
                             height={window.height*0.3}
                         />
                     </View>

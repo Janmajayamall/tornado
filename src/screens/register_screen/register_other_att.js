@@ -268,6 +268,7 @@ class RegisterOtherAtt extends React.PureComponent{
                                                                             console.log(register_user_variables,"dawdadadada")
                                                                             register_user({variables:register_user_variables})
                                                                         }}
+                                                                        active={true}
                                                                     />  
                                                                 </View>
                                                             )

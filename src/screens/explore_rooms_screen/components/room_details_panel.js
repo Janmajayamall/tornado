@@ -17,11 +17,18 @@ import {
 import {Navigation} from "react-native-navigation"
 import PropTypes from "prop-types"
 
+//importing queries and mutations
+import {  
+    TOGGLE_FOLLOW_ROOM, 
+    GET_ROOM_DEMOGRAPHICS,
+    GET_ROOM_FEED
+} from "./../../../apollo_client/apollo_queries/index";
+
 //importing base style 
 import base_style from "./../../../styles/base"
 
 //importing helpers
-import {get_relative_time_ago} from "./../../../helpers/index"
+import {get_relative_time_ago, constants} from "./../../../helpers/index"
 
 //importing custom components
 import BigButton from "./../../../custom_components/buttons/big_buttons"
@@ -47,8 +54,87 @@ class RoomDetailsPanel extends React.PureComponent{
         return get_relative_time_ago(timestamp)
     }
 
-    toggle_join = () => {  
-        
+    toggle_join = async() => {  
+        try{
+
+            //generating toggle variables
+            const variables = {
+                room_id:this.props.room_object._id,   
+                status:this.props.room_object.user_follows?constants.status.not_active:constants.status.active        
+            }
+            
+            const data = await this.props.client.mutate({
+                mutation:TOGGLE_FOLLOW_ROOM,
+                variables:variables,
+                optimisticResponse:()=>{
+                    let optimistic_response = {
+                        __typename:"Mutation",
+                        toggle_follow_room:{
+                            room_id: this.props.room_object._id,
+                            status:variables.status,
+                            __typename: "Follow_room"    
+                        }
+                    }
+                    return optimistic_response
+                },
+                update:(cache, {data})=>{
+
+                    //reaching caption objects for the post from cache
+                    const {get_room_demographics} = cache.readQuery({
+                        query:GET_ROOM_DEMOGRAPHICS,
+                        variables:{
+                            room_id:this.props.room_object._id
+                        }
+                    })
+
+                    //getting toggle_follow status output
+                    const {toggle_follow_room} = data
+
+                    const updated_room_demographics = {
+                        ...get_room_demographics
+                    }
+
+                    //updating user_follows object of the cached room_demographics of the data. 
+                    // Note that if status and user_follows on the same page then don't update it
+                    if(toggle_follow_room.status===constants.status.active){
+                        if(updated_room_demographics.user_follows===true){ // if user_follows is already true (i.e. ACTIVE) then return
+                            return
+                        }
+                        //change the user_follows to true
+                        updated_room_demographics.user_follows=true
+                    }else{
+                        if(updated_room_demographics.user_follows===false){ //if user_follows is already false, return
+                            return
+                        }
+                        //change the user_follows to false
+                        updated_room_demographics.user_follows=false
+                    }
+                
+
+                    //writing it to the cache
+                    cache.writeQuery({
+                        query:GET_ROOM_DEMOGRAPHICS,
+                        variables:{
+                            room_id:this.props.room_object._id
+                        },
+                        data:{
+                            get_room_demographics:updated_room_demographics
+                        }
+                    })
+     
+                },
+                refetchQueries:[
+                    {
+                        query:GET_ROOM_FEED,
+                        variables:{
+                            limit:5
+                        }
+                    }
+                ]
+            })
+        }catch(e){
+            console.log(`Error in toggling follow room: ${e}`)
+        }
     }   
     
     render(){
@@ -76,7 +162,7 @@ class RoomDetailsPanel extends React.PureComponent{
                             </View> 
                             <View style={styles.second_container_second_col}>
                                 <Text style={[styles.description_text, {}]}>
-                                    {`Created ${get_relative_time_ago(this.props.room_object.timestamp)}`}
+                                    {`created ${get_relative_time_ago(this.props.room_object.timestamp)}`}
                                 </Text>
                             </View>
                         </View>
@@ -86,8 +172,8 @@ class RoomDetailsPanel extends React.PureComponent{
                             onPress={this.props.navigate_to_creator_profile}
                         >
                             <View style={styles.creator_first_col}>
-                                <Text style={[styles.description_text, {fontStyle:"italic"}]}>
-                                    {`Created By: ${this.props.room_object.creator_info.username}`}
+                                <Text style={[styles.description_text]}>
+                                    {`created by: ${this.props.room_object.creator_info.username}`}
                                 </Text>
                             </View> 
                             <View style={styles.creator_second_col}>
@@ -103,6 +189,7 @@ class RoomDetailsPanel extends React.PureComponent{
                             <BigButton
                                 onPress={this.toggle_join}
                                 button_text={this.props.room_object.user_follows?"Leave the room":"Join Room"}
+                                active={!this.props.room_object.user_follows}
                             />
                         </View>
 
@@ -151,7 +238,6 @@ const styles = StyleSheet.create({
     },
     description_text:{
         ...base_style.typography.small_font_paragraph,
-        fontWeight:"bold"
     },
     creator_first_col:{
         width:"70%",

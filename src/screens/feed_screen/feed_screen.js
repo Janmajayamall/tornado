@@ -94,7 +94,7 @@ class FeedScreen extends React.PureComponent {
             }}
         >
             {({ loading, error, data, fetchMore }) => {   
-                
+                console.log(data, error, "hiii")
                 if (data){
                     return(
                         <ContentList

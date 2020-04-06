@@ -211,10 +211,9 @@ class Login extends React.PureComponent{
                                                                 email:this.state.email.value.trim(),
                                                                 password:this.state.password.value.trim()
                                                             }
-                                                        })
-
-                                            
+                                                        })                                            
                                                     }}
+                                                    active={true}
                                                 />
                                             )
                                         }}

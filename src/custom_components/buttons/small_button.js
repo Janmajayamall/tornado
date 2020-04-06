@@ -46,7 +46,7 @@ class SmallButton extends React.PureComponent {
 const styles = StyleSheet.create({
     main_container:{
         flexWrap:"wrap",        
-        backgroundColor:"#84C9FB",
+        backgroundColor:"#FFD600",
         padding:2
     },
     button_text:{

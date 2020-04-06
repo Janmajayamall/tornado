@@ -57,7 +57,11 @@ class CommonCreatePosts extends React.PureComponent{
 
     //for topBar buttons
     navigationButtonPressed({ buttonId }) {
-    
+        
+        if(buttonId === "back"){
+            Navigation.pop(this.props.componentId)
+        }
+
         if(buttonId === constants.navigation.action_buttons.SHARE_POST){
             console.log(this.state.create_post_type)
             if(this.state.create_post_type===constants.create_post_type.room_caption_post){

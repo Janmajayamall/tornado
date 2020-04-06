@@ -23,7 +23,6 @@ import base_style from "./../../../styles/base"
 import {get_relative_time_ago} from "./../../../helpers/index"
 
 //importing custom components
-import BigButton from "./../../../custom_components/buttons/big_buttons"
 import ProfileImage from "./../../../custom_components/image/profile_image"
 
 

@@ -19,6 +19,8 @@ import {
     withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 //importing custom components
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
@@ -57,8 +59,9 @@ class SearchRooms extends React.PureComponent{
         super(props)
 
         this.state = {
-            loading:false,
+            loading:true,
             error:false,
+            no_result:false,
 
             //search
             name_filter:"",
@@ -79,10 +82,12 @@ class SearchRooms extends React.PureComponent{
                 }
             })
             const {get_rooms} = data
+            
             //setting the list on the state
             this.setState({
                 rooms_list:get_rooms,
-                loading:false
+                loading:false,
+                no_result:get_rooms.length===0
             })
         }catch(e){
             this.setState({error:true})
@@ -118,16 +123,18 @@ class SearchRooms extends React.PureComponent{
                 >   
 
                     <View style={styles.search_bar_container}>
-                        <View>
-                            <Text>back</Text>
+                        <View style={styles.search_icon_container}>
+                            <Icon name="search1" size={base_style.icons.icon_size} color={base_style.color.icon_selected}/> 
                         </View>
-                        <TextInput
-                            placeholder={"Search rooms..."}
-                            style={styles.search_text_input}
-                            placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
-                            onChangeText={this.search_input_changed}
-                            value={this.state.name_filter}
-                        />            
+                        <View style={styles.search_text_input_container}>
+                            <TextInput                    
+                                placeholder={"Search rooms..."}
+                                style={styles.search_text_input}
+                                placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                                onChangeText={this.search_input_changed}
+                                value={this.state.name_filter}
+                            />        
+                        </View>        
                     </View>
                     <ListItemDivider/> 
 
@@ -136,30 +143,36 @@ class SearchRooms extends React.PureComponent{
 
                             <Loader/>:
 
-                            // if loading is false
-                            <FlatList
-                                data={this.state.rooms_list}
-                                renderItem={(object)=>{
-                                    return(
-                                        <RoomItemDisplay
-                                            room_object={object.item}
-                                            index={object.index}
-                                            add_to_set={()=>{}}
-                                            remove_from_set={()=>{}}
-                                            selected={false}
-                                            selection_allowed={false}
-                                            selection_on_press_sub={()=>{
-                                                this.navigate_to_room_details(object.item)
-                                            }}
-                                    />
-
-                                )
-                                }}
-                                ItemSeparatorComponent={()=> {
-                                    return <ListItemDivider/>
-                                }}
-                                
-                            />                
+                                //if the room_list is empty, that is no result is true
+                                this.state.no_result===true ?
+                                <View style={styles.no_result_container}>
+                                    <Text style={[base_style.typography.medium_header, {...base_style.typography.font_colors.low_emphasis}]}>
+                                        Sorry no such rooms
+                                    </Text>
+                                </View>:
+                                // if loading is false && no_result is false 
+                                <FlatList
+                                    data={this.state.rooms_list}
+                                    renderItem={(object)=>{
+                                        return(
+                                                <RoomItemDisplay
+                                                    room_object={object.item}
+                                                    index={object.index}
+                                                    add_to_set={()=>{}}
+                                                    remove_from_set={()=>{}}
+                                                    selected={false}
+                                                    selection_allowed={false}
+                                                    selection_on_press_sub={()=>{
+                                                        this.navigate_to_room_details(object.item)
+                                                    }}
+                                                />              
+                                        )
+                                    }}
+                                    ItemSeparatorComponent={()=> {
+                                        return <ListItemDivider/>
+                                    }}
+                                    
+                                />                
 
                     }
 
@@ -176,12 +189,25 @@ const styles = StyleSheet.create({
     }, 
     search_bar_container:{
         flexDirection:"row",
-        padding:10
+        padding:10,
+        width:"100%"
+    },
+    search_text_input_container:{
+        width:"90%"
     },
     search_text_input:{
         // width:"100%",
         ...base_style.typography.medium_font,
+        // paddingLeft:10,
+    },
+    no_result_container:{
+        justifyContent:"center",
+        alignItems:"center",
         flex:1
+    },
+    search_icon_container:{
+        width:"10%",
+        justifyContent:"center"
     }
 
 })

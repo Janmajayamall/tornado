@@ -32,7 +32,6 @@ import {
 
 //importing custom components
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
-import BigButton from "./../../custom_components/buttons/big_buttons"
 
 class RoomNameList extends React.PureComponent {
 

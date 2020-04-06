@@ -28,7 +28,6 @@ import {
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing custom components 
-import BigButton from "../../custom_components/buttons/big_buttons";
 import ApolloClient from "apollo-client";
 
 //importing helpers

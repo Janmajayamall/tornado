@@ -73,11 +73,10 @@ class RoomDetails extends React.Component{
                         room_id:this.props.room_id
                     }}
                 >
-                    {({loading: loading_one, error: error_one, data})=>{
+                    {({loading, error, data})=>{
 
                         //getting demographics
                         const get_room_demographics = data ? data.get_room_demographics : undefined
-
                         return(                            
                             <Query 
                                 query={GET_ROOM_POSTS}
@@ -104,17 +103,17 @@ class RoomDetails extends React.Component{
                                                         },
                                                         updateQuery: (previous_data, {fetchMoreResult}) => {
                                                             //appending to the previous result 
-            
+                        
                                                             if (!previous_data.get_room_posts_room_id.next_page){                                                                
                                                                 return previous_data
                                                             }
-            
-            
+                        
+                        
                                                             const new_posts_arr = [
                                                                 ...previous_data.get_room_posts_room_id.room_posts,
                                                                 ...fetchMoreResult.get_room_posts_room_id.room_posts
                                                             ]
-            
+                        
                                                             const new_data_object = {
                                                                 ...fetchMoreResult, 
                                                                 get_room_posts_room_id:{
@@ -122,7 +121,7 @@ class RoomDetails extends React.Component{
                                                                     room_posts:new_posts_arr
                                                                 }
                                                             }
-            
+                        
                                                             return new_data_object
                                                             }
                                                         })
@@ -139,7 +138,7 @@ class RoomDetails extends React.Component{
                                             />
                                         )
                                     }
-            
+                        
                                     //if loading or any error 
                                     return(
                                         <Loader/>
@@ -166,3 +165,4 @@ const styles = StyleSheet.create({
 })
 
 export default RoomDetails
+

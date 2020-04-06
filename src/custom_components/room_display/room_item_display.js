@@ -76,7 +76,7 @@ class RoomItemDisplay extends React.PureComponent{
                 style={{width:"100%"}}
                 >
                     <View style={styles.main_container}>
-                        <View style={[styles.description_container, {backgroundColor:!this.state.selected?base_style.color.primary_color:base_style.color.primary_color_lighter}]}>
+                        <View style={[styles.description_container, {}]}>
                         
                             <Text style={styles.room_name_text}>
                                 {this.props.room_object.name}
@@ -104,11 +104,6 @@ class RoomItemDisplay extends React.PureComponent{
                             }
                                                                             
                         </View>
-                        {/* <View style={styles.button_container}>
-                            <Text style={styles.button_text}>
-                                JOIN
-                            </Text>
-                        </View> */}
                     </View>
             </TouchableOpacity>
         )
@@ -154,3 +149,5 @@ const styles = StyleSheet.create({
 })
 
 export default RoomItemDisplay
+
+// {backgroundColor:!this.state.selected?base_style.color.primary_color:base_style.color.primary_color_lighter}

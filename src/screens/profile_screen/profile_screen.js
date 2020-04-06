@@ -61,6 +61,8 @@ class ProfileScreen extends React.Component {
 
         this.state={
             user_info:this.props.profile_user_info,
+            
+            loading:false
         }
         this.set_user_info()
     }
@@ -76,7 +78,11 @@ class ProfileScreen extends React.Component {
     }
 
     render_again = () => {
-        this.forceUpdate()
+        this.setState({
+            loading:true
+        })
+        this.set_user_info()
+        // this.forceUpdate()
     }
 
 
@@ -124,17 +130,19 @@ class ProfileScreen extends React.Component {
 
         if(this.props.is_user){
             const {data} = await this.props.client.query({
-                query:GET_USER_INFO
+                query:GET_USER_INFO,
+                
             })
             
             this.setState({
-                user_info:data.get_user_info
-    
+                user_info:data.get_user_info,
+                loading:false                
             })
         }
     }
 
     navigation_to_joined_rooms = (query_type) => {
+
         let screen_vars = {
             screen_name:JOINED_ROOMS_SCREEN,
             props:{
@@ -222,7 +230,6 @@ class ProfileScreen extends React.Component {
     }
 
     render(){
-        console.log(this.state.user_info, "inside render")
         return(
             <SafeAreaView style={styles.main_container}>
                 <Query 
@@ -238,14 +245,13 @@ class ProfileScreen extends React.Component {
                         }
                     }
                 >
-                    {({ loading, error, data, fetchMore }) => {
+                    {({ data, fetchMore }) => {
 
                         // if data is not undefined then render screen
-                        if(data && this.state.user_info){
+                        if(data && this.state.user_info && !this.state.loading){
                             return(
                                 <ContentList
                                     componentId={this.props.componentId}
-                                    loading={loading}
                                     room_posts={data ? data.get_user_profile_posts.room_posts : []}
                                     on_load_more={()=>{
     

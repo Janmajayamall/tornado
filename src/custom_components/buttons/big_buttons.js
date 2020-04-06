@@ -14,7 +14,10 @@ class BigButton extends React.PureComponent {
 
     static propTypes = {
         onPress:PropTypes.func,
-        button_text:PropTypes.string
+        button_text:PropTypes.string,
+
+        // button effect
+        active:PropTypes.bool
     }
 
     constructor(props){
@@ -27,7 +30,14 @@ class BigButton extends React.PureComponent {
     render(){
         return(
             <TouchableOpacity 
-                style={styles.main_container}
+                style={this.props.active ?
+                        [styles.main_container, {
+                            backgroundColor:base_style.color.icon_selected,
+                        }] :
+                        [styles.main_container, {
+                            backgroundColor:base_style.color.icon_not_selected,                                       
+                        }] 
+                    }           
                 onPress={this.props.onPress}
             >
                 <Text
@@ -44,16 +54,13 @@ class BigButton extends React.PureComponent {
 const styles = {
     main_container:{
         width:"100%",
-        backgroundColor:base_style.color.primary_color,
-        // borderRadius:10,
-        borderColor:base_style.color.primary_color_lighter,
-        borderWidth:2,
         padding:10,
         justifyContent:"center",
         alignItems:"center"
     },
     button_text:{
-        ...base_style.typography.small_header
+        ...base_style.typography.small_font,
+        color:base_style.color.primary_color
     }
 }
 
