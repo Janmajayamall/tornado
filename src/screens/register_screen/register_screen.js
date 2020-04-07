@@ -7,7 +7,8 @@ import {
     ScrollView
 } from "react-native";
 import {
-    Mutation
+    Mutation, 
+    withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 
@@ -15,15 +16,18 @@ import {Navigation} from "react-native-navigation"
 import base_style from "./../../styles/base"
 
 //importing graphql queries
+import {  
 
+} from "./../../apollo_client/apollo_queries/index";
 
 //import custom components
 import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
 import BigButton from "./../../custom_components/buttons/big_buttons"
+import Loader from "./../../custom_components/loading/loading_component"
 
 // importing screens
 import {
-    REGISTER_OTHER_ATT_SCREEN
+    REGISTER_OTHER_ATT_SCREEN, LOGIN_SCREEN
 } from "./../../navigation/screens"
 
 //import input validators
@@ -48,21 +52,24 @@ class Register extends React.PureComponent{
             email:{
                 value:"",
                 error:false,
-                error_text:"Please enter a valid email ID"
+                error_text:""
             },
             username:{
                 value:"",
                 error:false,
-                error_text:"Please enter username of length greater than 0 and less than 150 characters"
+                error_text:""
             },
             password:{
                 value:"",
                 error:false,
-                error_text:"Please enter a password of length 8-50 characters"
+                error_text:""
             },
 
             //keyboard safe
-            main_container_bottom_padding:0
+            main_container_bottom_padding:0,
+
+            //loading state
+            loading:false
         }
     }
 
@@ -81,30 +88,63 @@ class Register extends React.PureComponent{
         this.setState({main_container_bottom_padding:0})
     }
 
-    validate_the_input = () =>{
+    validate_the_input = async() =>{
 
         let all_inputs_valid = true
 
         let new_input_objects = {}
 
+        //validate password
+        let password_validation = validate_password(this.state.password.value)
+    
+        if (!password_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.password = {
+                ...this.state.password,
+                error:true, 
+                error_text:password_validation.error_text
+            }
+        }else{
+            new_input_objects.password = {
+                ...this.state.password,
+                error:false, 
+            }
+        }
+
         //validating email
-        if (!validate_email(this.state.email.value)){
-            all_inputs_valid = false
-            new_input_objects.email = {...this.state.email, error:true}
+        let email_validation = await validate_email(this.state.email.value, this.props.client)
+        if (!email_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.email={
+                ...this.state.email,
+                error:true, 
+                error_text:email_validation.error_text
+            }
+        }else{
+            new_input_objects.email={
+                ...this.state.email,
+                error:false, 
+            }
         }
 
         //validating username
-        if (!validate_username(this.state.username.value)){
-            all_inputs_valid = false
-            new_input_objects.username = {...this.state.username, error:true}
+        let username_validation = await validate_username(this.state.username.value, this.props.client)
+        if(!username_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.username={
+                ...this.state.username,
+                error:true, 
+                error_text:username_validation.error_text
+            }
+        }else{
+            new_input_objects.username={
+                ...this.state.username,
+                error:false, 
+            }
         }
 
-        //validating password
-        if (!validate_password(this.state.password.value)){
-            all_inputs_valid = false
-            new_input_objects.password = {...this.state.password, error:true}
-        }
         //if even one of the inputs are not valid, update the state
+        console.log(new_input_objects)
         if (!all_inputs_valid){
             this.setState((prev_state)=>{
                 return({
@@ -117,11 +157,25 @@ class Register extends React.PureComponent{
         return all_inputs_valid
     }
 
-    register_other_att = () => {
+    register_other_att = async() => {
+
+        //if loading state is true, then return.
+        if(this.state.loading){
+            return
+        }
+        // otherwise change loading state to true
+        this.setState({loading:true})
 
         //validate the input
-        if (!this.validate_the_input()){
-            return
+        try{
+            let validation_result = await this.validate_the_input()
+            if (!validation_result){
+                this.setState({loading:false})
+                return
+            }
+        }catch(e){
+            console.log(e, "register_screen.js")
+            //change error state to true
         }
 
         navigation_push_to_screen(this.props.componentId, 
@@ -134,15 +188,19 @@ class Register extends React.PureComponent{
                 }
             }
         )
+
+        this.setState({loading:false})
+        return
     }
 
-    change_email_id = (val) => {
+    change_email_id = async(val) => {
         this.setState({
             email:{
                 ...this.state.email,
-                value:val
+                value:val.toLowerCase().trim()
             }
         })
+        
     }
 
     change_password = (val) => {
@@ -155,15 +213,29 @@ class Register extends React.PureComponent{
     }
 
     change_username = (val) => {
+        
+        if(val===" "){
+            return
+        }
+
         this.setState({
             username:{
                 ...this.state.username,
-                value:val
+                value:val.toLowerCase().trim()
             }
         })
     }
     
     render(){
+
+        if(this.state.loading){
+            return(
+                <View style={[styles.main_container, {flex:1}]}>
+                    <Loader/>
+                </View>
+            )
+        }
+
         return(
             <TouchableWithoutFeedback
                 onPress={()=>{
@@ -207,7 +279,7 @@ class Register extends React.PureComponent{
                     <View style={styles.input_box}>
                         <BigButton
                             button_text={"Next"}
-                            onPress={this.register_other_att}
+                            onPress={()=>{this.register_other_att()}}
                             active={true}
                         />  
                     </View>
@@ -232,4 +304,4 @@ const styles = {
     }
 }
 
-export default Register
+export default withApollo(Register)

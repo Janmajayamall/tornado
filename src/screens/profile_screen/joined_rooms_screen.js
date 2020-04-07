@@ -94,7 +94,6 @@ class JoinedRoomsScreen extends React.PureComponent {
 
         //return object object if get_all_created_rooms or get_all_joined_rooms and is_user is true
         if(this.props.is_user && (this.props.query_type===constants.queries.get_all_created_rooms || this.props.query_type===constants.queries.get_all_joined_rooms)){
-            console.log("this")
             return{}
         }
         

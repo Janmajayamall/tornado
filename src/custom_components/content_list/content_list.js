@@ -41,9 +41,6 @@ class ContentList extends React.PureComponent{
         
     }
 
-    componentDidMount(){
-        // console.log("awadwd")
-    }
 
     render_item_list = (object) => {
 

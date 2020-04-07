@@ -42,5 +42,17 @@ export const constants = {
     post_types:{
         room_post:"ROOM_POST",
         room_caption_post:"ROOM_CAPTION_POST"
+    },
+    input_limits:{
+        username:30,
+        post_description:2000,
+        caption:2000,
+        bio:150,
+        three_words:40,
+        max_age:150,
+        min_age:1,
+        max_password:100,
+        min_password:8,
+        name:50
     }
 }

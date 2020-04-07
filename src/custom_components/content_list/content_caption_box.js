@@ -171,6 +171,7 @@ class ContentCaptionBox extends React.PureComponent {
                         panel_type={constants.avatar_text_panel_type.user}
                         componentId={this.props.componentId}
                         avatar_navigate_user_profile={this.props.avatar_navigate_user_profile}
+                        is_user={this.props.post_object.is_user}
                     />
                 </View>
 

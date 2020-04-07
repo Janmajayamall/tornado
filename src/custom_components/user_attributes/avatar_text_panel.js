@@ -7,8 +7,10 @@ import {
     Dimensions,
     StyleSheet,
     TouchableHighlight,
-    Keyboard
+    Keyboard,
+    TouchableWithoutFeedback
 } from "react-native"
+import Menu, { MenuItem, MenuDivider, Position } from "react-native-enhanced-popup-menu";
 
 
 import ProfileImage from "./../image/profile_image"
@@ -20,7 +22,9 @@ import VotingPanel from "./voting_panel"
 //importing helpers
 import {
     constants,
-    get_relative_time_ago
+    get_relative_time_ago,
+    delete_comment_apollo,
+    delete_caption_apollo
 } from "./../../helpers/index"
 
 //import screens and navigation functions
@@ -30,6 +34,7 @@ import{
 import {
     navigation_push_to_screen
 } from "./../../navigation/navigation_routes/index"
+import { withApollo } from "react-apollo";
 
 const window = Dimensions.get("window")
 
@@ -38,9 +43,10 @@ class AvatarTextPanel extends React.PureComponent{
     static propTypes =  {
         user_object:PropTypes.object,
         panel_type:PropTypes.string,
+        is_user:PropTypes.bool,
 
         //if panel_type is comment_display, then comment is required
-        comment:PropTypes.string,
+        comment_object:PropTypes.object,
 
         //if panel_type is comment_input, then create_comment_func is required
         create_comment_func:PropTypes.func,
@@ -66,6 +72,10 @@ class AvatarTextPanel extends React.PureComponent{
             comment_text_input:"",
             
         }
+
+        //refs
+        this.drop_down_menu_ref = null
+        this.generate_panel_ref = React.createRef()
     }
     
     // generating text panel on the basis of value of panel_type
@@ -90,7 +100,7 @@ class AvatarTextPanel extends React.PureComponent{
             return(
                 <View>
                     <HyperLinkText style={base_style.typography.small_font}>
-                        {this.props.comment}
+                        {this.props.comment_object.comment_body}
                     </HyperLinkText>
                 </View>
             )
@@ -205,37 +215,96 @@ class AvatarTextPanel extends React.PureComponent{
 
     // navigate to user_profile if panel_type is "USER"
     navigate_to_user_profile = () => {
+        
         navigation_push_to_screen(this.props.componentId, {
             screen_name:PROFILE_SCREEN,
             props:{
-                is_user:false,
+                is_user:this.props.is_user,
                 profile_user_info:this.props.user_object
             }
         })
     }
 
+    on_avatar_panel_pressed = () => {
+        //navigate to profile screen
+        if(this.props.avatar_navigate_user_profile===true){
+            this.navigate_to_user_profile()
+        }
+    }
+
+    on_avatar_panel_long_pressed = () => {
+        
+        //comment display && is_user, then give option to delete
+        if((this.props.panel_type===constants.avatar_text_panel_type.comment_display || this.props.panel_type===constants.avatar_text_panel_type.caption)
+             && this.props.is_user){
+                this.show_drop_down_menu()
+        }
+    }
+
+    show_drop_down_menu = () => {
+       this.drop_down_menu_ref.show(this.generate_panel_ref.current,Position.BOTTOM_CENTER);
+    }
+
+    handle_delete = () => {
+        console.log('aq')
+        //handling commment
+        if(this.props.panel_type===constants.avatar_text_panel_type.comment_display && this.props.is_user){
+            delete_comment_apollo(this.props.client, this.props.comment_object)
+        }
+
+        //handling caption
+        if(this.props.panel_type===constants.avatar_text_panel_type.caption && this.props.is_user){
+            delete_caption_apollo(this.props.client, this.props.caption_object)
+        }
+
+        //hide the dropdown menu
+        this.drop_down_menu_ref.hide()
+
+        return
+
+    }
+
+    handle_comment_delete = () => {
+
+    }
+
+    handle_caption_delete = () => {
+
+    }
+
     render(){
 
         return(
-            <TouchableOpacity
-                style={styles.main_container}
-                disabled={!this.props.avatar_navigate_user_profile}
-                onPress={this.navigate_to_user_profile}
+            <TouchableWithoutFeedback
+                onPress={this.on_avatar_panel_pressed}
+                onLongPress={this.on_avatar_panel_long_pressed}
             >
-                <View style={styles.user_profile_pic_container}>                    
-                    <ProfileImage
-                            width={window.width*0.10}
-                            image_object={this.props.user_object.avatar}
-                            default_avatar={this.props.user_object.default_avatar}
-                    />             
-                </View>
-                <View style={styles.content_panel_container}>
-                    {
-                        this.generate_panel()
-                    }   
+                <View style={styles.main_container}>
+                    <View style={styles.user_profile_pic_container}>                    
+                        <ProfileImage
+                                width={window.width*0.10}
+                                image_object={this.props.user_object.avatar}
+                                default_avatar={this.props.user_object.default_avatar}
+                        />             
+                    </View>
+                    <View 
+                        style={styles.content_panel_container}
+                        ref={this.generate_panel_ref}
+                        >
+                        {
+                            this.generate_panel()
+                        }   
+                    </View>
+
+                    {/* dropdown menu for delete */}
+                    <Menu
+                        ref={(ref)=>{this.drop_down_menu_ref=ref}}
+                    >
+                        <MenuItem onPress={this.handle_delete}>Delete</MenuItem>
+                    </Menu>
                 </View>
                          
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
         )
 
     }
@@ -293,8 +362,9 @@ const styles = StyleSheet.create({
         flexDirection:"row",
     },
     caption_text_container:{
-        flexDirection:"row", justifyContent:"space-between"
+        flexDirection:"row", 
+        justifyContent:"space-between"
     }
 })
 
-export default AvatarTextPanel
+export default withApollo(AvatarTextPanel)

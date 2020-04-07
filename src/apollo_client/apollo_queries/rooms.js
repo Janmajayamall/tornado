@@ -14,53 +14,8 @@ export const GET_NOT_JOINED_ROOMS = gql`
             },            
             room_members_count,
             user_follows,
-            description
-        }
-    }
-`
-
-export const GET_ROOM_POSTS = gql`
-    query get_room_post($room_id:ID!, $limit:Int!, $room_post_cursor:String){
-        get_room_posts_room_id(user_input:{
-            room_id:$room_id,
-            limit:$limit,
-            room_post_cursor:$room_post_cursor
-        }),{
-            room_posts{
-                _id, 
-                creator_id,
-                creator_info{
-                    user_id, 
-                    username,
-                    avatar{
-                        width,
-                        height
-                        cdn_url,
-                        image_name
-                    },
-                    three_words,
-                    default_avatar
-                },
-                likes_count,
-                user_liked, 
-                image{
-                    width,
-                    height,
-                    cdn_url,
-                    image_name
-                }, 
-                description,
-                timestamp,
-                post_type,
-                room_objects{
-                    _id,
-                    name,
-                    timestamp
-                }
-            },
-            next_page,
-            room_post_cursor, 
-            last_room_post_cursor            
+            description,
+            is_user
         }
     }
 `
@@ -78,7 +33,8 @@ export const GET_ALL_JOINED_ROOMS = gql`
             }, 
             room_members_count,
             user_follows,
-            description
+            description,
+            is_user
         }
     }
 `
@@ -96,7 +52,8 @@ export const GET_ALL_CREATED_ROOMS = gql`
             },          
             room_members_count,
             user_follows,
-            description
+            description,
+            is_user
         }
     }
 `
@@ -114,7 +71,8 @@ export const GET_COMMON_ROOMS = gql`
             },           
             room_members_count,
             user_follows,
-            description
+            description,
+            is_user
         }
     }
 `
@@ -142,7 +100,8 @@ export const GET_ROOM_DEMOGRAPHICS = gql`
             }, 
             room_members_count,
             user_follows,
-            description
+            description,
+            is_user
         }
     }
 `
@@ -162,17 +121,18 @@ export const GET_ROOMS = gql`
             }, 
             room_members_count,
             user_follows,
-            description
+            description,
+            is_user
         }
     }
 `
 
 
-// 
+
 //Mutations
 export const BULK_ROOM_FOLLOWS = gql`
 
-    mutation bulk_follow_room($follow_room_objects:[follow_room_input!]!){
+    mutation bulk_follow_room($follow_room_objects:[bulk_follow_room_input!]!){
         bulk_follow_rooms(user_input:$follow_room_objects){
             _id, 
             room_id, 
@@ -180,7 +140,9 @@ export const BULK_ROOM_FOLLOWS = gql`
             status
         }
     }
+
 `
+
 
 export const CREATE_ROOM = gql`
 
@@ -213,5 +175,7 @@ export const TOGGLE_FOLLOW_ROOM = gql`
         }
     }    
 `
+
+
 
 

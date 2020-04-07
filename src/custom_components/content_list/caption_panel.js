@@ -33,6 +33,7 @@ class CaptionPanel extends React.PureComponent{
                     caption_object={this.props.caption_object}
                     caption_index={this.props.caption_index}
                     feed_screen_caption={true}
+                    is_user={this.props.caption_object.is_user}
                 />            
             </View>                                          
         )

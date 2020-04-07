@@ -4,7 +4,7 @@ import base_style from "./../../styles/base"
 
 export const navigation_push_to_screen = (componentId, screen_object) => {
     Promise.all([
-        Icon.getImageSource("left", size=30)
+        Icon.getImageSource("left", size=base_style.icons.icon_size)
     ]).then(icons=>{
 
         //populating topBar with back button

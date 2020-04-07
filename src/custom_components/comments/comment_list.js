@@ -92,6 +92,7 @@ class CommentList extends React.PureComponent{
                     caption_index={object.index-1}
                     panel_type={constants.avatar_text_panel_type.caption}
                     feed_screen_caption={false}
+                    is_user={object.item.is_user}
                 />
             )
         }
@@ -101,7 +102,8 @@ class CommentList extends React.PureComponent{
                 <AvatarTextPanel
                     user_object={object.item.creator_info}
                     panel_type={constants.avatar_text_panel_type.comment_display}
-                    comment={object.item.comment_body}                
+                    comment_object={object.item}    
+                    is_user={object.item.is_user}
                 />
             )
         }
@@ -147,8 +149,7 @@ class CommentList extends React.PureComponent{
                 renderItem={(object)=>this.render_item(object)}
                 onRefresh={this.refresh_list}
                 refreshing={!this.props.network_status===7}
-                contentContainerStyle={{paddingBottom:this.props.bottom_padding}}
-                ItemSeparatorComponent={()=><ListItemDivider/>}
+                contentContainerStyle={{paddingBottom:this.props.bottom_padding}}                
             />      
         )
     }

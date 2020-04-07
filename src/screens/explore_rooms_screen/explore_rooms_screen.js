@@ -53,6 +53,9 @@ class ExploreRooms extends React.Component{
 
         this.state = {
             selected_set:new Set(),
+
+            //loading
+            loading:false
         }
     }
 
@@ -103,23 +106,7 @@ class ExploreRooms extends React.Component{
 
     navigate_to_feed = (data) =>{
 
-        navigation_set_root_two_bottoms_tabs(
-            {
-                screen_name:FEED_SCREEN,  
-                display_text:"FEED"
-            }, 
-            { 
-                screen_name:EXPLORE_ROOMS_SCREEN,  
-                display_text:"EXPLORE"
-            },
-            {
-                screen_name:PROFILE_SCREEN,  
-                display_text:"Profile",
-                props:{
-                    is_user:true
-                }
-            }
-        )
+        navigation_set_root_two_bottoms_tabs()
 
     }
 
@@ -136,25 +123,18 @@ class ExploreRooms extends React.Component{
                                 query={GET_NOT_JOINED_ROOMS}
                             >
                                 {({loading, error, data})=>{
-                                    let not_joined_rooms = data ? data.not_joined_rooms : undefined
 
-                                    if (not_joined_rooms){
-                                        return(
-                                            <Mutation mutation={BULK_ROOM_FOLLOWS}>
-                                                {(bulk_follow_rooms, {loading, error, data})=>{
+                                    let not_joined_rooms = data ? data.get_not_joined_rooms : undefined
+
+                                    return(
+                                        <Mutation mutation={BULK_ROOM_FOLLOWS}>
+                                            {(bulk_follow_rooms, {loading, error, data})=>{
         
-                                                    if (loading){
-                                                        return <Text>Loading....</Text>
-                                                    }
-        
-                                                    if (error){
-                                                        return <Text>Error....</Text>
-                                                    }
-        
-                                                    if (data){
-                                                        this.navigate_to_feed(data) 
-                                                    }
-                                                    
+                                                if (data){
+                                                    this.navigate_to_feed(data) 
+                                                }
+                                                
+                                                if(not_joined_rooms && !this.state.loading){
                                                     return(
                                                         <SafeAreaView style={styles.main_container}>
                                                             <FlatList
@@ -183,14 +163,30 @@ class ExploreRooms extends React.Component{
                                                                         <BigButton
                                                                             button_text={"Join Rooms"}
                                                                             onPress={async()=> {
-                                                                                //getting the user_id 
-                                                                                const {user_info} = await client.query({
-                                                                                    query:GET_USER_INFO
-                                                                                }) 
-                                                                                const bulk_join_objects = this.generate_selected_rooms_arr(user_info.user_id)
-                                                                                                                                                    
-                                                                                //mutation bulk follow rooms
-                                                                                bulk_follow_rooms({variables:{follow_room_objects:bulk_join_objects}})
+                                                                                
+                                                                                //if loading state already true, then return 
+                                                                                if(this.state.loading){
+                                                                                    return
+                                                                                }
+
+                                                                                //set loading state to tru 
+                                                                                this.setState({loading:true})
+
+                                                                                try{
+                                                                                    //getting the user_id 
+                                                                                    const {data} = await client.query({
+                                                                                        query:GET_USER_INFO
+                                                                                    }) 
+
+                                                                                    const bulk_join_objects = this.generate_selected_rooms_arr(data.get_user_info.user_id)
+                                                                                                                                            
+                                                                                    //mutation bulk follow rooms
+                                                                                    bulk_follow_rooms({variables:{follow_room_objects:bulk_join_objects}})
+
+                                                                                }catch(e){
+                                                                                    console.log(e, "explore_rooms_screen.js")
+                                                                                    //TODO: show error to the user
+                                                                                }
                                                                             }}
                                                                         />
                                                                     </View>
@@ -198,16 +194,21 @@ class ExploreRooms extends React.Component{
                                                                 :
                                                                 undefined
                                                             }
-                                                                                                                                                           
+                                                                                                                                                            
                                                         </SafeAreaView>
                                                     )
-                                                }}                            
-                                            </Mutation>
-                                        )
-                                    }
+                                                }
 
-                                    return(
-                                        <Loader/>
+                                                //when loading of not_joined_rooms is undefined
+                                                return(
+                                                    <View style={styles.main_container}>
+                                                        <Loader/>
+                                                    </View>
+                                                )
+            
+
+                                            }}                            
+                                        </Mutation>
                                     )
                                 }}
                             </Query>

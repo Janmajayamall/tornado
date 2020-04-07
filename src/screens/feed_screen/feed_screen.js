@@ -66,7 +66,7 @@ class FeedScreen extends React.PureComponent {
                                 rightButtons: [
                                     {
                                         id: constants.navigation.action_buttons.SHARE_POST,
-                                        text:"New Post"
+                                        text:"Post"
                                     }
                                 ]
                             }

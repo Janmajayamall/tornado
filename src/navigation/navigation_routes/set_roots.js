@@ -13,9 +13,13 @@ import {
 
 export const navigation_set_root_two_bottoms_tabs = async ()=>{
     Promise.all([
+      //bottom tab icons
       Icon.getImageSource("home",size=40),
       Icon.getImageSource("search1",size=40),
-      Icon.getImageSource("smileo",size=40)
+      Icon.getImageSource("smileo",size=40),
+      
+      //other icons
+      Icon.getImageSource("plus", size=base_style.icons.icon_size)
     ]).then(icons=>{
       Navigation.setRoot({
         root: {
@@ -41,7 +45,8 @@ export const navigation_set_root_two_bottoms_tabs = async ()=>{
                           rightButtons: [
                             {
                               id: constants.navigation.action_buttons.ADD_POST,
-                              text:"Add post",                                                       
+                              icon:icons[3],
+                              iconColor:base_style.color.icon_selected                                                                        
                             },                          
                           ],
                           rightButtonColor:base_style.color.icon_selected,

@@ -341,7 +341,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                             // width={window.width/3}
                             onPress={()=>{this.choose_post_image()}}
                         />
-                        <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic",   alignSelf:"center"}}>
                             {this.state.choose_image_subtext}
                         </Text>
                         
@@ -352,7 +352,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                             // width={window.width/3}
                             onPress={this.open_room_select_modal}
                         />   
-                        <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic",   alignSelf:"center"}}>
                             {` to share this post with?`}
                         </Text>
                         

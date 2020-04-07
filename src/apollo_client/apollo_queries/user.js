@@ -46,7 +46,6 @@ export const REGISTER_USER = gql`
     }
 `
 
-// Mutation 
 export const EDIT_USER_PROFILE = gql`
     mutation register_users(
                                 $username:String!,
@@ -84,6 +83,33 @@ export const EDIT_USER_PROFILE = gql`
     }
 `
 
+export const LOGIN_USER = gql`
+    mutation login_users($email:String!, $password:String!){
+        login_user(user_input:{
+            email:$email,
+            password:$password
+        }){
+            _id, 
+            user_id,
+            avatar{
+                _id,
+                image_name,
+                height,
+                width, 
+                cdn_url
+            },
+            jwt, 
+            age, 
+            name, 
+            three_words, 
+            bio,
+            username, 
+            default_avatar,
+            timestamp, 
+        }
+    }
+`
+
 
 //Query
 export const GET_PRESIGNED_URL = gql`
@@ -92,5 +118,40 @@ export const GET_PRESIGNED_URL = gql`
             file_name:$file_name
             file_mime:$file_mime
         })
+    }
+`
+
+export const GET_USER_INFO = gql`
+    query{
+        get_user_info{
+            _id,
+            user_id,
+            age, 
+            username, 
+            timestamp, 
+            name, 
+            three_words,
+            bio,
+            avatar{
+                _id,
+                image_name, 
+                width, 
+                height, 
+                cdn_url
+            },
+            default_avatar,
+        }
+    }
+`
+
+export const CHECK_EMAIL = gql`
+    query check_emails($email:String!){
+        check_email(email:$email)
+    }
+`
+
+export const CHECK_USERNAME = gql`
+    query check_usernames($username:String!){
+        check_username(username:$username)
     }
 `

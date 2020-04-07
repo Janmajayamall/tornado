@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     main_container:{
         flexWrap:"wrap",        
         backgroundColor:"#FFD600",
-        padding:2
+        padding:5
     },
     button_text:{
         ...base_style.typography.small_font,

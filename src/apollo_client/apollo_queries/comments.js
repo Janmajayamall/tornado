@@ -1,7 +1,6 @@
 import gql from "graphql-tag"
 
 // Queries
-
 export const GET_POST_COMMENTS = gql`
     query get_comments($content_id:ID!, $content_type:String! ){
         get_post_comments(user_input:{
@@ -12,9 +11,11 @@ export const GET_POST_COMMENTS = gql`
             content_id, 
             content_type, 
             creator_info{
+                _id,
                 username,
                 timestamp,
                 avatar{
+                    _id,
                     width,
                     height,
                     image_name, 
@@ -24,58 +25,8 @@ export const GET_POST_COMMENTS = gql`
             }, 
             comment_body,
             timestamp,
-            last_modified
-        }
-    }
-`
-
-export const GET_LOCAL_USER_INFO = gql`
-    {
-        user_info @client {
-            user_id,
-            avatar{
-                image_name,
-                width, 
-                height, 
-                cdn_url
-            }, 
-            username,
-            age, 
-            name, 
-            three_words, 
-            bio, 
-            default_avatar,
-            timestamp
-        }
-    }
-`
-
-export const GET_POST_CAPTIONS = gql`
-    query get_post_caption($post_id:ID!){
-        get_post_captions(post_id:$post_id){
-            _id,
-            post_id,
-            creator_info{
-                user_id,
-                avatar{
-                    image_name,
-                    width, 
-                    height, 
-                    cdn_url
-                }, 
-                username,
-                three_words
-            },
-            timestamp,
-            last_modified,        
-            description,     
-            up_votes_count, 
-            down_votes_count,  
-            user_vote_object{     
-                _id,            
-                content_id, 
-                vote_type
-            }
+            last_modified,
+            is_user
         }
     }
 `
@@ -101,68 +52,10 @@ export const CREATE_COMMENT = gql`
 `;
 
 
-export const CREATE_CAPTION = gql`
+export const DELETE_COMMENT = gql`
 
-    mutation create_captions($post_id:ID!, $description:String!){
-        
-        create_caption(user_input:{
-            post_id:$post_id,
-            description:$description
-        }),{
-            _id,
-            post_id,
-            creator_info{
-                user_id,
-                avatar{
-                    image_name,
-                    width, 
-                    height, 
-                    cdn_url
-                }, 
-                username,
-                three_words
-            },
-            timestamp,
-            last_modified,        
-            description,     
-            up_votes_count, 
-            down_votes_count,  
-            user_vote_object{
-                _id, 
-                content_id, 
-                vote_type
-            }
-        }
-    }
-`;
+    mutation delete_comments($comment_id:ID!){
 
-
-
-export const TOGGLE_LIKE = gql`
-
-    mutation toggle_likes($status:String!, $content_id:ID!){
-        toggle_like(user_input:{
-            content_id:$content_id      
-            status:$status
-        }),{
-            _id,
-            content_id, 
-            status
-        }
-    }
-`
-
-export const TOGGLE_VOTE = gql`
-
-    mutation toggle_votes($content_id:ID!, $vote_type:String!, $content_type:String!){
-        toggle_vote(user_input:{
-            content_id:$content_id, 
-            vote_type:$vote_type, 
-            content_type:$content_type
-        }){
-            _id, 
-            content_id,
-            vote_type,
-        }
+        delete_comment(comment_id:$comment_id)
     }
 `

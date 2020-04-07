@@ -104,6 +104,7 @@ class Comment extends React.PureComponent {
                     return(
                         <AvatarTextPanel
                             user_object={user_info}
+                            is_user={post_object.is_user}
                             panel_type={constants.avatar_text_panel_type.comment_input}
                             create_comment_func={(comment_body)=>{
 
@@ -119,11 +120,21 @@ class Comment extends React.PureComponent {
                                     variables:variables,
                                     update:(proxy, {data:{create_comment}})=>{
                                         //generating comment object temp
+                                        /*
+                                            In this case please note the following
+                                            1. __typename returned is "Comment" for CREATE_COMMENT query, not "Comment_with_creator"
+                                            2. __typename for comment returned in query "GET_POST_COMMENTS" is "Comment_with_creator", hence you need to change the __typename here
+                                                otherwise it will throw error.
+                                            3. Also populate the rest of the information (i.e. creator_info object, timestamp, last_modified) in the crete_comment object, so 
+                                                that object keys match with prior comments object keys.
+                                        */
                                         const get_comment_obj = {
                                             ...create_comment,
                                             timestamp:new Date().toISOString(),
                                             last_modified:new Date().toISOString(),
-                                            creator_info:user_info                                                
+                                            creator_info:user_info,
+                                            is_user:true,
+                                            __typename:"Comment_with_creator"                                             
                                         }
 
                                         const cache_query = {
@@ -136,7 +147,7 @@ class Comment extends React.PureComponent {
 
                                         //reading query response from cache
                                         const data = proxy.readQuery(cache_query)
-
+                                    
                                         //appending it to get_post_comments arr 
                                         data.get_post_comments.push(get_comment_obj)
 
@@ -169,6 +180,7 @@ class Comment extends React.PureComponent {
                     return(
                         <AvatarTextPanel
                             user_object={user_info}
+                            is_user={post_object.is_user}
                             panel_type={constants.avatar_text_panel_type.caption_input}
                             avatar_navigate_user_profile={false}
                             create_caption_func={(caption_body)=>{
