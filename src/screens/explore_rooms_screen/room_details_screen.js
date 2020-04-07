@@ -52,11 +52,11 @@ class RoomDetails extends React.Component{
 
     }
 
-    navigate_to_creator_profile = (user_info) => {
+    navigate_to_creator_profile = (user_info, is_user) => {
         navigation_push_to_screen(this.props.componentId, {
             screen_name:PROFILE_SCREEN,
             props:{
-                is_user:false,
+                is_user:is_user,
                 profile_user_info:user_info
             }
         })
@@ -131,7 +131,7 @@ class RoomDetails extends React.Component{
                                                     <RoomDetailsPanel
                                                         room_object={get_room_demographics}
                                                         navigate_to_creator_profile={()=>{                                                                            
-                                                            this.navigate_to_creator_profile(get_room_demographics.creator_info)
+                                                            this.navigate_to_creator_profile(get_room_demographics.creator_info, get_room_demographics.is_user)
                                                         }}
                                                     />
                                                 }

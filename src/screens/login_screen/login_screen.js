@@ -10,11 +10,10 @@ import {
     Mutation,
     ApolloConsumer
 } from "react-apollo"
-import {Navigation} from "react-native-navigation"
 import { 
     setting_up_the_user,
-    validate_email,
-    validate_password,
+    validate_login_email,
+    validate_login_password,
     setting_up_jwt_token
  } from "./../../helpers/index";
 
@@ -34,6 +33,9 @@ import {
     LOGIN_SCREEN,
     FEED_SCREEN
 } from "./../../navigation/screens"
+import {
+    navigation_set_root_two_bottoms_tabs
+} from "./../../navigation/navigation_routes/index"
 
 
 
@@ -81,15 +83,35 @@ class Login extends React.PureComponent{
         let new_input_objects = {}
 
         //validating email
-        if (!validate_email(this.state.email.value)){
-            all_inputs_valid = false
-            new_input_objects.email = {...this.state.email, error:true}
+        let email_validation = validate_login_email(this.state.email.value)
+        if(!email_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.email={
+                ...this.state.email,
+                error:true, 
+                error_text:email_validation.error_text
+            }
+        }else{
+            new_input_objects.email={
+                ...this.state.email,
+                error:false
+            }
         }
 
         //validating password
-        if (!validate_password(this.state.password.value)){
-            all_inputs_valid = false
-            new_input_objects.password = {...this.state.password, error:true}
+        let password_validation = validate_login_password(this.state.password.value)
+        if(!password_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.password={
+                ...this.state.password,
+                error:true, 
+                error_text:password_validation.error_text
+            }
+        }else{
+            new_input_objects.password={
+                ...this.state.password,
+                error:false
+            }
         }
 
         //if even one of the inputs are not valid, update the state
@@ -124,28 +146,12 @@ class Login extends React.PureComponent{
         })
     }
 
-    setting_up_the_user = async(user_data, apollo_client) => {
+    setting_up_the_user = async(user_data) => {
 
         await setting_up_jwt_token(user_data.jwt)
 
-        //routing user to feed screen after authentication
-        Navigation.setRoot({
-            root: {
-              stack: {
-                children: [{
-                  component: {
-                    name: FEED_SCREEN,
-                    options: {
-                      topBar: {
-                        visible: false,
-                      },
-                    }
-                  }
-                }]
-              }
-            }
-          });
-        
+        //routing bottom tab screens
+        navigation_set_root_two_bottoms_tabs()
         return
     }
     
@@ -181,46 +187,40 @@ class Login extends React.PureComponent{
                         />
                     </View>
                     <View style={styles.input_box}>
-                        <ApolloConsumer>
-                            {
-                                client => (
-                                    <Mutation
-                                        mutation={LOGIN_USER}
-                                    >
-                                        {(login_user, {data, error})=>{
+                        <Mutation
+                            mutation={LOGIN_USER}
+                        >
+                            {(login_user, {data, error})=>{
 
-                                            console.log(error)
+                                console.log(error)
 
-                                            //after authenticating the user
-                                            if (data){
-                                                console.log("Logged in")
-                                                this.setting_up_the_user(data.login_user, client)
+                                //after authenticating the user
+                                if (data){
+                                    console.log("Logged in")
+                                    this.setting_up_the_user(data.login_user)
+                                }
+
+                                return(
+                                    <BigButton
+                                        button_text={"Login"}
+                                        onPress={()=>{
+                                            //validate the input
+                                            if(!this.validate_the_input()){
+                                                return
                                             }
 
-                                            return(
-                                                <BigButton
-                                                    button_text={"Login"}
-                                                    onPress={()=>{
-                                                        //validate the input
-                                                        if(!this.validate_the_input()){
-                                                            return
-                                                        }
-
-                                                        login_user({
-                                                            variables:{
-                                                                email:this.state.email.value.trim(),
-                                                                password:this.state.password.value.trim()
-                                                            }
-                                                        })                                            
-                                                    }}
-                                                    active={true}
-                                                />
-                                            )
+                                            login_user({
+                                                variables:{
+                                                    email:this.state.email.value.trim(),
+                                                    password:this.state.password.value.trim()
+                                                }
+                                            })                                            
                                         }}
-                                    </Mutation>
+                                        active={true}
+                                    />
                                 )
-                            }
-                        </ApolloConsumer>                             
+                            }}
+                        </Mutation>                           
                     </View>
                 </ScrollView>
             </TouchableWithoutFeedback>

@@ -35,6 +35,34 @@ export const validate_email = async(email, apollo_client) => {
     })
 }
 
+export const validate_login_email = (email) => {
+
+    if(email.trim()===""){
+        return({
+            valid:false,
+            error_text:"Please enter your email"
+        })
+    }
+
+    return ({
+        valid:true
+    })
+}
+
+export const validate_login_password = (password) => {
+
+    if(password.trim()===""){
+        return({
+            valid:false,
+            error_text:"Please enter your password"
+        })
+    }
+
+    return({
+        valid:true
+    })
+}
+
 export const validate_password = (password) => {
 
     if(password.trim()===0){
