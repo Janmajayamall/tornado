@@ -20,6 +20,9 @@ import { Navigation } from "react-native-navigation"
 
 import base_style from "./../../styles/base"
 
+//importing custom components
+import Loader from "./../../custom_components/loading/loading_component"
+
 //import graphql queries/mutations
 import {
     GET_ALL_JOINED_ROOMS,
@@ -27,12 +30,11 @@ import {
     GET_USER_INFO
 } from "./../../apollo_client/apollo_queries/index"
 
-//importing custom components 
-import ApolloClient from "apollo-client";
-
 //importing helpers
 import {
-    constants
+    constants,
+    validate_room_description,
+    validate_room_name
 } from "./../../helpers/index"
 
 const window = Dimensions.get("window")
@@ -48,8 +50,18 @@ class AddRooms extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            name:"",
-            description:"",
+            name:{
+                value:"",
+                error:false,
+                error_text:""
+            },
+            description:{
+                value:"",
+                error:false,
+                error_text:""
+            },
+
+            //loading state
             loading:false
         }
 
@@ -62,22 +74,80 @@ class AddRooms extends React.Component{
 
         //create room action button is triggered
         if (buttonId===constants.navigation.action_buttons.CREATE_ROOM && !this.state.loading){
-            this.generate_create_room_variables()
+            this.create_room_mutation_wrapper()
         }
     }
 
-    validate_inputs = () => {
-        return true
+    validate_inputs = async() => {
+
+        let all_inputs_valid = true
+        let new_input_objects = {}
+        
+        //validate room name
+        const name_validation = await validate_room_name(this.state.name.value, this.props.client)
+        if(!name_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.name={
+                ...this.state.name,
+                error:true,
+                error_text:name_validation.error_text
+            }
+        }else{
+            new_input_objects.name={
+                ...this.state.name,
+                error:false
+            }
+        }
+
+        //validate room description
+        const description_validation = validate_room_description(this.state.description.value)
+        if(!description_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.description={
+                ...this.state.description,
+                error:true,
+                error_text:description_validation.error_text
+            }
+        }else{
+            new_input_objects.description={
+                ...this.state.description,
+                error:false,
+            }
+        }
+
+        //checking whether all inputs valid or not
+        if(!all_inputs_valid){
+            this.setState((prev_state)=>{
+                return({
+                    ...prev_state,
+                    ...new_input_objects
+                })
+            })
+        }
+
+        return all_inputs_valid
     }
 
-    generate_create_room_variables = async() => {
+    create_room_mutation = async() => {
 
-        //TODO:validate the inputs
-        if(!this.validate_inputs()){
-            return({
-                variables:{},
-                valid:false
+        //if loading state is true then return 
+        if(this.state.loading){
+            return
+        }
+
+        //otherwise make the loading state true
+        this.setState({
+            loading:true
+        })
+
+        //validate the inputs
+        const inputs_valid = await this.validate_inputs()
+        if(!inputs_valid){
+            //if input validation is false, then set loading state to false
+            this.setState({
+                loading:false
             })
+            return
         }
 
         //considering all inputs are valid
@@ -86,64 +156,125 @@ class AddRooms extends React.Component{
         })
         const {user_id} = data.get_user_info
 
-        if(user_id===undefined){
-            return({
-                variables:{},
-                valid:false
-            })
-        } 
-        this.create_room_query({
-            variables:{
-                creator_id:user_id,
-                name:this.state.name, 
-                description:this.state.description
-            },
-            valid:true
-        })
-
-    }
-
-    create_room_query = async(create_room_input) => {
-
-        //if the input is invalid then return 
-        if (!create_room_input.valid){
+        if(!user_id){
+            //TODO: throw an error
+            console.log(error)
             return
         }
 
         //creating the room using the client
         const create_room_result = await this.props.client.mutate({
             mutation:CREATE_ROOM,
-            variables:create_room_input.variables
+            variables:{
+                creator_id:user_id,
+                name:this.state.name.value, 
+                description:this.state.description.value
+            },
+            refetchQueries:[
+                {
+                    query:GET_ALL_JOINED_ROOMS,
+                    variables:{}
+                }
+            ]
         })
 
-        //TODO: creating room is done. stop loading and move to room
-        console.log(create_room_result, "create_room")
+        //popping add_rooms screen
+        Navigation.pop(this.props.componentId)
+    }
 
+    create_room_mutation_wrapper = async() => {
+
+        //if loading is true then return 
+        if(this.state.loading){
+            return
+        }
+
+        try{
+            await this.create_room_mutation()
+            return
+        }catch(e){
+            console.log(e, "add_rooms_screen.js")
+            this.setState({
+                loading:false
+            })
+            return
+        }
+    }
+
+    change_room_name = (val) => {
+        
+        this.setState((prev_state)=> {
+            return({
+                name:{
+                    ...prev_state.name,
+                    value:val.toLowerCase().trim()
+                }
+            })
+        })
+    }
+
+    change_room_description = (val) => {
+
+        this.setState((prev_state)=> {
+            return({
+                description:{
+                    ...prev_state.description,
+                    value:val
+                }
+            })
+        })
     }
 
     render(){
+
+        if(this.state.loading){
+            return(
+                <View style={styles.main_container}>
+                    <Loader/>
+                </View>
+            )
+        }
+
         return(
             <ScrollView style={styles.main_container}>
                 <SafeAreaView>
                 
                     <View style={styles.name_container}>
                         <TextInput
-                            value={this.state.name}
+                            value={this.state.name.value}
                             style={styles.name_text_input}
-                            onChangeText={(val)=>{this.setState({name:val})}}
+                            onChangeText={this.change_room_name}
                             placeholder={"Room Name"}
-                            placeholderTextColor={"#d9d9d9"}
+                            placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
                         />
+                        {
+                            this.state.name.error ? 
+                            <View style={styles.error_view}>
+                                <Text style={styles.error_text}>
+                                    {this.state.name.error_text}
+                                </Text>
+                            </View>:
+                            undefined
+                        }   
                     </View>                        
                     <View style={styles.description_container}>
                         <TextInput
-                            value={this.state.description}
+                            value={this.state.description.value}
                             multiline={true}
-                            onChangeText={(val)=>{this.setState({description:val})}}
+                            onChangeText={this.change_room_description}
                             style={styles.description_text_input}
                             placeholder={"Short description of the room..."}
-                            placeholderTextColor={"#d9d9d9"}
+                            placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
                         />
+                        {
+                            this.state.description.error ? 
+                            <View style={styles.error_view}>
+                                <Text style={styles.error_text}>
+                                    {this.state.description.error_text}
+                                </Text>
+                            </View>:
+                            undefined
+                        }   
                     </View>
                 </SafeAreaView>
             </ScrollView>
@@ -165,7 +296,7 @@ const styles = StyleSheet.create({
     },
     name_text_input:{
         width:"100%",
-        ...base_style.typography.small_header,
+        ...base_style.typography.small_font,
         backgroundColor:base_style.color.primary_color_lighter,
         padding:10
     },
@@ -176,10 +307,16 @@ const styles = StyleSheet.create({
     description_text_input:{
         width:"100%",
         ...base_style.typography.small_font_paragraph,
-        backgroundColor:base_style.color.primary_color_lighter,
         height:window.height*0.3,
-        padding:10
+        padding:10,
+        borderColor:base_style.color.primary_color_lighter,
+        borderWidth:2.5,
+    },
+    error_view:{
+        paddingTop:2
+    },
+    error_text:{
+        ...base_style.typography.mini_font
     }
 
 })
-

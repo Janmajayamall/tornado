@@ -8,7 +8,8 @@ export const constants = {
             CREATE_ROOM:"create_room",
             EDIT_PROFILE:"edit_profile",
             DONE_POST_ROOM_SELECTION:"done_post_room_selection",
-            SEARCH_ROOMS:"search_rooms"
+            SEARCH_ROOMS:"search_rooms",
+            FOLLOW_BULK:"follow_bulk"
         }
     },
     queries:{
@@ -47,12 +48,13 @@ export const constants = {
         username:30,
         post_description:2000,
         caption:2000,
-        bio:150,
+        bio:500,
         three_words:40,
-        max_age:150,
         min_age:1,
         max_password:100,
         min_password:8,
-        name:50
+        name:100,
+        room_name:50,
+        room_description:1000
     }
 }

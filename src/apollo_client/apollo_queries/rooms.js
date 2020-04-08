@@ -127,6 +127,11 @@ export const GET_ROOMS = gql`
     }
 `
 
+export const CHECK_ROOM_NAME = gql`
+    query check_room_names($room_name:String!){
+        check_room_name(room_name:$room_name)
+    }
+`
 
 
 //Mutations

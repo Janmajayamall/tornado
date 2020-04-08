@@ -158,7 +158,11 @@ class ContentBox extends React.PureComponent {
 
                 {/* description container */}
                 <View style={styles.description_container}>
-                    <HyperLinkText style={base_style.typography.small_font_paragraph}>
+                    <HyperLinkText
+                        style={base_style.typography.small_font_paragraph}
+                        trim={true}
+                        numberOfLines={3}
+                    >
                         {this.props.post_object.description}
                     </HyperLinkText>
                     <Text style={styles.timestamp_text}>
@@ -199,11 +203,6 @@ class ContentBox extends React.PureComponent {
                             
                             //getting toggle like result
                             const toggle_result = data.toggle_like
-
-                            //checking if there is any need to update
-                            if(toggle_result.user_liked===this.props.post_object.user_liked){
-                                return
-                            }
                             
                             //taking care of the liked/unliked post & the likes count
                             const updated_room_posts_arr = []

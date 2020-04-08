@@ -3,6 +3,7 @@ import {
     StyleSheet,
     View,
     Text,
+    TouchableOpacity,
 
 } from "react-native";
 import { 
@@ -10,6 +11,7 @@ import {
  } from "react-apollo";
 import base_style from "./../../styles/base"
 import PropTypes from "prop-types"
+import Icon from "react-native-vector-icons/AntDesign"
 
 //importing queries/mutations
 import {  
@@ -49,7 +51,23 @@ class VotingPanel extends React.PureComponent{
                     vote_type:vote_type,
                     content_type:"CAPTION"
                 },
+                optimisticResponse:()=>{
+                    let optimistic_response = {
+                        __typename:"Mutation",
+                        toggle_vote:{
+                            _id:new Date().toISOString(),
+                            content_id:this.props.caption_object._id,
+                            vote_type:vote_type,
+                            __typename:"Vote"
+                        }
+                    }
+                    return optimistic_response
+                },
                 update:(cache, {data})=>{
+
+                    //getting toggle vote result
+                    const toggle_result = data.toggle_vote
+                    console.log(toggle_result, "qwerty")
 
                     //reaching caption objects for the post from cache
                     const {get_post_captions} = cache.readQuery({
@@ -57,16 +75,7 @@ class VotingPanel extends React.PureComponent{
                         variables:{
                             post_id:this.props.caption_object.post_id,    
                         }
-                    })
-
-                    //getting toggle vote result
-                    const toggle_result = data.toggle_vote
-                    
-    
-                    //checking if the toggle is in same state then no need to update it
-                    if(this.props.caption_object.user_vote_object && this.props.caption_object.user_vote_object.vote_type===toggle_result.vote_type){
-                        return
-                    }
+                    })                                
     
                     //updating the vote of the specific caption_object
                     const updated_post_captions = []
@@ -80,20 +89,19 @@ class VotingPanel extends React.PureComponent{
 
                             //updating user_vote_object 
                             new_post_caption.user_vote_object=toggle_result
-
                             
                             //changing the vote counts
                             if(toggle_result.vote_type===constants.vote_type.up){
                                 new_post_caption.up_votes_count+=1
                                 //only if user had chosen down before
-                                if(this.props.caption_object.user_vote_object){
+                                if(caption.user_vote_object){
                                     new_post_caption.down_votes_count-=1
                                 }
                             }
                             else if(toggle_result.vote_type===constants.vote_type.down){                                
                                 new_post_caption.down_votes_count+=1
                                 //only if user had chosen up before
-                                if(this.props.caption_object.user_vote_object){
+                                if(caption.user_vote_object){
                                     new_post_caption.up_votes_count-=1
                                 }                                
                             }
@@ -125,24 +133,86 @@ class VotingPanel extends React.PureComponent{
     
     }
 
+    generate_icon(icon_vote_type){
+
+        if(icon_vote_type===constants.vote_type.up){
+            if(this.props.caption_object.user_vote_object && this.props.caption_object.user_vote_object.vote_type===constants.vote_type.up){
+                return (
+                    <Icon
+                        name="upcircleo"
+                        size={base_style.icons.icon_size}
+                        color={base_style.color.icon_selected}
+                    />
+                )
+            }else{
+                return (
+                    <Icon
+                        name="upcircleo"
+                        size={base_style.icons.icon_size}
+                        color={base_style.color.icon_not_selected}
+                    />
+                )
+            }
+        }else{
+            if(this.props.caption_object.user_vote_object && this.props.caption_object.user_vote_object.vote_type===constants.vote_type.down){
+                return(
+                    <Icon
+                        name="downcircleo"
+                        size={base_style.icons.icon_size}
+                        color={base_style.color.icon_selected}
+                    />
+                )
+            }else{
+                return(
+                    <Icon
+                        name="downcircleo"
+                        size={base_style.icons.icon_size}
+                        color={base_style.color.icon_not_selected}
+                    />
+                )
+            }
+        }
+
+    }
+
     render(){
         return(
             <View style={styles.main_container}>
-                <Text
-                    style={base_style.typography.mini_font}
-                    onPress={()=>{this.toggle_user_vote(constants.vote_type.up)}}
-                >
-                    {this.props.caption_object.up_votes_count}
+                <View style={{flexDirection:"row"}}>
+                    <TouchableOpacity
+                        onPress={()=>{this.toggle_user_vote(constants.vote_type.up)}}
+                        style={styles.icons_container}
+                    >
+                        {
+                            this.generate_icon(constants.vote_type.up)
+                        }
+                    </TouchableOpacity>
+                    <Text
+                        style={styles.count_text}                        
+                    >
+                        {this.props.caption_object.up_votes_count}
+                    </Text>
+                </View>
+                
+                <Text style={[base_style.typography.small_font, {alignSelf:"flex-start"}]}>
+                    {"        "}
                 </Text>
-                <Text style={base_style.typography.mini_font}>
-                    {"  &&&  "}
-                </Text>
-                <Text 
-                    style={base_style.typography.mini_font}
-                    onPress={()=>{this.toggle_user_vote(constants.vote_type.down)}}
-                >
-                    {this.props.caption_object.down_votes_count}
-                </Text>
+
+                <View style={{flexDirection:"row"}}>
+                    <TouchableOpacity
+                        onPress={()=>{this.toggle_user_vote(constants.vote_type.down)}}
+                        style={styles.icons_container}
+                    >
+                        {
+                            this.generate_icon(constants.vote_type.down)
+                        }
+                    </TouchableOpacity>
+                    <Text 
+                        style={styles.count_text}                        
+                    >
+                        {this.props.caption_object.down_votes_count}
+                    </Text>
+                </View>
             </View>
         )
     }
@@ -153,6 +223,15 @@ const styles = StyleSheet.create({
     main_container:{
         width:"100%",
         flexDirection:'row'
+    },
+    icons_container:{
+        alignItems:"center", 
+        justifyContent:"center"
+    },
+    count_text:{
+        ...base_style.typography.small_font,
+        padding:5, 
+        alignSelf:"center"
     }
 })
 

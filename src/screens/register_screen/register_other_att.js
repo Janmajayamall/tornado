@@ -21,8 +21,10 @@ import {
 } from "./../../helpers/index"
 import { 
     upload_image_to_s3,
-    get_presigned_url
+    get_presigned_url,
+    constants
  } from "./../../helpers/index";
+import Icon from 'react-native-vector-icons/AntDesign'
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -239,8 +241,29 @@ class RegisterOtherAtt extends React.PureComponent{
         
         await setting_up_jwt_token(data.register_user.jwt)
 
-        navigation_set_root_one_screen({screen_name:EXPLORE_ROOMS_SCREEN})
-
+        Promise.all([
+            Icon.getImageSource("check", size=base_style.icons.icon_size)
+        ]).then(icons=>{
+            navigation_set_root_one_screen({
+                screen_name:EXPLORE_ROOMS_SCREEN,
+                options:{
+                    topBar: {
+                        rightButtons: [
+                            {
+                                id: constants.navigation.action_buttons.FOLLOW_BULK,
+                                icon:icons[0],
+                                iconColor:base_style.color.icon_selected                                                                        
+                            },                          
+                        ],
+                        rightButtonColor:base_style.color.icon_selected,
+                        background: {
+                        color: base_style.color.primary_color,
+                        }                           
+                    },   
+                }
+            })
+        })
+    
         return 
     }
 

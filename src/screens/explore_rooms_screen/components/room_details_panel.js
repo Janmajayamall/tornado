@@ -21,7 +21,8 @@ import PropTypes from "prop-types"
 import {  
     TOGGLE_FOLLOW_ROOM, 
     GET_ROOM_DEMOGRAPHICS,
-    GET_ROOM_FEED
+    GET_ROOM_FEED,
+    GET_ALL_JOINED_ROOMS
 } from "./../../../apollo_client/apollo_queries/index";
 
 //importing base style 
@@ -129,6 +130,10 @@ class RoomDetailsPanel extends React.PureComponent{
                         variables:{
                             limit:5
                         }
+                    },
+                    {
+                        query:GET_ALL_JOINED_ROOMS,
+                        variables:{}
                     }
                 ]
             })
@@ -150,7 +155,7 @@ class RoomDetailsPanel extends React.PureComponent{
 
                         <View style={styles.second_container}>
                             <Text style={styles.description_text}>
-                                {this.props.room_object.description}
+                                "The best part of using Character Counters is having you count the number of characters you have used already. It’s indeed useful as you have the character counter to help you probably reword a long phrase or status in online posts."The best part of using Character Counters is having you count the number of characters you have used already. It’s indeed useful as you have the character counter to help you probably reword a long phrase or status in online posts.The best part of using Character Counters is having you count the number of characters you have used already. It’s indeed useful as you have the character counter to help you probably reword a long phrase or status in online posts.
                             </Text>
                         </View>
 

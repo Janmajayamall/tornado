@@ -97,7 +97,7 @@ class EditProfile extends React.PureComponent {
 
 
     validate_the_input = () =>{
-
+        return true
         let all_inputs_valid = true
 
         let new_input_objects = {}

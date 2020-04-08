@@ -3,7 +3,8 @@ import {
 } from "./index"
 import {
     CHECK_USERNAME,
-    CHECK_EMAIL
+    CHECK_EMAIL,
+    CHECK_ROOM_NAME
 } from "./../apollo_client/apollo_queries/index"
 
 export const validate_email = async(email, apollo_client) => {
@@ -227,4 +228,61 @@ export const validate_bio = (bio) => {
 
 }
 
+export const validate_room_name = async (room_name, apollo_client) => {
 
+    if(room_name.trim()===""){
+        return({
+            valid:false,
+            error_text:"Please enter room name"
+        })
+    }
+
+    room_name=room_name.trim()
+    if(room_name.length>constants.input_limits.room_name){
+        return({
+            valid:false,
+            error_text:`room name should be less than ${constants.input_limits.room_name} characters`
+        })
+    }
+
+    //checking whether room name already exists or not
+    const {data} = await apollo_client.query({
+        query:CHECK_ROOM_NAME,
+        variables:{
+            room_name:room_name.trim()
+        }
+    })
+
+    if(data.check_room_name){ //if true, name already exists. Return valid false
+        return({
+            valid:false,
+            error_text:"Room name already in use."
+        })
+    }
+
+    return({
+        valid:true
+    })
+}
+
+export const validate_room_description = (room_description) => {
+
+    if(room_description.trim()===""){
+        return({
+            valid:false, 
+            error_text:"Please enter the room_description"
+        })
+    }
+
+    room_description=room_description.trim()
+    if(room_description.length>constants.input_limits.room_description){
+        return({
+           valid:false, 
+           error_text:`Room description should be less than ${constants.input_limits.room_description} characters`
+        })
+    }
+
+    return({
+        valid:true
+    })
+}

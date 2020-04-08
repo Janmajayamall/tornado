@@ -13,7 +13,9 @@ import {
 import {
     Mutation,
     ApolloConsumer,
-    Query
+    Query,
+    withQuery,
+    withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 
@@ -26,8 +28,6 @@ import {
 import {  
      navigation_set_root_two_bottoms_tabs
 } from "./../../navigation/navigation_routes/index";
-
-
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -45,6 +45,11 @@ import {
     GET_USER_INFO
 } from "./../../apollo_client/apollo_queries/index";
 
+// importing helpers
+import {
+    constants
+} from "./../../helpers/index"
+
 
 class ExploreRooms extends React.Component{
 
@@ -57,7 +62,23 @@ class ExploreRooms extends React.Component{
             //loading
             loading:false
         }
+        
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
     }
+
+    //react native navigation event binded function for action buttons
+    navigationButtonPressed({ buttonId }) {
+        if (buttonId===constants.navigation.action_buttons.FOLLOW_BULK){
+            //don't react if loading state is true
+            if(this.state.loading){
+                return 
+            }
+
+            this.follow_bulk_rooms()
+        }
+    }
+    
 
     add_to_set = (room_id) => {
         if (this.state.selected_set.has(room_id)){''
@@ -104,13 +125,48 @@ class ExploreRooms extends React.Component{
 
     }
 
-    navigate_to_feed = (data) =>{
+    follow_bulk_rooms = async() => {
 
-        navigation_set_root_two_bottoms_tabs()
+        //checking if any room is selected or not 
+        if(this.state.selected_set.size===0){
+            //navigate to main screen. Remember user has not chosen any rooms
+            navigation_set_root_two_bottoms_tabs()
+            return
+        }
+        
+        //if loading state already true, then return 
+        if(this.state.loading){
+            return
+        }
+
+        //set loading state to tru 
+        this.setState({loading:true})
+
+        try{
+            //getting the user_id 
+            const {data} = await this.props.client.query({
+                query:GET_USER_INFO
+            }) 
+
+            const bulk_join_objects = this.generate_selected_rooms_arr(data.get_user_info.user_id)
+                                                                    
+            //mutation bulk follow rooms
+            const bulk_follow_object = await this.props.client.mutate({
+                mutation:BULK_ROOM_FOLLOWS,
+                variables:{
+                    follow_room_objects:bulk_join_objects
+                }
+            })
+            console.log(bulk_follow_object, "the result is here")
+            //navigate to the main screen
+            navigation_set_root_two_bottoms_tabs()
+            return 
+        }catch(e){
+            console.log(e, "explore_rooms_screen.js")
+            //TODO: show error to the user
+        }
 
     }
-
-
 
     render(){
         return(
@@ -155,46 +211,7 @@ class ExploreRooms extends React.Component{
                                                                     return <ListItemDivider/>
                                                                 }}
                                                                 
-                                                            />    
-                                                            {
-                                                                this.state.selected_set.size!==0?
-                                                                <View style={styles.join_button_container}>
-                                                                    <View style={styles.join_button_main_view}>
-                                                                        <BigButton
-                                                                            button_text={"Join Rooms"}
-                                                                            onPress={async()=> {
-                                                                                
-                                                                                //if loading state already true, then return 
-                                                                                if(this.state.loading){
-                                                                                    return
-                                                                                }
-
-                                                                                //set loading state to tru 
-                                                                                this.setState({loading:true})
-
-                                                                                try{
-                                                                                    //getting the user_id 
-                                                                                    const {data} = await client.query({
-                                                                                        query:GET_USER_INFO
-                                                                                    }) 
-
-                                                                                    const bulk_join_objects = this.generate_selected_rooms_arr(data.get_user_info.user_id)
-                                                                                                                                            
-                                                                                    //mutation bulk follow rooms
-                                                                                    bulk_follow_rooms({variables:{follow_room_objects:bulk_join_objects}})
-
-                                                                                }catch(e){
-                                                                                    console.log(e, "explore_rooms_screen.js")
-                                                                                    //TODO: show error to the user
-                                                                                }
-                                                                            }}
-                                                                        />
-                                                                    </View>
-                                                                </View>
-                                                                :
-                                                                undefined
-                                                            }
-                                                                                                                                                            
+                                                            />                                                                                                 
                                                         </SafeAreaView>
                                                     )
                                                 }
@@ -236,4 +253,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ExploreRooms
+export default withApollo(ExploreRooms)

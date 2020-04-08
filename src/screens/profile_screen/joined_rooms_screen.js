@@ -121,7 +121,7 @@ class JoinedRoomsScreen extends React.PureComponent {
                 variables={this.get_query_variables()}
             >
                 {({loading, error, data})=>{
-
+                    console.log(data)
                     if(data){
 
                         return(

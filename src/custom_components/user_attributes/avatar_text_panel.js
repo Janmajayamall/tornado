@@ -85,11 +85,11 @@ class AvatarTextPanel extends React.PureComponent{
             return(
                 <View style={styles.user_description_container}>
                     <View>
-                            <Text style={base_style.typography.small_header}>
-                                {this.props.user_object.username}
-                            </Text>
-                        </View>
-                    <Text style={[base_style.typography.small_font, {fontStyle:"italic"}]}>
+                        <Text numberOfLines={1} style={base_style.typography.small_header}>
+                            {this.props.user_object.username}
+                        </Text>
+                    </View>
+                    <Text numberOfLines={1} style={[base_style.typography.small_font, {fontStyle:"italic"}]}>
                         {this.props.user_object.three_words} 
                     </Text>
                 </View>
@@ -99,7 +99,11 @@ class AvatarTextPanel extends React.PureComponent{
         if(this.props.panel_type===constants.avatar_text_panel_type.comment_display){
             return(
                 <View>
-                    <HyperLinkText style={base_style.typography.small_font}>
+                    <HyperLinkText 
+                        style={base_style.typography.small_font}
+                        trim={true}
+                        numberOfLines={3}
+                    >
                         {this.props.comment_object.comment_body}
                     </HyperLinkText>
                 </View>
@@ -119,7 +123,7 @@ class AvatarTextPanel extends React.PureComponent{
                                     this.setState({comment_text_input:val})
                                 }}
                                 placeholder={"Add a new comment..."}
-                                placeholderTextColor={"white"}
+                                placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
                         />
                     </View>
                     <TouchableOpacity 
@@ -154,9 +158,13 @@ class AvatarTextPanel extends React.PureComponent{
                                 {`${this.props.caption_index===0?"Top rated" : ""}`}
                             </Text>
                     </View> 
-                    <Text style={base_style.typography.small_font}>
+                    <HyperLinkText 
+                        style={base_style.typography.small_font}
+                        trim={true}
+                        numberOfLines={3}    
+                    >
                         {this.props.caption_object.description}
-                    </Text>
+                    </HyperLinkText>
                     <Text style={[base_style.typography.small_font, {...base_style.typography.font_colors.low_emphasis, alignSelf:"flex-end"}]}>
                             {`${get_relative_time_ago(this.props.caption_object.timestamp)}`}
                         </Text>
@@ -188,7 +196,7 @@ class AvatarTextPanel extends React.PureComponent{
                                     this.setState({caption_text_input:val})
                                 }}
                                 placeholder={"Describe the image in your words!"}
-                                placeholderTextColor={"white"}
+                                placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
                         />
                     </View>
                     <TouchableOpacity 
