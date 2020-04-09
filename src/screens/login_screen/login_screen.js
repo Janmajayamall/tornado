@@ -32,7 +32,8 @@ import BigButton from "./../../custom_components/buttons/big_buttons"
 import {
     LOGIN_SCREEN,
     FEED_SCREEN,
-    REGISTER_SCREEN
+    REGISTER_SCREEN,
+    RESET_PASSWORD_SCREEN
 } from "./../../navigation/screens"
 import {
     navigation_set_root_two_bottoms_tabs,
@@ -163,6 +164,12 @@ class Login extends React.PureComponent{
         })
     }
 
+    navigate_to_reset_password = () => {
+        navigation_set_root_one_screen({
+            screen_name:RESET_PASSWORD_SCREEN
+        })
+    }
+
     render(){
         return(
             <TouchableWithoutFeedback
@@ -231,10 +238,16 @@ class Login extends React.PureComponent{
                         </Mutation>                           
                     </View>
                     <Text 
-                        style={base_style.typography.small_font}
+                        style={[base_style.typography.small_font, {padding:10}]}
                         onPress={this.navigate_to_register}
                     >
-                        Don't have an account?
+                        Don't have an account? Create one.
+                    </Text>
+                    <Text 
+                        style={[base_style.typography.small_font, {padding:10}]}
+                        onPress={this.navigate_to_reset_password}
+                    >
+                        Forgot password?
                     </Text>
                 </ScrollView>
             </TouchableWithoutFeedback>

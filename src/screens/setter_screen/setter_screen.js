@@ -31,7 +31,8 @@ import {
     PROFILE_SCREEN,
     EDIT_PROFILE_SCREEN,
     REGISTER_SCREEN,
-    TREND_FEED_SCREEN
+    TREND_FEED_SCREEN,
+    SETTER_SCREEN
 } from "../../navigation/screens"
 import {
   navigation_push_to_screen,
@@ -76,7 +77,7 @@ class Setter extends React.PureComponent{
     
     route_to_login = () => {
         //routing the user to login
-        navigation_set_root_one_screen({screen_name:LOGIN_SCREEN}) //change this to REGISTER_SCREEN
+        navigation_set_root_one_screen({screen_name:SETTER_SCREEN}) //change this to REGISTER_SCREEN
     }
 
     render(){

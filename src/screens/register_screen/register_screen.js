@@ -291,10 +291,10 @@ class Register extends React.PureComponent{
                         />  
                     </View>
                     <Text 
-                        style={base_style.typography.small_font}
+                        style={[base_style.typography.small_font, {padding:10}]}
                         onPress={this.navigate_to_login}
                     >
-                        Login in?
+                        Already have an account?
                     </Text>
                 </ScrollView>
             </TouchableWithoutFeedback>

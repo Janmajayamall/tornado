@@ -7,6 +7,7 @@ export const REGISTER_SCREEN = "screen.register"
 export const REGISTER_OTHER_ATT_SCREEN = "screen.register_other_att"
 
 export const LOGIN_SCREEN = "screen.login"
+export const RESET_PASSWORD_SCREEN = "screen.reset_password"
 
 export const SETTER_SCREEN = "screen.setter"
 

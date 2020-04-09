@@ -110,6 +110,15 @@ export const LOGIN_USER = gql`
     }
 `
 
+export const PASSWORD_RECOVERY_CODE_VERIFICATION = gql`
+    mutation password_recovery_code_verifications($verification_code:String!, $password:String!){
+        password_recovery_code_verification(
+            verification_code:$verification_code,
+            password:$password
+        )
+    }
+`
+
 
 //Query
 export const GET_PRESIGNED_URL = gql`
@@ -153,5 +162,11 @@ export const CHECK_EMAIL = gql`
 export const CHECK_USERNAME = gql`
     query check_usernames($username:String!){
         check_username(username:$username)
+    }
+`
+
+export const PASSWORD_RECOVERY_SEND_CODE = gql`
+    query password_recovery_send_codes($email:String!){
+        password_recovery_send_code(email:$email)
     }
 `
