@@ -92,10 +92,11 @@ class FeedScreen extends React.PureComponent {
             variables={{
                 limit:5
             }}
+            fetchPolicy={"cache-and-network"}
         >
-            {({ loading, error, data, fetchMore }) => {   
-                console.log(data, error, "hiii")
+            {({ loading, error, data, fetchMore, networkStatus, refetch }) => {   
                 if (data){
+
                     return(
                         <ContentList
                             componentId={this.props.componentId}
@@ -135,6 +136,10 @@ class FeedScreen extends React.PureComponent {
                             header_display={false}
                             header_component={undefined}  
                             avatar_navigate_user_profile={true}
+
+                            //refetch & networkStatus
+                            refetch={refetch}
+                            networkStatus={networkStatus}
                         />
                     )
                 }

@@ -71,10 +71,10 @@ class RoomNameList extends React.PureComponent {
                 }}
             >
                     <View styles={styles.room_object_container}>
-                        <Text numberOfLines={4} style={styles.room_name_text}>
+                        <Text numberOfLines={2} style={styles.room_name_text}>
                             {object.item.name}
                         </Text>
-                        <Text style={{...base_style.typography.small_font}}>
+                        <Text style={{...base_style.typography.small_font, color:base_style.color.icon_not_selected}}>
                             {`created ${get_relative_time_ago(object.item.timestamp)}`}
                         </Text>
                     </View>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         flex:1,
     }, 
     room_name_text:{
-        ...base_style.typography.medium_font
+        ...base_style.typography.small_font
     },
     list_main_container:{
         padding:10,

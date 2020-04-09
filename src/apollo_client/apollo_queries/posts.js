@@ -110,6 +110,33 @@ export const GET_ROOM_POSTS = gql`
                     name,
                     timestamp
                 },
+                caption_objects{
+                    _id,
+                    post_id,
+                    creator_info{
+                        user_id, 
+                        username,
+                        avatar{
+                            width,
+                            height,
+                            cdn_url,
+                            image_name
+                        },
+                        three_words,
+                        default_avatar
+                    },
+                    timestamp,
+                    last_modified,
+                    description,
+                    up_votes_count, 
+                    down_votes_count,
+                    user_vote_object{
+                        _id, 
+                        content_id, 
+                        vote_type
+                    },
+                    is_user
+                },
                 is_user
             },
             next_page,
@@ -152,7 +179,35 @@ export const GET_USER_PROFILE_POSTS = gql`
                     _id,
                     name,
                     timestamp
-                }
+                },
+                caption_objects{
+                    _id,
+                    post_id,
+                    creator_info{
+                        user_id, 
+                        username,
+                        avatar{
+                            width,
+                            height,
+                            cdn_url,
+                            image_name
+                        },
+                        three_words,
+                        default_avatar
+                    },
+                    timestamp,
+                    last_modified,
+                    description,
+                    up_votes_count, 
+                    down_votes_count,
+                    user_vote_object{
+                        _id, 
+                        content_id, 
+                        vote_type
+                    },
+                    is_user
+                },
+                is_user
             },
             next_page,
             room_post_cursor, 

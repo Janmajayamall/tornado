@@ -90,6 +90,7 @@ class SearchRooms extends React.PureComponent{
                 no_result:get_rooms.length===0
             })
         }catch(e){
+            console.log(e, "ass")
             this.setState({error:true})
         }
     }

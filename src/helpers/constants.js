@@ -57,5 +57,16 @@ export const constants = {
         room_name:50,
         room_description:1000,
         comment:2000
+    },
+    apollo_query:{
+        network_status:{
+            refetch:4, 
+            fetchMore:3, 
+            ready:7,
+            error:8,
+            loading:1, 
+            setVariables:2,
+            poll:6
+        }
     }
 }

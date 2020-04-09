@@ -96,30 +96,18 @@ class ContentCaptionBox extends React.PureComponent {
     }
 
     navigate_to_comment_screen = () => {
-        Navigation.push(this.props.componentId, {
-            component: {
-                name: COMMENT_SCREEN,
-                passProps: {
-                    post_id:this.props.post_object._id,
-                    query_type:constants.comment_list_query_type.caption_query
-                },
-                options: {
-                    bottomTabs:{
-                        visible:false
-                    }
-                },
-                topBar:{
-                    leftButtons: [
-                        {
-                            id: 'back',
-                            icon: {
-                                uri: 'back',
-                            },
-                        },
-                    ],
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name: COMMENT_SCREEN, 
+            props:{
+                post_id:this.props.post_object._id,
+                query_type:constants.comment_list_query_type.caption_query
+            },
+            options: {
+                bottomTabs:{
+                    visible:false
                 }
             }
-        });
+        })
 
     }
 

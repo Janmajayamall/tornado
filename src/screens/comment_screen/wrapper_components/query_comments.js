@@ -69,15 +69,14 @@ class QueryComments extends React.PureComponent{
             <Query
                 query={this.get_query()}
                 variables={this.get_variables()}
+                fetchPolicy={"cache-and-network"}
             >
                 {({loading, error, data, refetch, networkStatus}) => {
-                    
+
                     //render comment list when data is not undefined
                     if(data){
-                        
                         //getting data array
-                        const data_array = data[`${Object.keys(data)[0]}`]
-
+                        const data_array = data[`${Object.keys(data)[0]}`]                    
                         return(
                             <CommentList
                                 comment_list={data_array ? data_array : []}
@@ -85,9 +84,7 @@ class QueryComments extends React.PureComponent{
                                 query_type={this.props.query_type}
                                 error={error}
                                 loading={loading}
-                                refresh_list={()=>{
-                                    refetch()
-                                }}
+                                refetch={refetch}
                                 network_status={networkStatus}
                                 bottom_padding={this.props.bottom_padding}
                                 componentId={this.props.componentId}

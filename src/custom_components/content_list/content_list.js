@@ -5,7 +5,8 @@ import {
     Text,
     ScrollView,
     Dimensions,
-    FlatList
+    FlatList,
+    RefreshControl
 } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -28,6 +29,8 @@ class ContentList extends React.PureComponent{
         on_load_more:PropTypes.func,
         header_display:PropTypes.bool,
         header_component:PropTypes.any,
+        networkStatus:PropTypes.any,
+        refetch:PropTypes.func, 
 
         //boolean whether avatar text panel for user is clickable or not
         avatar_navigate_user_profile:PropTypes.any
@@ -50,6 +53,7 @@ class ContentList extends React.PureComponent{
 
         //if post_type: room_caption_post
         if(object.item.post_type===constants.post_types.room_caption_post){
+            console.log(this.props.header_display, object.item, "This is it")
             return (
                 <ContentCaptionBox
                     post_object={object.item}
@@ -92,6 +96,14 @@ class ContentList extends React.PureComponent{
                 onEndReached={this.props.on_load_more}
                 onEndReachedThreshold={0.5}
                 ItemSeparatorComponent={()=><ListItemDivider/>}
+                refreshControl={
+                    <RefreshControl
+                        onRefresh={()=>{this.props.refetch()}}
+                        refreshing={this.props.networkStatus===constants.apollo_query.network_status.refetch}                        
+                        progressBackgroundColor="#ffffff"
+                        tintColor="#ffffff"
+                    />
+                }
             />      
         )
     }

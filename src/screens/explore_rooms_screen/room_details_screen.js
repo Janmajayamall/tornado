@@ -47,17 +47,16 @@ class RoomDetails extends React.Component{
         super(props)
 
         this.state = {
-            selected_set:new Set(),
         }
 
     }
 
-    navigate_to_creator_profile = (user_info, is_user) => {
+    navigate_to_creator_profile = (user_id, is_user) => {
         navigation_push_to_screen(this.props.componentId, {
             screen_name:PROFILE_SCREEN,
             props:{
                 is_user:is_user,
-                profile_user_info:user_info
+                user_id:user_id
             }
         })
     }
@@ -72,8 +71,9 @@ class RoomDetails extends React.Component{
                     variables={{
                         room_id:this.props.room_id
                     }}
+                    fetchPolicy={"cache-and-network"}
                 >
-                    {({loading, error, data})=>{
+                    {({loading, error, data, refetch, networkStatus})=>{
 
                         //getting demographics
                         const get_room_demographics = data ? data.get_room_demographics : undefined
@@ -88,6 +88,7 @@ class RoomDetails extends React.Component{
                                 {({ loading: loading_two, error: error_two, data, fetchMore }) => {
                                     const get_room_posts_room_id = data ? data.get_room_posts_room_id : undefined
                                     if(get_room_demographics && get_room_posts_room_id){
+
                                         return(
                                             <ContentList
                                                 componentId={this.props.componentId}
@@ -131,10 +132,15 @@ class RoomDetails extends React.Component{
                                                     <RoomDetailsPanel
                                                         room_object={get_room_demographics}
                                                         navigate_to_creator_profile={()=>{                                                                            
-                                                            this.navigate_to_creator_profile(get_room_demographics.creator_info, get_room_demographics.is_user)
+                                                            this.navigate_to_creator_profile(get_room_demographics.creator_info.user_id, get_room_demographics.is_user)
                                                         }}
                                                     />
                                                 }
+                                                avatar_navigate_user_profile={true}
+
+                                                //refetch & networkStatus
+                                                refetch={refetch}
+                                                networkStatus={networkStatus}
                                             />
                                         )
                                     }

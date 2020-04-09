@@ -51,8 +51,10 @@ class ProfileScreen extends React.Component {
     static propTypes = {
         is_user:PropTypes.bool,
 
-        //profile_user_info is only required when is_user is false
+        //user_id is only required when is_user is false
         profile_user_info:PropTypes.object,
+        user_id:PropTypes.string
+
     }
 
     constructor(props){
@@ -60,7 +62,7 @@ class ProfileScreen extends React.Component {
         super(props)
 
         this.state={
-            user_info:this.props.profile_user_info,
+            user_info:undefined,
             
             loading:false
         }
@@ -73,9 +75,6 @@ class ProfileScreen extends React.Component {
         // this.navigationEventListener = Navigation.events().bindComponent(this);
     }
 
-    componentDidUpdate(){
-        console.log("ass*daiwo")
-    }
 
     render_again = () => {
         this.setState({
@@ -128,17 +127,36 @@ class ProfileScreen extends React.Component {
     
     set_user_info = async() => {
 
-        if(this.props.is_user){
+        try{
             const {data} = await this.props.client.query({
                 query:GET_USER_INFO,
-                
+                variables:this.props.is_user ? {} :
+                                                {
+                                                    user_id:this.props.user_id
+                                                }
             })
-            
+
             this.setState({
                 user_info:data.get_user_info,
                 loading:false                
             })
+        }catch(e){
+            console.log(e, "profile_screen.js | function set_user_info()")
         }
+
+        // if(this.props.is_user){
+        //     const {data} = await this.props.client.query({
+        //         query:GET_USER_INFO,
+                
+        //     })
+            
+        //     this.setState({
+        //         user_info:data.get_user_info,
+        //         loading:false                
+        //     })
+        // }else{
+
+        // }
     }
 
     navigation_to_joined_rooms = (query_type) => {
@@ -147,7 +165,8 @@ class ProfileScreen extends React.Component {
             screen_name:JOINED_ROOMS_SCREEN,
             props:{
                 query_type:query_type,
-                is_user:false
+                is_user:true
+
             }
         }
 
@@ -159,12 +178,12 @@ class ProfileScreen extends React.Component {
 
             // get_all_created rooms or get_all_joined_rooms
             if(query_type===constants.queries.get_all_created_rooms || query_type===constants.queries.get_all_joined_rooms){
-                screen_vars.props.other_user_id=this.props.profile_user_info.user_id
+                screen_vars.props.other_user_id=this.props.user_id
             }
 
             // get_common_rooms
             if(query_type===constants.queries.get_common_rooms){
-                screen_vars.props.other_user_id_arr=[this.props.profile_user_info.user_id]
+                screen_vars.props.other_user_id_arr=[this.props.user_id]
             }
         }
 
@@ -241,14 +260,15 @@ class ProfileScreen extends React.Component {
                         }:
                         {
                             limit:5,
-                            user_id:this.props.profile_user_info.user_id
+                            user_id:this.props.user_id
                         }
                     }
+                    fetchPolicy={"cache-and-network"}
                 >
-                    {({ data, fetchMore }) => {
-
+                    {({ data, fetchMore, refetch, networkStatus }) => {
                         // if data is not undefined then render screen
                         if(data && this.state.user_info && !this.state.loading){
+
                             return(
                                 <ContentList
                                     componentId={this.props.componentId}
@@ -261,7 +281,7 @@ class ProfileScreen extends React.Component {
                                             room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
                                         }
                                         if(!this.props.is_user){
-                                            fetch_variables.user_id = this.props.profile_user_info.user_id
+                                            fetch_variables.user_id = this.props.user_id
                                         }
     
                                         fetchMore({
@@ -306,6 +326,10 @@ class ProfileScreen extends React.Component {
                                     }
                                     header_display={true}  
                                     avatar_navigate_user_profile={false}
+
+                                    //refetch && networkStatus
+                                    refetch={refetch}
+                                    networkStatus={networkStatus}
                                 />
                             )
                         }

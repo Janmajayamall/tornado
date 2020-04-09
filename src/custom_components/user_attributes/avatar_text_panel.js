@@ -69,15 +69,12 @@ class AvatarTextPanel extends React.PureComponent{
     constructor(props){
         super(props)
         this.state={
-            comment_text_input:"",
-            
+            comment_text_input:"",            
         }
 
         //refs
         this.drop_down_menu_ref = null
         this.generate_panel_ref = React.createRef()
-        
-        console.log('ajdapod')
     }
     
     // generating text panel on the basis of value of panel_type
@@ -235,7 +232,7 @@ class AvatarTextPanel extends React.PureComponent{
             screen_name:PROFILE_SCREEN,
             props:{
                 is_user:this.props.is_user,
-                profile_user_info:this.props.user_object
+                user_id:this.props.user_object.user_id
             }
         })
     }

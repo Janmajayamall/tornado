@@ -131,8 +131,8 @@ export const GET_PRESIGNED_URL = gql`
 `
 
 export const GET_USER_INFO = gql`
-    query{
-        get_user_info{
+    query get_user_infos($user_id:ID){
+        get_user_info(user_id:$user_id){
             _id,
             user_id,
             age, 

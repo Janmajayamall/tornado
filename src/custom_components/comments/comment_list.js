@@ -5,7 +5,8 @@ import {
     Text,
     ScrollView,
     Dimensions,
-    FlatList
+    FlatList,
+    RefreshControl
 } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -28,7 +29,7 @@ class CommentList extends React.PureComponent{
         comment_list:PropTypes.array,
         loading:PropTypes.any,
         error:PropTypes.any,
-        refresh_list:PropTypes.func,
+        refetch:PropTypes.func,
         bottom_padding:PropTypes.any,
         post_object:PropTypes.object,
         network_status:PropTypes.any,
@@ -43,6 +44,7 @@ class CommentList extends React.PureComponent{
         super(props)
         this.state={
         }
+        console.log("mounted?")
     }
 
     componentDidUpdate(){
@@ -117,12 +119,6 @@ class CommentList extends React.PureComponent{
         
     }
 
-    refresh_list = () => {
-        this.setState({refreshing:true})
-        this.props.refresh_list()
-    }
-
-
     render(){
 
         if (this.props.loading){
@@ -146,10 +142,16 @@ class CommentList extends React.PureComponent{
 
             <FlatList
                 data={[this.props.post_object, ...this.props.comment_list]}
-                renderItem={(object)=>this.render_item(object)}
-                onRefresh={this.refresh_list}
-                refreshing={!this.props.network_status===7}
-                contentContainerStyle={{paddingBottom:this.props.bottom_padding}}                
+                renderItem={(object)=>this.render_item(object)}                
+                contentContainerStyle={{paddingBottom:this.props.bottom_padding}}    
+                refreshControl={
+                    <RefreshControl
+                        onRefresh={()=>{this.props.refetch()}}
+                        refreshing={this.props.network_status===constants.apollo_query.network_status.refetch}                        
+                        progressBackgroundColor="#ffffff"
+                        tintColor="#ffffff"
+                    />
+                }
             />      
         )
     }
@@ -161,3 +163,5 @@ const styles = StyleSheet.create({
 })
 
 export default CommentList
+
+// this.props.network_status===8

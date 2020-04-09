@@ -24,7 +24,6 @@ class HyperLinkText extends React.PureComponent{
             trimmed_state:true,
             read_more:false
         }
-        console.log(this.props)
     }
 
     open_link = (url) => {
