@@ -39,7 +39,8 @@ import {
 
 // import navigation routes
 import {  
-    navigation_push_to_screen
+    navigation_push_to_screen,
+    navigation_set_root_one_screen
 } from "./../../navigation/navigation_routes/index";
 
 
@@ -225,6 +226,12 @@ class Register extends React.PureComponent{
             }
         })
     }
+
+    navigate_to_login = () => {
+        navigation_set_root_one_screen({
+            screen_name:LOGIN_SCREEN
+        })
+    }
     
     render(){
 
@@ -283,6 +290,12 @@ class Register extends React.PureComponent{
                             active={true}
                         />  
                     </View>
+                    <Text 
+                        style={base_style.typography.small_font}
+                        onPress={this.navigate_to_login}
+                    >
+                        Login in?
+                    </Text>
                 </ScrollView>
             </TouchableWithoutFeedback>
         )

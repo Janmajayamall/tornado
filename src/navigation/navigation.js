@@ -31,7 +31,7 @@ registerScreens();
 
 export function start_app () {
 
-  navigation_set_root_one_screen({screen_name:SETTER_SCREEN})
+  navigation_set_root_one_screen({screen_name:LOGIN_SCREEN})
 
 //   Promise.all([
 //     Icon.getImageSource("check", size=base_style.icons.icon_size)

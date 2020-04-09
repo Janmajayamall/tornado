@@ -108,6 +108,9 @@ class Comment extends React.PureComponent {
                             panel_type={constants.avatar_text_panel_type.comment_input}
                             create_comment_func={(comment_body)=>{
 
+                                //close the keyboard 
+                                Keyboard.dismiss()
+
                                 //generating variables object for comment input
                                 const variables = {
                                     content_id:post_object._id,
@@ -184,6 +187,9 @@ class Comment extends React.PureComponent {
                             panel_type={constants.avatar_text_panel_type.caption_input}
                             avatar_navigate_user_profile={false}
                             create_caption_func={(caption_body)=>{
+
+                                //close the keyboard
+                                Keyboard.dismiss()
 
                                 //generating variables object for comment input
                                 const variables = {

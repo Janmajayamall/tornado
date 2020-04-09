@@ -26,20 +26,26 @@ class ChoosePostImage extends React.PureComponent{
 
     static propTypes = {
         upload_img_s3:PropTypes.func,
-        width:PropTypes.any
+        width:PropTypes.any,
+
+        //if image is already chosen, then pass this
+        /*
+            image:{
+                image_uri:String, 
+                height:number,
+                width:number
+            }
+        */
+       image:PropTypes.object
     }
 
 
     constructor(props){
         super(props)
         this.state={
-            image_uri:undefined
-        }
+            image_object: this.props.image ? this.aggregate_call_scaling(this.props.image) : undefined
+        }        
 
-    }
-
-    componentDidUpdate(){
-        // console.log("rendered: ContentList", this.props.bottom_padding)
     }
 
     scale_main_view_dimensions = (image_dimensions) => {
@@ -60,6 +66,20 @@ class ChoosePostImage extends React.PureComponent{
 
     }
     
+    aggregate_call_scaling = (image) => {
+
+        //getting scaled image dimensions for display
+        const scaled_dims = this.scale_image_dimensions_display({width:image.width,height:image.height})
+        const scaled_main_view_dims = this.scale_main_view_dimensions({width:image.width,height:image.height})
+
+        return({
+            image_uri:image.image_uri,
+            image_width:scaled_dims.width,
+            image_height:scaled_dims.height,
+            main_view_width:scaled_main_view_dims.width,
+            main_view_height:scaled_main_view_dims.height               
+        })
+    }
 
     //dev 
     select_image_from_device = () => {
@@ -74,38 +94,39 @@ class ChoosePostImage extends React.PureComponent{
                     width:image.width,
                     height:image.height,
                     image_data:image.data,
+                    image_uri:image_uri                
                 }
 
                 this.props.upload_img_s3(image_obj)
-
-                //getting scaled image dimensions for display
-                const scaled_dims = this.scale_image_dimensions_display({width:image.width,height:image.height})
-                const scaled_main_view_dims = this.scale_main_view_dimensions({width:image.width,height:image.height})
-
+            
                 this.setState({
-                    image_uri:image_uri,
-                    image_width:scaled_dims.width,
-                    image_height:scaled_dims.height,
-                    main_view_width:scaled_main_view_dims.width,
-                    main_view_height:scaled_main_view_dims.height
-                })
-            });
+                    image_object:this.aggregate_call_scaling({
+                        image_uri:image_uri,
+                        width:image.width,
+                        height:image.height,
+                    })
+                });
+            })
     }
 
 
     render(){
         return(
-            this.state.image_uri===undefined?
-                <View/>:
-                <View style={styles.main_container}>
-                    <View style={[styles.first_container, {width:this.state.main_view_width, height:this.state.main_view_height}]}>
-                        {/* display chosen image, initially display default image */}
-                        <Image
-                            source={{uri:this.state.image_uri}}
-                            style={[styles.image_container, {width:this.state.image_width, height:this.state.image_height}]}
-                        />
+            <View>
+                {
+                    this.state.image_object===undefined?
+                    <View/>:
+                    <View style={styles.main_container}>
+                        <View style={[styles.first_container, {width:this.state.image_object.main_view_width, height:this.state.image_object.main_view_height}]}>
+                            {/* display chosen image, initially display default image */}
+                            <Image
+                                source={{uri:this.state.image_object.image_uri}}
+                                style={[styles.image_container, {width:this.state.image_object.image_width, height:this.state.image_object.image_height}]}
+                            />
+                        </View>
                     </View>
-                </View>
+                }
+            </View>
         )
     }
 

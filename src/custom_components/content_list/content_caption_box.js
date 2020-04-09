@@ -178,12 +178,7 @@ class ContentCaptionBox extends React.PureComponent {
                 {/* displaying the post image */}
                 <View>
                     <AsyncImage
-                        image_object={{
-                            width: 512,
-                            height: 512,
-                            cdn_url: "https://d99qv6hi77isg.cloudfront.net",
-                            image_name: "5e7d63e09c33fb6a88ff250c_2020-03-28T20:02:53.005Z.jpeg",
-                        }}
+                        image_object={this.props.post_object.image}
                         window_dimensions={window}
                     />
                 </View>
@@ -195,7 +190,6 @@ class ContentCaptionBox extends React.PureComponent {
                     </Text>
                 </View>
 
-                
                 {/* comment and likes count */}
                 <View style={styles.like_comment_main_container}>
 
@@ -228,11 +222,6 @@ class ContentCaptionBox extends React.PureComponent {
                             
                             //getting toggle like result
                             const toggle_result = data.toggle_like
-
-                            //checking if there is any need to update
-                            if(toggle_result.user_liked===this.props.post_object.user_liked){
-                                return
-                            }
                             
                             //taking care of the liked/unliked post & the likes count
                             const updated_room_posts_arr = []
@@ -299,7 +288,6 @@ class ContentCaptionBox extends React.PureComponent {
                                             variables.status=constants.status.active //user_liked==false means user wants to like
                                         }
                                         //mutating the like object
-                                        console.log(variables, "like post")
                                         toggle_like({
                                             variables:variables
                                         })
@@ -309,34 +297,35 @@ class ContentCaptionBox extends React.PureComponent {
                                 >                                        
                                         {
                                             this.props.post_object.user_liked ?
-                                                <Icon name="heart" size={30} color="#900"/>  :
-                                                <Icon name="hearto" size={30} color="#ffffff"/>          
+                                                <Icon name="heart" size={base_style.icons.icon_size} color="#900"/>  :
+                                                <Icon name="hearto" size={base_style.icons.icon_size} color={base_style.color.icon_not_selected}/>          
                                         }                                                                                                                      
                                 </TouchableOpacity>                                       
                             )
                         }}
                     </Mutation>          
                     <View style={styles.likes_count_container}>
-                        <Text style={[base_style.typography.small_font, {alignSelf:"center"}]}>
+                        <Text style={[base_style.typography.small_font, {alignSelf:"center", color:base_style.color.icon_not_selected}]}>
                             {`${this.props.post_object.likes_count} ${this.props.post_object.likes_count===1?"like":"likes"}`}
                         </Text>   
                     </View>
                     <TouchableOpacity style={styles.comment_container}
                         onPress={()=>{
                             if(!this.props.on_feed){
-                                console.log("open comment")
+                                
                             }else{
                                 this.navigate_to_comment_screen()
                             }
                         }}
                     >                        
-                        <Icon name="message1" size={30} color="#ffffff"/> 
-                        <Text style={[base_style.typography.small_font, {alignSelf:"center", paddingLeft:5}]}>
-                            Comments
+                        <Icon name="team" size={base_style.icons.icon_size} color={base_style.color.icon_not_selected}/> 
+                        <Text style={[base_style.typography.small_font, {alignSelf:"center", paddingLeft:5, color:base_style.color.icon_not_selected}]}>
+                            Caption this
                         </Text>                        
                     </TouchableOpacity>
                 </View>    
-            
+                            
+
                 {/* displaying top rated captions */}
                 <View>
                         {
@@ -374,7 +363,8 @@ const styles = StyleSheet.create({
     like_comment_main_container:{
         flexDirection:"row",
         justifyContent:"center",
-        marginTop:10
+        marginTop:10,
+        marginBottom:15
     },
     like_container:{
         width:"20%",
@@ -390,9 +380,8 @@ const styles = StyleSheet.create({
         width:"30%",
         // justifyContent:"flex-start",
         // alignItems:"flex-start",
-        borderRightColor:base_style.color.primary_color_lighter,
-        borderRightWidth:2.5,
-        flexDirection:"row"
+        flexDirection:"row",
+        paddingLeft:5
     },
     shared_to_name_container:{
         width:"100%",

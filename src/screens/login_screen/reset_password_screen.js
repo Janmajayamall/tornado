@@ -15,33 +15,33 @@ import {
     validate_login_email,
     validate_login_password,
     setting_up_jwt_token
- } from "./../../helpers/index";
+ } from "../../helpers/index";
 
 //importing base style 
-import base_style from "./../../styles/base"
+import base_style from "../../styles/base"
 
 //importing graphql queries
-import {REGISTER_USER, LOGIN_USER} from "./../../apollo_client/apollo_queries/index"
-import base from "./../../styles/base";
+import {REGISTER_USER, LOGIN_USER} from "../../apollo_client/apollo_queries/index"
+import base from "../../styles/base";
 
 //import custom components
-import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
-import BigButton from "./../../custom_components/buttons/big_buttons"
+import BigTextInput from "../../custom_components/text_inputs/big_input_text"
+import BigButton from "../../custom_components/buttons/big_buttons"
 
 // importing screens
 import {
     LOGIN_SCREEN,
     FEED_SCREEN,
     REGISTER_SCREEN
-} from "./../../navigation/screens"
+} from "../../navigation/screens"
 import {
     navigation_set_root_two_bottoms_tabs,
     navigation_set_root_one_screen
-} from "./../../navigation/navigation_routes/index"
+} from "../../navigation/navigation_routes/index"
 
 
 
-class Login extends React.PureComponent{
+class ResetPassword extends React.PureComponent{
 
     constructor(props){
         super(props)
@@ -257,4 +257,4 @@ const styles = {
     }
 }
 
-export default Login
+export default ResetPassword

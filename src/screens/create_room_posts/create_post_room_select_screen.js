@@ -3,8 +3,8 @@ import {
     StyleSheet,
     SafeAreaView,
     FlatList, 
-    Text
-
+    Text,
+    View
 } from "react-native";
 import PropTypes from "prop-types"
 import { 
@@ -70,7 +70,8 @@ class CreatePostRoomSelect extends React.Component{
             <Query query={GET_ALL_JOINED_ROOMS}>
                 {({loading, error, data})=>{
                     
-                    if(data.get_all_joined_rooms){
+                    if(data){
+                        console.log(data.get_all_joined_rooms, "ass")
                         return(
                             <SafeAreaView style={styles.main_container}>
                                 <FlatList

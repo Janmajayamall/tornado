@@ -24,6 +24,7 @@ class SmallButton extends React.PureComponent {
         this.state={
 
         }
+
     }
 
     render(){

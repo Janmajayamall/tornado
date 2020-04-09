@@ -27,7 +27,8 @@ import Loader from "./../../custom_components/loading/loading_component"
 import {
     GET_ALL_JOINED_ROOMS,
     CREATE_ROOM,
-    GET_USER_INFO
+    GET_USER_INFO,
+    GET_ROOMS
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing helpers
@@ -167,13 +168,19 @@ class AddRooms extends React.Component{
             mutation:CREATE_ROOM,
             variables:{
                 creator_id:user_id,
-                name:this.state.name.value, 
+                name:this.state.name.value.trim(), 
                 description:this.state.description.value
             },
             refetchQueries:[
                 {
                     query:GET_ALL_JOINED_ROOMS,
                     variables:{}
+                },
+                {
+                    query:GET_ROOMS,
+                    variables:{
+                        name_filter:""
+                    }
                 }
             ]
         })

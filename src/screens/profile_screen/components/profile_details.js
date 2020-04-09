@@ -13,7 +13,7 @@ import {
     Mutation,
     ApolloConsumer
 } from "react-apollo"
-import {Navigation} from "react-native-navigation"
+
 import PropTypes from "prop-types"
 
 //importing base style 
@@ -24,6 +24,7 @@ import {get_relative_time_ago} from "./../../../helpers/index"
 
 //importing custom components
 import ProfileImage from "./../../../custom_components/image/profile_image"
+import HyperLinkText from "./../../../custom_components/text/hyper_link_text"
 
 
 class ProfileDetails extends React.PureComponent{
@@ -65,17 +66,23 @@ class ProfileDetails extends React.PureComponent{
                     />
                 </View>
                 <View style={styles.second_container}>
-                    <Text style={styles.three_word_text}>
-                        {this.props.user_info.three_words}
-                    </Text>
+                    {
+                        this.props.user_info.three_words.trim()!==""?
+                            <Text style={styles.three_word_text}>
+                                {this.props.user_info.three_words}
+                            </Text>:undefined
+                    }
                     <Text style={styles.three_word_text}>
                         {` | Joined ${get_relative_time_ago(this.props.user_info.timestamp)}`}
                     </Text>
                 </View>
                 <View style={styles.third_container}>
-                    <Text style={styles.bio_text}>
+                    <HyperLinkText 
+                        style={styles.bio_text}
+                        trim={false}
+                    >
                         {this.props.user_info.bio}
-                    </Text>
+                    </HyperLinkText>
                 </View>
             </View>
 

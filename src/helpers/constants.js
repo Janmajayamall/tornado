@@ -55,6 +55,7 @@ export const constants = {
         min_password:8,
         name:100,
         room_name:50,
-        room_description:1000
+        room_description:1000,
+        comment:2000
     }
 }

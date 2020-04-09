@@ -286,3 +286,26 @@ export const validate_room_description = (room_description) => {
         valid:true
     })
 }
+
+export const validate_post_description = (post_description) => {
+
+    if(post_description.trim()===""){
+        return({
+            valid:true, 
+        })
+    }
+
+    post_description=post_description.trim()
+
+    if(post_description.length>constants.input_limits.caption){
+        return({
+            valid:false, 
+            error_text:"Caption cannot be more than 2000 characters"
+        })
+    }
+
+    return({
+        valid:true
+    })
+
+}

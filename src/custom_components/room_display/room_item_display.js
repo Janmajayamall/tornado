@@ -78,10 +78,10 @@ class RoomItemDisplay extends React.PureComponent{
                     <View style={styles.main_container}>
                         <View style={[styles.description_container, {backgroundColor:!this.state.selected?base_style.color.primary_color:base_style.color.primary_color_lighter}]}>
                         
-                            <Text style={styles.room_name_text}>
+                            <Text numberOfLines={1} style={styles.room_name_text}>
                                 {this.props.room_object.name}
                             </Text>                
-                            <Text style={[styles.room_attributes_text,{marginTop:5}]}>
+                            <Text numberOfLines={3} style={[styles.room_attributes_text,{marginTop:5}]}>
                                 {this.props.room_object.description}
                             </Text>      
                             <View style={styles.members_timestamp_container}>
@@ -92,7 +92,7 @@ class RoomItemDisplay extends React.PureComponent{
                                     {`created ${this.get_relative_time_ago(this.props.room_object.timestamp)}`}
                                 </Text>
                             </View>                                                      
-                            <Text style={[styles.room_attributes_text, {marginTop:5}]}>
+                            <Text numberOfLines={1} style={[styles.room_attributes_text, {marginTop:5}]}>
                                 {`creator: ${this.props.room_object.creator_info.username}`}
                             </Text>
                             {

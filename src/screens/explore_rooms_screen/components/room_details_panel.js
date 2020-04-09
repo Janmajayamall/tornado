@@ -34,6 +34,7 @@ import {get_relative_time_ago, constants} from "./../../../helpers/index"
 //importing custom components
 import BigButton from "./../../../custom_components/buttons/big_buttons"
 import ProfileImage from "./../../../custom_components/image/profile_image"
+import HyperLinkText from "./../../../custom_components/text/hyper_link_text"
 
 const window = Dimensions.get("window")
 class RoomDetailsPanel extends React.PureComponent{
@@ -148,15 +149,18 @@ class RoomDetailsPanel extends React.PureComponent{
                     <View style={styles.main_container}>
 
                         <View style={styles.first_container}>    
-                            <Text style={styles.room_name_text}>
+                            <Text numberOfLines={1} style={styles.room_name_text}>
                                 {this.props.room_object.name}
                             </Text>
                         </View>
 
                         <View style={styles.second_container}>
-                            <Text style={styles.description_text}>
-                                "The best part of using Character Counters is having you count the number of characters you have used already. It’s indeed useful as you have the character counter to help you probably reword a long phrase or status in online posts."The best part of using Character Counters is having you count the number of characters you have used already. It’s indeed useful as you have the character counter to help you probably reword a long phrase or status in online posts.The best part of using Character Counters is having you count the number of characters you have used already. It’s indeed useful as you have the character counter to help you probably reword a long phrase or status in online posts.
-                            </Text>
+                            <HyperLinkText 
+                                style={styles.description_text}
+                                trim={true}
+                                numberOfLines={5}>
+                                {this.props.room_object.description}
+                            </HyperLinkText>
                         </View>
 
                         <View style={styles.third_container}>
@@ -239,7 +243,7 @@ const styles = StyleSheet.create({
         // alignItems:"center"
     },
     room_name_text:{
-        ...base_style.typography.medium_header,
+        ...base_style.typography.small_header,
     },
     description_text:{
         ...base_style.typography.small_font_paragraph,

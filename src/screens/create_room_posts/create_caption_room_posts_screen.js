@@ -68,15 +68,17 @@ class CreateCaptionRoomPosts extends React.PureComponent{
 
         this.state = {
             image_object:{},
-            urls:{},
             rooms_id_set:new Set(),
             description:"",
             loading:false,
 
             //image choose phrase
             choose_image_phrase:"Add Photo",
-            choose_image_subtext:" to your post."
-            
+            choose_image_subtext:" to your post.",
+
+            //errors
+            set_error:false, 
+            image_error:false
         }
 
         //refs
@@ -153,7 +155,11 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                                   id:constants.navigation.action_buttons.DONE_POST_ROOM_SELECTION,
                                   text:"Done"
                               }
-                          ]
+                          ],
+                          rightButtonColor:base_style.color.icon_selected,
+                          background:{
+                              color:base_style.color.primary_color
+                          }
                       }
                   }
                 }
@@ -164,8 +170,41 @@ class CreateCaptionRoomPosts extends React.PureComponent{
     }
 
     validate_all_input = () => {
-        //TODO: complete the validation
-        return true
+
+        let all_inputs_valid=true
+        let new_input_objects={}
+        
+        //if no image object, then invalid
+        if(Object.keys(this.state.image_object).length===0){
+            all_inputs_valid=false
+            new_input_objects.image_error=true
+        }else{
+            new_input_objects.image_error=false
+        }
+
+        //room_ids set validation 
+        if(this.state.rooms_id_set.size===0){
+
+            all_inputs_valid=false
+
+            //set set_error to true 
+            new_input_objects.set_error=true
+        }else{
+            new_input_objects.set_error=false
+        }
+
+        if(!all_inputs_valid){
+            
+            this.setState((prev_state)=>{
+                console.log({...prev_state,
+                    ...new_input_objects})
+                return({
+                    ...prev_state,
+                    ...new_input_objects
+                })
+            })
+        }
+        return all_inputs_valid
     }
 
     upload_image_to_s3 = async() => {
@@ -235,19 +274,13 @@ class CreateCaptionRoomPosts extends React.PureComponent{
         }
 
         //if image is added to the post then upload it first
-        if(Object.keys(this.state.image_object).length>0){
-            try{
-                await this.upload_image_to_s3()
-                variable_object.create_post_object.image = {
-                    image_name:this.state.image_object.file_name,
-                    width:this.state.image_object.width, 
-                    height:this.state.image_object.height
-                }
-            }catch(e){
-                console.log(e, "create_room_posts_screen, while image upload to s3")
-                variable_object.valid=false
-            }
-            
+        if(Object.keys(this.state.image_object).length>0){            
+            await this.upload_image_to_s3()
+            variable_object.create_post_object.image = {
+                image_name:this.state.image_object.file_name,
+                width:this.state.image_object.width, 
+                height:this.state.image_object.height
+            }        
         }
 
         return variable_object
@@ -270,10 +303,10 @@ class CreateCaptionRoomPosts extends React.PureComponent{
 
         //checking whether variable_object are valid or not
         if (!variable_object.valid){
-            console.log("error, encountered")
+            this.setState({loading:false})
             return 
         }   
-        console.log(variable_object)
+        
         //creating the post
         const {data} = await this.props.client.mutate({
             mutation:CREATE_ROOM_POST,
@@ -295,11 +328,30 @@ class CreateCaptionRoomPosts extends React.PureComponent{
         })
         
         this.setState({
-            loading:false
+            loading:false,
         })
 
         //going to previous screen in stack
         Navigation.pop(this.props.componentId)
+        return
+
+    }
+
+    create_post_wrapper = async() => {
+        
+        //if loading state is true then return 
+        if(this.state.loading){
+            return    
+        }
+
+        try{
+            await this.create_post()
+            return
+        }catch(e){
+            console.log(e, "create_caption_room_posts_screen.js")
+            return
+            //TODO:set error state to true
+        }
 
     }
 
@@ -334,6 +386,13 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                         upload_img_s3={this.get_img_object}
                         ref={this.choose_post_image_ref}
                         width={window.width}
+
+                        //if image is already chosen
+                        image={this.state.image_object.image_uri ? {
+                            image_uri:this.state.image_object.image_uri,
+                            height:this.state.image_object.height,
+                            width:this.state.image_object.width
+                        }:undefined}
                     />
                     <View style={styles.choose_container}>
                         <SmallButton
@@ -354,11 +413,26 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                         />   
                         <Text style={{...base_style.typography.small_font, fontStyle:"italic",   alignSelf:"center"}}>
                             {` to share this post with?`}
-                        </Text>
-                        
+                        </Text>                        
                     </View>
-
-                                    
+                    {
+                        this.state.image_error ? 
+                        <View style={styles.error_view}>
+                            <Text style={styles.error_text}>
+                                Choose a photo to post
+                            </Text>
+                        </View>:
+                        undefined
+                    }  
+                    {
+                        this.state.set_error ? 
+                        <View style={styles.error_view}>
+                            <Text style={styles.error_text}>
+                                Choose at least one room to post this to.
+                            </Text>
+                        </View>:
+                        undefined
+                    }                                      
                 </SafeAreaView>
             </ScrollView>
         )
@@ -391,9 +465,13 @@ const styles = StyleSheet.create({
     choose_image_container:{
         width:"100%",
         height:0
+    },
+    error_view:{
+        padding:10
+    },
+    error_text:{
+        ...base_style.typography.mini_font
     }
-
-
 })
 
 export default CreateCaptionRoomPosts

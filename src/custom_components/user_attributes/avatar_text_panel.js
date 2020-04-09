@@ -76,6 +76,8 @@ class AvatarTextPanel extends React.PureComponent{
         //refs
         this.drop_down_menu_ref = null
         this.generate_panel_ref = React.createRef()
+        
+        console.log('ajdapod')
     }
     
     // generating text panel on the basis of value of panel_type
@@ -98,7 +100,12 @@ class AvatarTextPanel extends React.PureComponent{
 
         if(this.props.panel_type===constants.avatar_text_panel_type.comment_display){
             return(
-                <View>
+                <View style={styles.user_description_container}>
+                    <View style={styles.caption_text_container}>
+                            <Text style={base_style.typography.small_header}>
+                                {`${this.props.user_object.username}`}                            
+                            </Text>
+                    </View> 
                     <HyperLinkText 
                         style={base_style.typography.small_font}
                         trim={true}
@@ -195,7 +202,7 @@ class AvatarTextPanel extends React.PureComponent{
                                 onChangeText={(val)=>{
                                     this.setState({caption_text_input:val})
                                 }}
-                                placeholder={"Describe the image in your words!"}
+                                placeholder={"Caption this!"}
                                 placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
                         />
                     </View>
@@ -211,7 +218,7 @@ class AvatarTextPanel extends React.PureComponent{
                             }
                         }}
                     >
-                        <Text>Post</Text>
+                        <Text style={styles.post_button_text}>Post</Text>
                     </TouchableOpacity>
                     
                 </View>

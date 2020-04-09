@@ -24,7 +24,8 @@ import base_style from "../../styles/base"
 
 //importing helpers
 import {  
-    upload_image_to_s3
+    upload_image_to_s3,
+    validate_post_description
 } from "./../../helpers/index";
 
 //importing custom components
@@ -71,9 +72,12 @@ class CreateRoomPosts extends React.PureComponent{
 
         this.state = {
             image_object:{},
-            urls:{},
             rooms_id_set:new Set(),
-            description:"",
+            description:{
+                value:"",
+                error:false,
+                error_text:""
+            },
             loading:false,
 
             //image choose phrase
@@ -172,8 +176,61 @@ class CreateRoomPosts extends React.PureComponent{
     }
 
     validate_all_input = () => {
-        //TODO: complete the validation
-        return true
+
+        let all_inputs_valid = true
+        let new_input_objects = {}
+        
+        //validating description
+        const description_validation = validate_post_description(this.state.description.value)
+        if(!description_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.description={
+                ...this.state.description,
+                error:true, 
+                error_text:description_validation.error_text
+            }
+        }else{
+    
+            //if description is none && no image
+            if(this.state.description.value.trim()==="" && Object.keys(this.state.image_object).length===0){
+                //throw an error that at least one of them should be present
+                all_inputs_valid=false 
+                new_input_objects.description={
+                    ...this.state.description,
+                    error:true,
+                    error_text:"Either choose a Image or write something."
+                }
+            }else{
+                new_input_objects.description={
+                    ...this.state.description,
+                    error:false
+                }
+            }
+
+        }
+
+        //room_ids set validation 
+        if(this.state.rooms_id_set.size===0){
+
+            all_inputs_valid=false
+
+            //set set_error to true 
+            new_input_objects.set_error=true
+        }else{
+            new_input_objects.set_error=false
+        }
+
+        //all inputs are not valid
+        if(!all_inputs_valid){
+            this.setState((prev_state)=>{
+                return({
+                    ...prev_state,
+                    ...new_input_objects
+                })
+            })
+        }
+
+        return all_inputs_valid
     }
 
     upload_image_to_s3 = async() => {
@@ -215,7 +272,7 @@ class CreateRoomPosts extends React.PureComponent{
 
     generate_create_post_variables = async() => {
 
-        //TODO:validate all this inputs
+        //validate all this inputs
         if(!this.validate_all_input()){
             return({
                 valid:false
@@ -229,13 +286,13 @@ class CreateRoomPosts extends React.PureComponent{
         const {user_id} = data.get_user_info
 
         //generate room ids 
-        const room_ids = this.generate_room_ids(user_id)
+        const room_ids = this.generate_room_ids()
 
         //generating create_post_variables
         let variable_object = {
             create_post_object:{
                 creator_id:user_id,
-                description:this.state.description,
+                description:this.state.description.value,
                 room_ids:room_ids,
                 post_type:constants.post_types.room_post
             },
@@ -244,25 +301,18 @@ class CreateRoomPosts extends React.PureComponent{
 
         //if image is added to the post then upload it first
         if(Object.keys(this.state.image_object).length>0){
-            try{
-                await this.upload_image_to_s3()
-                variable_object.create_post_object.image = {
-                    image_name:this.state.image_object.file_name,
-                    width:this.state.image_object.width, 
-                    height:this.state.image_object.height
-                }
-            }catch(e){
-                console.log(e, "create_room_posts_screen, while image upload to s3")
-                variable_object.valid=false
-            }
-            
+            await this.upload_image_to_s3()
+            variable_object.create_post_object.image = {
+                image_name:this.state.image_object.file_name,
+                width:this.state.image_object.width, 
+                height:this.state.image_object.height
+            }            
         }
 
         return variable_object
     }
 
     create_post = async() => {
-
         //check if the screen is already in loading state, if yes the create post does not responds
         if(this.state.loading){
             return
@@ -277,8 +327,7 @@ class CreateRoomPosts extends React.PureComponent{
         const variable_object = await this.generate_create_post_variables()
 
         //checking whether variable_object are valid or not
-        if (!variable_object.valid){
-            console.log("error, encountered")
+        if (!variable_object.valid){            
             this.setState({
                 loading:false
             })
@@ -311,6 +360,23 @@ class CreateRoomPosts extends React.PureComponent{
         
         //going to previous screen in stack
         Navigation.pop(this.props.componentId)
+        return
+    }
+
+    create_post_wrapper = async() => {
+
+        //if loading state is true then return 
+        if(this.state.loading){
+            return    
+        }
+
+        try{
+            await this.create_post()
+            return
+        }catch(e){
+            console.log(e, "create_room_posts_screen.js")
+            //TODO:set error state to true
+        }
 
     }
 
@@ -345,16 +411,41 @@ class CreateRoomPosts extends React.PureComponent{
                         upload_img_s3={this.get_img_object}
                         ref={this.choose_post_image_ref}
                         width={window.width}
+
+                         //if image is already chosen
+                        image={this.state.image_object.image_uri ? {
+                            image_uri:this.state.image_object.image_uri,
+                            height:this.state.image_object.height,
+                            width:this.state.image_object.width
+                        }:undefined}
                     />
-                    <View style={styles.description_container}>
+                    {
+                        this.state.description.error ? 
+                        <View style={styles.error_view}>
+                            <Text style={styles.error_text}>
+                                {this.state.description.error_text}
+                            </Text>
+                        </View>:
+                        undefined
+                    }   
+                    <View style={styles.description_container}>                    
                         <TextInput
                             style={styles.description_text_input}
                             multiline={true}
-                            value={this.state.description}
-                            onChangeText={(val)=>{this.setState({description:val})}}
+                            value={this.state.description.value}
+                            onChangeText={(val)=>{
+                                this.setState((prev_state)=>{
+                                    return({
+                                        description:{
+                                            ...prev_state.description,
+                                            value:val
+                                        }
+                                    })
+                                })
+                            }}
                             placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
-                            placeholderTextColor={"#ffffff"}
-                        />
+                            placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                        />                  
                     </View>
                     <View style={styles.choose_container}>
                         <SmallButton
@@ -375,10 +466,17 @@ class CreateRoomPosts extends React.PureComponent{
                         />   
                         <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
                             {` to share this post with?`}
-                        </Text>
-                        
+                        </Text>                                         
                     </View>
-
+                    {
+                        this.state.set_error ? 
+                        <View style={styles.error_view}>
+                            <Text style={styles.error_text}>
+                                Choose at least one room to post this to.
+                            </Text>
+                        </View>:
+                        undefined
+                    }      
                                     
                 </SafeAreaView>
             </ScrollView>
@@ -413,9 +511,13 @@ const styles = StyleSheet.create({
     choose_image_container:{
         width:"100%",
         height:0
+    },
+    error_view:{
+        padding:10
+    },
+    error_text:{
+        ...base_style.typography.mini_font
     }
-
-
 })
 
 export default CreateRoomPosts

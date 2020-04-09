@@ -47,7 +47,7 @@ class HyperLinkText extends React.PureComponent{
                     color:"#00acee"
                 }}
             >
-                <Text                     
+                <Text                                     
                     style={[this.props.style, {textAlign:"left"}]}>
                     {this.props.children}
                 </Text>
