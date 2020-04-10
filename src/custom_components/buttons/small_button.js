@@ -16,7 +16,7 @@ class SmallButton extends React.PureComponent {
     static propTypes = {
         onPress:PropTypes.func,
         button_text:PropTypes.string,
-        width:PropTypes.any,
+        width:PropTypes.any, 
     }
 
     constructor(props){
@@ -47,7 +47,7 @@ class SmallButton extends React.PureComponent {
 const styles = StyleSheet.create({
     main_container:{
         flexWrap:"wrap",        
-        backgroundColor:"#FFD600",
+        backgroundColor:base_style.color.icon_selected,
         padding:5
     },
     button_text:{

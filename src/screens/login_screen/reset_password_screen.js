@@ -61,7 +61,7 @@ class ResetPassword extends React.PureComponent{
             },
 
             //screen state EMAIL or VERIFICATION_PASSWORD
-            screen_state:"VERIFICATION_PASSWORD",
+            screen_state:"EMAIL",
 
             //keyboard safe
             main_container_bottom_padding:0,

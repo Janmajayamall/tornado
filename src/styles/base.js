@@ -61,6 +61,7 @@ export default base_style = {
         }
     },
     icons:{
-        icon_size:25
+        icon_size:25,
+        icon_bottom_tab_size:30
     }
 }

@@ -4,7 +4,8 @@ import {
     Text,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    Image
 } from "react-native";
 import {
     Mutation,

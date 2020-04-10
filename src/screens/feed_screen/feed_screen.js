@@ -80,8 +80,6 @@ class FeedScreen extends React.PureComponent {
     }
 
 
-
-
     get_room_posts = () => {
     //    in-build pagination
 

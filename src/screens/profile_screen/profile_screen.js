@@ -40,7 +40,8 @@ import { navigation_push_to_screen } from '../../navigation/navigation_routes';
 import {  
     ADD_ROOMS_SCREEN,
     EDIT_PROFILE_SCREEN,
-    JOINED_ROOMS_SCREEN
+    JOINED_ROOMS_SCREEN,
+    SETTINGS_SCREEN,
 } from "./../../navigation/screens";
 
 const window = Dimensions.get("window")
@@ -71,10 +72,21 @@ class ProfileScreen extends React.Component {
 
 
     componentDidMount(){
-        // // adding event for navigation
-        // this.navigationEventListener = Navigation.events().bindComponent(this);
+
+        // adding event for navigation
+        this.navigationEventListener = Navigation.events().bindComponent(this);
     }
 
+    //react native navigation event binded function for action buttons
+    navigationButtonPressed({ buttonId }) {
+        if (buttonId===constants.navigation.action_buttons.SETTINGS){
+            navigation_push_to_screen(this.props.componentId,
+                    {
+                        screen_name:SETTINGS_SCREEN,                
+                    }
+                )
+        }
+    }
 
     render_again = () => {
         this.setState({
@@ -234,7 +246,7 @@ class ProfileScreen extends React.Component {
                 </Text>
                 <SmallButton
                     button_text={"Create a room"}
-                    onPress={this.navigate_to_add_new_room}
+                    onPress={this.navigate_to_add_new_room}        
                 />
                 <Text style={{...base_style.typography.small_font, fontStyle:"normal"}}>
                     {"  |  "}
@@ -356,7 +368,7 @@ const styles = StyleSheet.create({
     },
     header_container:{
         backgroundColor:base_style.color.primary_color,
-        padding:10,
+        padding:10
         // borderBottomColor:"white",
         // borderBottomWidth:5
     },

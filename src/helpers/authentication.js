@@ -34,7 +34,7 @@ export const setting_up_the_user = async(user_data, apollo_client) => {
 }
 
 export const setting_up_jwt_token = async(jwt) => {
-    console.log(jwt)
+
     if(!jwt){
         // if jwt is not present then return
         return
@@ -42,18 +42,7 @@ export const setting_up_jwt_token = async(jwt) => {
 
     //store it in local storage
     await AsyncStorage.setItem("token", jwt)
-
-    try{
-        const jwt = await AsyncStorage.getItem("token")
-        if (jwt){
-        console.log("yeh rhi", jwt)
-          return jwt
-        }
-        return ""
-      }catch(e){
-        console.log("AsyncStorage Error(jwt token not setup): "+e)
-        return ""
-      }
-
+    
     return
 }
+

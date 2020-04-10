@@ -368,7 +368,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
 
         //if loading is false
         return(
-            <ScrollView style={styles.main_container}>
+            <View style={styles.main_container}>
                 <SafeAreaView >
 
                     <BigButton
@@ -434,7 +434,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                         undefined
                     }                                      
                 </SafeAreaView>
-            </ScrollView>
+            </View>
         )
     }
 }

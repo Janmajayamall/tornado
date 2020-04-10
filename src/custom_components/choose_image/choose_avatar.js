@@ -36,7 +36,6 @@ class ChooseAvatar extends React.PureComponent{
         this.state={
             image_uri:this.props.image_uri!==undefined?this.props.image_uri:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"
         }
-        console.log(this.props.image_uri)
 
     }
 
@@ -61,7 +60,8 @@ class ChooseAvatar extends React.PureComponent{
                 width:image.width,
                 height:image.height,
                 image_data:image.data,
-                file_name:`${this.props.username}_${new Date().toISOString()}.${image_extension}`
+                file_name:`${this.props.username}_${new Date().toISOString()}.${image_extension}`,
+                image_uri:image_uri
             }
 
             this.props.upload_img_s3(image_obj)

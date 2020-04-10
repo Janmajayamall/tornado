@@ -26,5 +26,7 @@ export const COMMON_CREATE_POSTS_SCREEN = "screen.common_create_posts"
 export const PROFILE_SCREEN = "screen.profile"
 export const EDIT_PROFILE_SCREEN = "screen.edit_profile"
 
+export const SETTINGS_SCREEN = "screen.settings"
+
 
 

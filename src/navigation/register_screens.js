@@ -25,6 +25,7 @@ import common_create_posts from "./../screens/create_room_posts/common_create_po
 import search_rooms_screen from "./../screens/explore_rooms_screen/search_rooms_screen"
 import trend_feed_screen from "./../screens/feed_screen/trend_feed_screen"
 import reset_password_screen from "./../screens/login_screen/reset_password_screen"
+import settings_screen from "./../screens/settings_screen/settings_screen"
 
 //importing apollo client 
 import apollo_client from './../apollo_client/client_configuration'
@@ -52,7 +53,8 @@ import {
     COMMON_CREATE_POSTS_SCREEN,
     SEARCH_ROOMS_SCREEN,
     TREND_FEED_SCREEN,
-    RESET_PASSWORD_SCREEN
+    RESET_PASSWORD_SCREEN,
+    SETTINGS_SCREEN
 } from './screens'
 
 export default function () {
@@ -76,4 +78,5 @@ export default function () {
     Navigation.registerComponent(SEARCH_ROOMS_SCREEN, ()=>enhance_provider_hoc(search_rooms_screen, apollo_client, store))
     Navigation.registerComponent(TREND_FEED_SCREEN, ()=>enhance_provider_hoc(trend_feed_screen, apollo_client, store))
     Navigation.registerComponent(RESET_PASSWORD_SCREEN, ()=>enhance_provider_hoc(reset_password_screen, apollo_client, store))
+    Navigation.registerComponent(SETTINGS_SCREEN, ()=>enhance_provider_hoc(settings_screen, apollo_client, store))
 }

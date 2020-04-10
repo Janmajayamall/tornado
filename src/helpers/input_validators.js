@@ -21,7 +21,8 @@ export const validate_email = async(email, apollo_client) => {
         query:CHECK_EMAIL,
         variables:{
             email:email.toLowerCase().trim()
-        }
+        },
+        fetchPolicy:"no-cache"
     })
    
     if(data.check_email){
@@ -110,8 +111,10 @@ export const validate_username = async(username, apollo_client) => {
         query:CHECK_USERNAME,
         variables:{
             username:username.toLowerCase().trim()
-        }
+        },
+        fetchPolicy:"no-cache"
     })
+    console.log(data, "adoiwdaoijn")
     if(data.check_username){
         return ({
             valid:false,
@@ -186,7 +189,7 @@ export const validate_age = (age) => {
     })
 }
 
-export const validate_name = async(name) => {
+export const validate_name = (name) => {
 
     if(name.trim()===""){
         return ({
@@ -222,9 +225,12 @@ export const validate_bio = (bio) => {
         return({
             valid:false,
             error_text:`Bio should be less than ${constants.input_limits.bio} characters`
-
         })
     }
+
+    return({
+        valid:true
+    })
 
 }
 

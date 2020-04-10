@@ -57,6 +57,12 @@ class ProfileDetails extends React.PureComponent{
                         <Text style={styles.username_text}>
                             {this.props.user_info.username}
                         </Text>
+                        {
+                            this.props.user_info.three_words.trim()!==""?
+                                <Text style={styles.three_word_text}>
+                                    {this.props.user_info.three_words}
+                                </Text>:undefined
+                        }
                     </View>
                     {/* display chosen image, initially display default image */}
                     <ProfileImage
@@ -65,25 +71,18 @@ class ProfileDetails extends React.PureComponent{
                         default_avatar={this.props.user_info.default_avatar}
                     />
                 </View>
-                <View style={styles.second_container}>
-                    {
-                        this.props.user_info.three_words.trim()!==""?
-                            <Text style={styles.three_word_text}>
-                                {this.props.user_info.three_words}
-                            </Text>:undefined
-                    }
-                    <Text style={styles.three_word_text}>
-                        {` | Joined ${get_relative_time_ago(this.props.user_info.timestamp)}`}
-                    </Text>
-                </View>
                 <View style={styles.third_container}>
                     <HyperLinkText 
                         style={styles.bio_text}
-                        trim={false}
+                        trim={true}
+                        numberOfLines={2}
                     >
                         {this.props.user_info.bio}
                     </HyperLinkText>
                 </View>
+                <Text style={styles.joined_text}>
+                        {`Joined ${get_relative_time_ago(this.props.user_info.timestamp)}`}
+                </Text>
             </View>
 
         )
@@ -101,7 +100,9 @@ const styles = StyleSheet.create({
     },
     username_container:{
         marginTop:10,
-        marginBottom:10
+        marginBottom:10,
+        justifyContent:"center",
+        alignItems:"center"
     },
     username_text:{
         ...base_style.typography.medium_header,
@@ -116,14 +117,18 @@ const styles = StyleSheet.create({
         ...base_style.typography.small_font,
     },
     third_container:{
-        justifyContent:"center",
-        alignItems:"center",
+        // justifyContent:"center",
+        // alignItems:"center",
         marginTop:10
     },
     bio_text:{
         ...base_style.typography.small_font_paragraph,
-        width:"80%",
-        textAlign:"center"
+    },
+    joined_text:{
+        ...base_style.typography.small_font, 
+        ...base_style.typography.font_colors.low_emphasis, 
+        alignSelf:"flex-end",
+        marginTop:10
     }
 })
 

@@ -158,7 +158,8 @@ class RoomDetailsPanel extends React.PureComponent{
                             <HyperLinkText 
                                 style={styles.description_text}
                                 trim={true}
-                                numberOfLines={5}>
+                                numberOfLines={5}
+                            >
                                 {this.props.room_object.description}
                             </HyperLinkText>
                         </View>

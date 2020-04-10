@@ -63,3 +63,10 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 2. https://speakerdeck.com/mikeyk/secrets-to-lightning-fast-mobile-design?slide=94
 
 # Instagram engineering: https://instagram-engineering.com/instagram-darkmode-58802b43c0f2
+
+## Setting up splash screen
+1. https://medium.com/@appstud/add-a-splash-screen-to-a-react-native-app-810492e773f9
+2. https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
+
+## Generating different icon sizes for ios/android
+1. https://makeappicon.com/

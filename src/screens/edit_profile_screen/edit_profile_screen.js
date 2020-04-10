@@ -76,7 +76,7 @@ class EditProfile extends React.PureComponent {
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
         if(buttonId === constants.navigation.action_buttons.EDIT_PROFILE){
-            this.edit_profile_mutation()
+            this.edit_profile_mutation_wrapper()
         }
     }
 
@@ -96,88 +96,131 @@ class EditProfile extends React.PureComponent {
     }
 
 
-    validate_the_input = () =>{
-        return true
-        let all_inputs_valid = true
+    validate_inputs = async() =>{
 
+        let all_inputs_valid = true
         let new_input_objects = {}
 
         //validating three words
-        if (!validate_three_words(this.state.three_words.value)){
-            all_inputs_valid = false
-            new_input_objects.three_words = {...this.state.three_words, error:true}
+        const three_words_validation = validate_three_words(this.state.three_words.value)
+        if(!three_words_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.three_words = {
+                ...this.state.three_words,
+                error:true,
+                error_text:three_words_validation.error_text
+            }
+        }else{
+            new_input_objects.three_words = {
+                ...this.state.three_words,
+                error:false,
+            }
         }
 
         //validating username
-        if (!validate_username(this.state.username.value)){
-            all_inputs_valid = false
-            new_input_objects.username = {...this.state.username, error:true}
+        const username_validation = await validate_username(this.state.username.value, this.props.client)
+        if(!username_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.username={
+                ...this.state.username,
+                error:true,
+                error_text:username_validation.error_text
+            }
+        }else{
+            new_input_objects.username={
+                ...this.state.username,
+                error:false,
+            }
         }
 
         //validating bio
-        if (!validate_bio(this.state.bio.value)){
-            all_inputs_valid = false
-            new_input_objects.bio = {...this.state.bio, error:true}
+        const bio_validation = validate_bio(this.state.bio.value)
+        if(!bio_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.bio={
+                ...this.state.bio,
+                error:true,
+                error_text:bio_validation.error_text
+            }
+        }else{
+            new_input_objects.bio={
+                ...this.state.bio,
+                error:false,
+            }
         }
 
         //validating name
-        if (!validate_name(this.state.name.value)){
-            all_inputs_valid = false
-            new_input_objects.name = {...this.state.name, error:true}
+        const name_validation = validate_name(this.state.name.value)
+        if(!name_validation.valid){
+            all_inputs_valid=false
+            new_input_objects.name={
+                ...this.state.name,
+                error:true,
+                error_text:name_validation.error_text
+            }
+        }else{
+            new_input_objects.name={
+                ...this.state.name,
+                error:false,
+            }
         }
 
         //if even one of the inputs are not valid, update the state
         
-        if (!all_inputs_valid){
-            this.setState((prev_state)=>{
-                return({
-                    ...prev_state,
-                    ...new_input_objects
-                })
-            })
-        }
+        this.setState({
+            three_words:new_input_objects.three_words,
+            username:new_input_objects.username,
+            bio:new_input_objects.bio,
+            name:new_input_objects.name
+        })
 
         return all_inputs_valid
     }
 
     edit_profile_mutation = async() => {
 
-        //TODO: enable loading state
-
-        //validate the input 
-        if(!this.validate_the_input()){
+        // if loading state is true then return 
+        if(this.state.loading){
             return
         }
 
+        // enable loading state
+        this.setState({loading:true})
+
+        //validate the input 
+        const all_inputs_valid = await this.validate_inputs()
+        console.log(all_inputs_valid)
+
+        if(!all_inputs_valid){
+            this.setState({loading:false})
+            return //no need to process further
+        }
+
+
         //generating edit_user_profile_variables
         let edit_user_profile_variables = {
-            name:this.state.name.value,
-            username:this.state.username.value,
-            bio:this.state.bio.value,
-            three_words:this.state.three_words.value
+            name:this.state.name.value.trim(),
+            username:this.state.username.value.trim(),
+            bio:this.state.bio.value.trim(),
+            three_words:this.state.three_words.value.trim()
         }
 
         //upload the image, if image has been changed
         if (Object.keys(this.state.chosen_avatar).length > 0){
-            try{
-                //get presigned url 
-                const presigned_upload_url = await get_presigned_url(this.props.client, this.state.chosen_avatar.file_name, this.state.chosen_avatar.file_mime)
-                //uploading the image to s3
-                await upload_image_to_s3(presigned_upload_url, this.state.chosen_avatar.image_data, this.state.chosen_avatar.file_mime)    
-                
-                //populating edit_user_profile_variables with avatar & last_avatar_id
-                edit_user_profile_variables.avatar = {
-                    image_name:this.state.chosen_avatar.file_name,
-                    width:this.state.chosen_avatar.width,
-                    height:this.state.chosen_avatar.height
-                }
-                if(this.state.current_avatar){
-                    edit_user_profile_variables.last_avatar_id = this.state.current_avatar._id
-                }
-
-            }catch(e){
-                console.log(e, "Error in uploading image, edit_profile_screen")
-            }        
+            //get presigned url 
+            const presigned_upload_url = await get_presigned_url(this.props.client, this.state.chosen_avatar.file_name, this.state.chosen_avatar.file_mime)
+            //uploading the image to s3
+            await upload_image_to_s3(presigned_upload_url, this.state.chosen_avatar.image_data, this.state.chosen_avatar.file_mime)    
+            
+            //populating edit_user_profile_variables with avatar & last_avatar_id
+            edit_user_profile_variables.avatar = {
+                image_name:this.state.chosen_avatar.file_name,
+                width:this.state.chosen_avatar.width,
+                height:this.state.chosen_avatar.height
+            }
+            if(this.state.current_avatar){
+                edit_user_profile_variables.last_avatar_id = this.state.current_avatar._id
+            }      
         }
 
         // mutating the user_profile
@@ -188,12 +231,30 @@ class EditProfile extends React.PureComponent {
 
         //re-rendering the profile screen
         this.props.render_edit_profile_screen()
-
+        console.log("aass")
         //go back
         Navigation.pop(this.props.componentId)
+        return 
     }
 
+    edit_profile_mutation_wrapper = async() => {
 
+        if(this.state.loading){ //loading is true
+            return
+        }
+
+
+        try{
+            await this.edit_profile_mutation()
+            return
+        }catch(e){
+            console.log(e, "edit_profile_screen.js")
+            this.setState({loading:false})
+            //TODO: Notify the user about the error
+            return 
+        }
+
+    }
 
     setup_edit_profile_state = (user_info) => {
         console.log(user_info)
@@ -234,7 +295,8 @@ class EditProfile extends React.PureComponent {
         this.setState({
             bio:{
                 ...this.state.bio,
-                value:val
+                value:val,
+                error:false
             }
         })
     }
@@ -243,7 +305,8 @@ class EditProfile extends React.PureComponent {
         this.setState({
             name:{
                 ...this.state.name,
-                value:val
+                value:val,
+                error:false
             }
         })
     }
@@ -252,16 +315,19 @@ class EditProfile extends React.PureComponent {
         this.setState({
             three_words:{
                 ...this.state.three_words,
-                value:val
+                value:val,
+                error:false
             }
         })
     }
 
     change_username = (val) => {
+
         this.setState({
             username:{
                 ...this.state.username,
-                value:val
+                value:val.toLowerCase().trim(),
+                error:false
             }
         })
     }
@@ -270,6 +336,19 @@ class EditProfile extends React.PureComponent {
         this.setState({
             chosen_avatar:img_obj,
         })
+    }
+
+    get_choose_image_uri = () => {
+
+        if(Object.keys(this.state.chosen_avatar).length>0){
+            return this.state.chosen_avatar.image_uri
+        }
+
+        if(!this.state.default_avatar){
+            return `${this.state.current_avatar.cdn_url}/${this.state.current_avatar.image_name}`
+        }   
+
+        return undefined
     }
 
     render(){
@@ -297,7 +376,7 @@ class EditProfile extends React.PureComponent {
                             width={window.width*0.8}
                             upload_img_s3={this.get_img_object}
                             username={this.state.username.value}                            
-                            image_uri={!this.state.default_avatar?`${this.state.current_avatar.cdn_url}/${this.state.current_avatar.image_name}`:undefined}
+                            image_uri={this.get_choose_image_uri()}
                         />
                     </View>
                     <View style={styles.input_box}>

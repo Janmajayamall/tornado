@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     SafeAreaView,
     TextInput,
-    Dimensions
+    Dimensions,
+    KeyboardAvoidingView
 } from "react-native";
 import {
     Mutation,
@@ -393,7 +394,9 @@ class CreateRoomPosts extends React.PureComponent{
 
         //if loading state is false
         return(
-            <ScrollView style={styles.main_container}>
+            <KeyboardAvoidingView 
+                behavior={"padding"}
+                style={styles.main_container}>
                 <SafeAreaView >
 
                     <BigButton
@@ -479,7 +482,7 @@ class CreateRoomPosts extends React.PureComponent{
                     }      
                                     
                 </SafeAreaView>
-            </ScrollView>
+            </KeyboardAvoidingView>
         )
     }
 }
