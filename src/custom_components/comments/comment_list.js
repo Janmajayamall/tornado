@@ -27,8 +27,6 @@ class CommentList extends React.PureComponent{
 
     static propTypes = {
         comment_list:PropTypes.array,
-        loading:PropTypes.any,
-        error:PropTypes.any,
         refetch:PropTypes.func,
         bottom_padding:PropTypes.any,
         post_object:PropTypes.object,
@@ -44,11 +42,7 @@ class CommentList extends React.PureComponent{
         super(props)
         this.state={
         }
-        console.log("mounted?")
-    }
-
-    componentDidUpdate(){
-        // console.log("rendered: ContentList", this.props.bottom_padding)
+        console.log("commentlist")
     }
 
     render_item = (object) => {
@@ -95,6 +89,8 @@ class CommentList extends React.PureComponent{
                     panel_type={constants.avatar_text_panel_type.caption}
                     feed_screen_caption={false}
                     is_user={object.item.is_user}
+                    avatar_navigate_user_profile={true}
+                    componentId={this.props.componentId}
                 />
             )
         }
@@ -106,6 +102,8 @@ class CommentList extends React.PureComponent{
                     panel_type={constants.avatar_text_panel_type.comment_display}
                     comment_object={object.item}    
                     is_user={object.item.is_user}
+                    avatar_navigate_user_profile={true}
+                    componentId={this.props.componentId}
                 />
             )
         }
@@ -120,23 +118,6 @@ class CommentList extends React.PureComponent{
     }
 
     render(){
-
-        if (this.props.loading){
-            return(
-                <Text>
-                    Loading....
-                </Text>
-            )
-        }
-
-    
-        if (this.props.error){
-            return(
-                <Text>
-                    Loadssssing....
-                </Text>
-            )
-        }
     
         return(
 

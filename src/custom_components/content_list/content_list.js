@@ -19,6 +19,7 @@ import ListItemDivider from "./../../custom_components/common_decorators/list_it
 import {
     constants
 } from "./../../helpers/index"
+import base_style from '../../styles/base'
 
 
 class ContentList extends React.PureComponent{
@@ -41,6 +42,9 @@ class ContentList extends React.PureComponent{
         this.state={
 
         }
+
+        //refs
+        this.flat_list_ref = React.createRef()
         
     }
 
@@ -53,7 +57,7 @@ class ContentList extends React.PureComponent{
 
         //if post_type: room_caption_post
         if(object.item.post_type===constants.post_types.room_caption_post){
-            console.log(this.props.header_display, object.item, "This is it")
+            
             return (
                 <ContentCaptionBox
                     post_object={object.item}
@@ -87,10 +91,15 @@ class ContentList extends React.PureComponent{
 
     }
 
+    scroll_to_top = () => {
+        this.flat_list_ref.scrollToIndex({index:0, viewOffset:0, viewPosition:0})
+    }
+
     render(){
     
         return(
             <FlatList
+                ref={(ref)=>{this.flat_list_ref=ref}}
                 data={this.generate_data_for_list()}
                 renderItem={this.render_item_list}
                 onEndReached={this.props.on_load_more}
@@ -104,6 +113,13 @@ class ContentList extends React.PureComponent{
                         tintColor="#ffffff"
                     />
                 }
+                ListEmptyComponent={
+                    <View style={styles.no_item_main_container}>
+                        <Text style={{...base_style.typography.medium_font, ...base_style.typography.font_colors.low_emphasis, fontSize:40}}>
+                            No posts
+                        </Text>
+                    </View>
+                }
             />      
         )
     }
@@ -111,7 +127,11 @@ class ContentList extends React.PureComponent{
 }
 
 const styles = StyleSheet.create({
-
+    no_item_main_container:{
+        justifyContent:"center",
+        alignItems:"center",
+        flex:1
+    }
 })
 
 export default ContentList

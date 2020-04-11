@@ -5,7 +5,8 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     ScrollView,
-    Dimensions
+    Dimensions,
+    Alert
 } from "react-native";
 import {
     Mutation,
@@ -41,12 +42,10 @@ import Loader from "./../../custom_components/loading/loading_component"
 
 // importing navigation routes
 import {  
-    navigation_push_to_screen,
     navigation_set_root_one_screen,
-    navigation_set_root_two_bottoms_tabs
 } from "./../../navigation/navigation_routes/index";
 import {  
-    EXPLORE_ROOMS_SCREEN
+    EXPLORE_ROOMS_SCREEN, REGISTER_SCREEN
 } from "./../../navigation/screens";
 
 const window = Dimensions.get("window")
@@ -232,7 +231,7 @@ class RegisterOtherAtt extends React.PureComponent{
         }else{
             register_user_variables.default_avatar=true
         }  
-        console.log("register variables", register_user_variables)
+        
         //registering the user
         const {data} = await this.props.client.mutate({
             mutation:REGISTER_USER,
@@ -272,8 +271,16 @@ class RegisterOtherAtt extends React.PureComponent{
             await this.register_user_request()
             return
         }catch(e){
-            console.log(e, "register_other_att.js")
-            //TODO: make error state true
+            Alert.alert(
+                "Sorry",
+                "Registration Failed",
+                [
+                    {text: 'OK', onPress: () => {
+                        navigation_set_root_one_screen({screen_name:REGISTER_SCREEN})
+                    }},
+                ],
+                { cancelable: false }
+            )            
         }
     }
 

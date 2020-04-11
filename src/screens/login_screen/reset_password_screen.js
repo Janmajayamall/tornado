@@ -4,7 +4,8 @@ import {
     Text,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    Alert
 } from "react-native";
 import {
     Mutation,
@@ -35,6 +36,7 @@ import { LOGIN_SCREEN, REGISTER_SCREEN } from "../../navigation/screens"
 import {
     navigation_set_root_one_screen
 } from "../../navigation/navigation_routes/index"
+import { concatAST } from "graphql";
 
 
 
@@ -122,7 +124,7 @@ class ResetPassword extends React.PureComponent{
                 },
                 fetchPolicy:"no-cache"
             })
-            console.log(data)
+            
             //checking if query was successful 
             if(data.password_recovery_send_code){
                 this.setState({
@@ -143,8 +145,18 @@ class ResetPassword extends React.PureComponent{
                 })
             }
         }catch(e){
-            console.log(e, "reset_password_screen.js | screen_state:EMAIL")
-            //TODO: set error_state to true
+            Alert.alert(
+                "Sorry",
+                "Sending code failed",
+                [
+                    {text: 'OK', onPress: () => {
+                      this.setState({
+                          loading:false
+                      })
+                    }},
+                ],
+                { cancelable: false }
+            )
         }
     }
 
@@ -203,34 +215,58 @@ class ResetPassword extends React.PureComponent{
             return // not need to process further        
         }
 
-        //call password_recovery_code_verification mutation 
-        const {data} = await this.props.client.mutate({
-            mutation:PASSWORD_RECOVERY_CODE_VERIFICATION,
-            variables:{
-                verification_code:this.state.verification_code.value.trim(),
-                password:this.state.password.value.trim()
-            }
-        })
-
-        //check password_recovery_code_verification response
-        if(data.password_recovery_code_verification){
-            //TODO: signal the user that password has been changed
-            console.log("Password changed")
-            this.navigate_to_login()
-        }else{
-            //signal the user that verification has not been successful 
-            this.setState((prev_state)=>{
-                return({
-                    verification_code:{
-                        ...prev_state.verification_code,
-                        error:true,
-                        error_text:"Verification code not valid"
-                    },
-                    loading:false 
-                })
+        try{            
+            //call password_recovery_code_verification mutation 
+            const {data} = await this.props.client.mutate({
+                mutation:PASSWORD_RECOVERY_CODE_VERIFICATION,
+                variables:{
+                    verification_code:this.state.verification_code.value.trim(),
+                    password:this.state.password.value.trim()
+                }
             })
-            return
+
+            //check password_recovery_code_verification response
+            if(data.password_recovery_code_verification){
+                Alert.alert(
+                    "Update",
+                    "Password changed",
+                    [
+                        {text: 'OK', onPress: () => {
+                            this.navigate_to_login()
+                        }},
+                    ],
+                    { cancelable: false }
+                )
+                
+            }else{
+                //signal the user that verification has not been successful 
+                this.setState((prev_state)=>{
+                    return({
+                        verification_code:{
+                            ...prev_state.verification_code,
+                            error:true,
+                            error_text:"Verification code not valid"
+                        },
+                        loading:false 
+                    })
+                })
+                return
+            }
+        }catch(e){
+            Alert.alert(
+                "Sorry",
+                "Password update failed",
+                [
+                    {text: 'OK', onPress: () => {
+                      this.setState({
+                          loading:false,                          
+                      })
+                    }},
+                ],
+                { cancelable: false }
+            )
         }
+
     }
 
     change_email_id = (val) => {

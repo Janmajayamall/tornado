@@ -63,7 +63,7 @@ class CommonCreatePosts extends React.PureComponent{
         }
 
         if(buttonId === constants.navigation.action_buttons.SHARE_POST){
-            console.log(this.state.create_post_type)
+
             if(this.state.create_post_type===constants.create_post_type.room_caption_post){
                 this.create_caption_room_posts_ref.current.create_post_wrapper()
                 return
@@ -71,7 +71,7 @@ class CommonCreatePosts extends React.PureComponent{
                 this.create_room_posts_ref.current.create_post_wrapper()
                 return
             }
-            console.log("ERROR, not able to select which post type it is")
+
         }
 
     }  
@@ -86,8 +86,7 @@ class CommonCreatePosts extends React.PureComponent{
 
     render(){
 
-        if(this.state.create_post_type===constants.create_post_type.room_caption_post){
-            console.log("idhar heo yeh")
+        if(this.state.create_post_type===constants.create_post_type.room_caption_post){            
             return(
                 <CreateCaptionRoomPosts
                     client={this.props.client}

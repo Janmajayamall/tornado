@@ -7,13 +7,11 @@ export const setting_up_the_user = async(user_data, apollo_client) => {
     //storing values in async storage
     try{
         //setting up the user_info
-        const user_info = JSON.stringify(user_data)
-        console.log(user_data,"this is setting")
+        const user_info = JSON.stringify(user_data)    
         await AsyncStorage.setItem("user_info",user_info)
 
         //setting up jwttoken only if it is present in user_date
-        if(user_data.jwt){
-            console.log("setting up the jwt")
+        if(user_data.jwt){        
             await AsyncStorage.setItem("token", user_data.jwt)
         }
                    

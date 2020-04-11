@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     SafeAreaView,
     TextInput,
-    Dimensions
+    Dimensions,
+    Alert
 } from "react-native";
 import {
     Mutation,
@@ -105,7 +106,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
             })
 
         }catch(e){
-            console.log(e, "get_img_object function error in create_room_posts_screen.js")
+            this.error_alert()
         }
     }
 
@@ -169,6 +170,21 @@ class CreateCaptionRoomPosts extends React.PureComponent{
           
     }
 
+    error_alert = () =>{
+        Alert.alert(
+            "Sorry",
+            "Something went wrong",
+            [
+                {text: 'OK', onPress: () => {
+                    this.setState({
+                        loading:false
+                    })
+                }},
+            ],
+            { cancelable: false }
+        )
+    }
+
     validate_all_input = () => {
 
         let all_inputs_valid=true
@@ -196,8 +212,6 @@ class CreateCaptionRoomPosts extends React.PureComponent{
         if(!all_inputs_valid){
             
             this.setState((prev_state)=>{
-                console.log({...prev_state,
-                    ...new_input_objects})
                 return({
                     ...prev_state,
                     ...new_input_objects
@@ -348,9 +362,8 @@ class CreateCaptionRoomPosts extends React.PureComponent{
             await this.create_post()
             return
         }catch(e){
-            console.log(e, "create_caption_room_posts_screen.js")
-            return
-            //TODO:set error state to true
+            this.error_alert()
+            return            
         }
 
     }

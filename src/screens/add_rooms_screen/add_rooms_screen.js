@@ -7,14 +7,12 @@ import {
     TextInput,
     View,
     ScrollView,
-    Dimensions
+    Dimensions,
+    Alert
 } from "react-native";
 import PropTypes from "prop-types"
 import { 
-    Query, 
-    ApolloConsumer, 
-    Mutation, 
-    withApollo
+    withApollo,
 } from "react-apollo";
 import { Navigation } from "react-native-navigation"
 
@@ -157,12 +155,6 @@ class AddRooms extends React.Component{
         })
         const {user_id} = data.get_user_info
 
-        if(!user_id){
-            //TODO: throw an error
-            console.log(error)
-            return
-        }
-
         //creating the room using the client
         const create_room_result = await this.props.client.mutate({
             mutation:CREATE_ROOM,
@@ -199,11 +191,19 @@ class AddRooms extends React.Component{
         try{
             await this.create_room_mutation()
             return
-        }catch(e){
-            console.log(e, "add_rooms_screen.js")
-            this.setState({
-                loading:false
-            })
+        }catch(e){ 
+            Alert.alert(
+                "Sorry",
+                "Something went wrong. Not able to create new room",
+                [
+                    {text: 'OK', onPress: () => {
+                        this.setState({
+                            loading:false
+                        })
+                    }},
+                ],
+                { cancelable: false }
+            )
             return
         }
     }

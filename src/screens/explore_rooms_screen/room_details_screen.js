@@ -32,9 +32,13 @@ import base_style from "../../styles/base"
 import RoomDetailsPanel from "./components/room_details_panel"
 import ContentList from "./../../custom_components/content_list/content_list"
 import Loader from "./../../custom_components/loading/loading_component"
+import ErrorComponent from "./../../custom_components/loading/error_component"
 
 //importing graphql queries
 import { GET_ROOM_POSTS, GET_ROOM_DEMOGRAPHICS } from "../../apollo_client/apollo_queries/index";
+import { 
+    constants
+} from "../../helpers";
 
 
 class RoomDetails extends React.Component{
@@ -70,10 +74,12 @@ class RoomDetails extends React.Component{
                     query={GET_ROOM_DEMOGRAPHICS}
                     variables={{
                         room_id:this.props.room_id
-                    }}
-                    fetchPolicy={"cache-and-network"}
+                    }}                
                 >
-                    {({loading, error, data, refetch, networkStatus})=>{
+                    {({data, refetch, error})=>{
+
+                        const room_demographics_refetch = refetch
+                        const room_demographics_error = !!error
 
                         //getting demographics
                         const get_room_demographics = data ? data.get_room_demographics : undefined
@@ -84,11 +90,15 @@ class RoomDetails extends React.Component{
                                     limit:5,
                                     room_id:this.props.room_id
                                 }}
+                                fetchPolicy={"cache-and-network"}
                             >
-                                {({ loading: loading_two, error: error_two, data, fetchMore }) => {
-                                    const get_room_posts_room_id = data ? data.get_room_posts_room_id : undefined
-                                    if(get_room_demographics && get_room_posts_room_id){
+                                {({ data, fetchMore, refetch, networkStatus, error }) => {
 
+                                    const room_posts_refetch = refetch
+                                    const room_posts_error = !!error
+                                    const get_room_posts_room_id = data ? data.get_room_posts_room_id : undefined
+
+                                    if(get_room_demographics && get_room_posts_room_id){
                                         return(
                                             <ContentList
                                                 componentId={this.props.componentId}
@@ -144,7 +154,22 @@ class RoomDetails extends React.Component{
                                             />
                                         )
                                     }
-                        
+
+                                    if(room_demographics_error || room_posts_error){
+                                            return(
+                                                <ErrorComponent
+                                                    retry={()=>{
+                                                        if(room_posts_refetch){
+                                                            room_posts_refetch()
+                                                        }
+                                                        if(room_demographics_refetch){
+                                                            room_demographics_refetch()
+                                                        }
+                                                    }}
+                                                />
+                                            )
+                                    }
+
                                     //if loading or any error 
                                     return(
                                         <Loader/>

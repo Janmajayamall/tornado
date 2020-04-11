@@ -10,6 +10,7 @@ import PropTypes from "prop-types"
 //importing custom components
 import CommentList from "../../../custom_components/comments/comment_list"
 import Loader from "./../../../custom_components/loading/loading_component"
+import ErrorComponent from "./../../../custom_components/loading/error_component"
 
 //importing queries
 import {
@@ -32,8 +33,7 @@ class QueryComments extends React.PureComponent{
         this.state = {
 
         }
-
-        console.log(this.props, "query_comments props")
+        console.log("query comments you fool")
     }
 
     get_query = () => {
@@ -72,7 +72,7 @@ class QueryComments extends React.PureComponent{
                 fetchPolicy={"cache-and-network"}
             >
                 {({loading, error, data, refetch, networkStatus}) => {
-
+            
                     //render comment list when data is not undefined
                     if(data){
                         //getting data array
@@ -81,9 +81,7 @@ class QueryComments extends React.PureComponent{
                             <CommentList
                                 comment_list={data_array ? data_array : []}
                                 post_object={this.props.post_object}
-                                query_type={this.props.query_type}
-                                error={error}
-                                loading={loading}
+                                query_type={this.props.query_type}                               
                                 refetch={refetch}
                                 network_status={networkStatus}
                                 bottom_padding={this.props.bottom_padding}
@@ -93,6 +91,16 @@ class QueryComments extends React.PureComponent{
 
                     }   
                     
+                    if(!!error){
+                        return(
+                            <ErrorComponent
+                                retry={()=>{
+                                    refetch()
+                                }}
+                            />
+                        )
+                    }
+
                     //otherwise keep loading
                     return(
                         <Loader/>

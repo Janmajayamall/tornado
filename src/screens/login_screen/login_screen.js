@@ -37,7 +37,7 @@ import {
     RESET_PASSWORD_SCREEN
 } from "./../../navigation/screens"
 import {
-    navigation_set_root_two_bottoms_tabs,
+    navigation_set_bottom_tabs,
     navigation_set_root_one_screen
 } from "./../../navigation/navigation_routes/index"
 
@@ -61,7 +61,14 @@ class Login extends React.PureComponent{
             },
 
             //keyboard safe
-            main_container_bottom_padding:0
+            main_container_bottom_padding:0,
+
+            //loading state
+            loading:false,
+
+            //login error state
+            login_error:false
+
         }
     }
 
@@ -81,6 +88,17 @@ class Login extends React.PureComponent{
     }
 
     validate_the_input = () =>{
+
+        //if loading is true, return 
+        if(this.state.loading){
+            return
+        }
+
+        //set loading to true 
+        this.setState({
+            loading:true,
+            login_error:false       
+        })
 
         let all_inputs_valid = true
 
@@ -155,7 +173,7 @@ class Login extends React.PureComponent{
         await setting_up_jwt_token(user_data.jwt)
 
         //routing bottom tab screens
-        navigation_set_root_two_bottoms_tabs()
+        navigation_set_bottom_tabs()
         return
     }
     
@@ -202,17 +220,30 @@ class Login extends React.PureComponent{
                             error_text={this.state.password.error_text}
                         />
                     </View>
+                    {
+                        this.state.login_error?
+                        <Text 
+                            style={[base_style.typography.small_font, {padding:10}]}
+                            onPress={this.navigate_to_register}
+                        >
+                            email or password are incorrect
+                        </Text>:
+                        undefined
+                    }
                     <View style={styles.input_box}>
                         <Mutation
                             mutation={LOGIN_USER}
+                            onError={(e)=>{
+                                this.setState({
+                                    login_error:true,
+                                    loading:false
+                                })
+                            }}
                         >
-                            {(login_user, {data, error})=>{
-
-                                console.log(error)
+                            {(login_user, {data, error})=>{                                
 
                                 //after authenticating the user
-                                if (data){
-                                    console.log("Logged in")
+                                if (data){                                    
                                     this.setting_up_the_user(data.login_user)
                                 }
 
@@ -222,15 +253,23 @@ class Login extends React.PureComponent{
                                         onPress={()=>{
                                             //validate the input
                                             if(!this.validate_the_input()){
+                                                //set loading to false
+                                                this.setState({
+                                                    loading:false
+                                                })
                                                 return
                                             }
 
-                                            login_user({
-                                                variables:{
-                                                    email:this.state.email.value.trim(),
-                                                    password:this.state.password.value.trim()
-                                                }
-                                            })                                            
+                                            try{
+                                                login_user({
+                                                    variables:{
+                                                        email:this.state.email.value.trim(),
+                                                        password:this.state.password.value.trim()
+                                                    }
+                                                })    
+                                            }catch(e){
+                                                console.log(e)
+                                            }                                      
                                         }}
                                         active={true}
                                     />

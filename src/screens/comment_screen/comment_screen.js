@@ -9,7 +9,8 @@ import {
     KeyboardAvoidingView,
     SafeAreaView,
     Keyboard,
-    Dimensions
+    Dimensions,
+    Alert
 } from 'react-native'
 import base_style from './../../styles/base'
 import {
@@ -37,6 +38,8 @@ import QueryComments from "./wrapper_components/query_comments"
 import base from './../../styles/base';
 import { constants } from '../../helpers'
 import Loader from "./../../custom_components/loading/loading_component"
+import ErrorComponent from "./../../custom_components/loading/error_component"
+import moment from "moment"
 
 const window = Dimensions.get("window")
 
@@ -55,6 +58,9 @@ class Comment extends React.PureComponent {
             post_comment_box_padding:20,
             comment_container_height:0
         }
+
+        //refetches
+        this.post_refetch=null
     }   
 
     componentDidMount(){
@@ -96,10 +102,26 @@ class Comment extends React.PureComponent {
 
     }
 
+    alert_error = () => {
+        Alert.alert(
+            "Sorry",
+            "Something went wrong!",
+            [
+                {text: 'OK', onPress: () => {}},
+            ],
+            { cancelable: false }
+        ) 
+    }
+
     post_comment = (user_info, post_object) => {
 
         return(
-            <Mutation mutation={CREATE_COMMENT}>
+            <Mutation 
+                mutation={CREATE_COMMENT}
+                onError={()=>{
+                    this.alert_error()   
+                }}
+            >
                 {mutate => {
                     return(
                         <AvatarTextPanel
@@ -121,7 +143,20 @@ class Comment extends React.PureComponent {
 
                                 mutate({
                                     variables:variables,
-                                    update:(proxy, {data:{create_comment}})=>{
+                                    optimisticResponse:()=>{
+                                        let optimistic_response = {
+                                            __typename:"Mutation",
+                                            create_comment:{
+                                                _id: new Date().toISOString(),
+                                                content_id: post_object._id,
+                                                comment_body: comment_body, 
+                                                content_type: post_object.post_type,
+                                                __typename: "Comment"
+                                            }
+                                        }
+                                        return optimistic_response
+                                    },
+                                    update:(proxy, {data:{create_comment}})=>{                                        
                                         //generating comment object temp
                                         /*
                                             In this case please note the following
@@ -178,7 +213,12 @@ class Comment extends React.PureComponent {
     post_caption = (user_info, post_object) => {
 
         return(
-            <Mutation mutation={CREATE_CAPTION}>
+            <Mutation 
+                mutation={CREATE_CAPTION}
+                onError={()=>{
+                    this.alert_error()   
+                }}
+            >
                 {mutate => {
                     return(
                         <AvatarTextPanel
@@ -199,8 +239,33 @@ class Comment extends React.PureComponent {
 
                                 mutate({
                                     variables:variables,
+                                    optimisticResponse:()=>{
+                                        let optimistic_response = {
+                                            __typename:"Mutation",
+                                            create_caption:{
+                                                _id: new Date().toISOString(),
+                                                post_id:post_object._id,
+                                                creator_info:{
+                                                    user_id: user_info.user_id,
+                                                    avatar: user_info.avatar,
+                                                    username: user_info.username,
+                                                    three_words: user_info.three_words,
+                                                    __typename: "User_account"
+                                                },                                                                         
+                                                timestamp: new Date().getTime(),
+                                                last_modified: new Date().getTime(),
+                                                description: caption_body,
+                                                up_votes_count: 0,
+                                                down_votes_count: 0,
+                                                user_vote_object: null,
+                                                is_user: true,
+                                                __typename: "Caption"
+                                            }
+                                        }
+                                        return optimistic_response
+                                    },
                                     update:(proxy, {data:{create_caption}})=>{
-
+                                        console.log(create_caption)
                                         //reading from cache all the captions of the current post
                                         const cache_query = {
                                             query:GET_POST_CAPTIONS,
@@ -250,12 +315,12 @@ class Comment extends React.PureComponent {
                     _id:this.props.post_id
                 }}
             >
-                {({loading, error, data})=>{
-                    console.log(loading)
+                {({loading, networkStatus, error, data, refetch})=>{   
+
                     const post_object = data ? data.post_detailed_screen : undefined
 
                     //render the screen after getting the post object from local cache
-                    if(data && post_object){
+                    if(post_object){
                         return(
                             <SafeAreaView
                                 style={styles.main_container}
@@ -275,7 +340,9 @@ class Comment extends React.PureComponent {
                                     style={[styles.create_comment_container, {paddingBottom:this.state.post_comment_box_padding}]}
                                 >
                                     <Query query={GET_USER_INFO}>
-                                        {({loading, error, data})=>{
+                                        {({loading, error, data, refetch})=>{
+
+
                                             const user_info = data ? data.get_user_info : undefined        
                                             
                                             //render input area at bottom only is user info is present
@@ -299,6 +366,14 @@ class Comment extends React.PureComponent {
                             </SafeAreaView>
                     
                         )
+                    }
+
+                    if(!!error){
+                        <ErrorComponent
+                            retry={()=>{
+                                refetch()
+                            }}
+                        />
                     }
 
                     //otherwise load

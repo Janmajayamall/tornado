@@ -47,7 +47,7 @@ export const REGISTER_USER = gql`
 `
 
 export const EDIT_USER_PROFILE = gql`
-    mutation register_users(
+    mutation edit_user_profiles(
                                 $username:String!,
                                 $name:String!,
                                 $bio:String!,

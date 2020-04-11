@@ -16,6 +16,7 @@ import {
  } from "react-apollo";
 import base_style from "./../../styles/base"
 import Icon from 'react-native-vector-icons/AntDesign';
+import Menu, { MenuItem, Position } from "react-native-enhanced-popup-menu";
 
 
 //customer components
@@ -42,9 +43,11 @@ import {
 //importing helpers
 import {
     constants,
-    get_relative_time_ago
+    get_relative_time_ago,
+    delete_post_apollo
 } from "./../../helpers/index"
 import base from './../../styles/base';
+import { getBlockStringIndentation } from 'graphql/language/blockString';
 
 
 
@@ -68,6 +71,10 @@ class ContentBox extends React.PureComponent {
 
         this.state={
         }
+
+        //refs
+        this.drop_down_menu_ref = null
+        this.generate_panel_ref = React.createRef()
     }
 
     // componentDidMount(){
@@ -112,6 +119,16 @@ class ContentBox extends React.PureComponent {
         })
     }
 
+    //for floating drop down
+    show_drop_down_menu = () => {
+        this.drop_down_menu_ref.show(this.generate_panel_ref.current,Position.BOTTOM_LEFT);
+    }
+
+    handle_post_delete = async() => {
+        const result = await delete_post_apollo(this.props.client, this.props.post_object)
+        this.drop_down_menu_ref.hide()
+    }
+
     render(){
         return(
             <View style={styles.main_container}>
@@ -123,11 +140,32 @@ class ContentBox extends React.PureComponent {
                     onPress={this.navigate_to_room_list}
                 >
                     <Text 
-                        style={styles.shared_to_name_text}
+                        style={[styles.shared_to_name_text, this.props.post_object.is_user ? {width:"90%"} :{}]}
                         numberOfLines={1}
                     >
                         {`${this.generate_room_ids_name()}`}
                     </Text>
+                    {
+                        this.props.post_object.is_user ?
+                        <TouchableOpacity 
+                            style={{width:"10%", alignItems:"flex-end"}}
+                            ref={this.generate_panel_ref}
+                            onPress={this.show_drop_down_menu}
+                        >
+                            <Icon
+                                name={"minuscircleo"}
+                                size={base_style.icons.icon_size}
+                                color={base_style.color.icon_not_selected}
+                            />
+                            {/* dropdown menu for delete */}
+                            <Menu
+                                ref={(ref)=>{this.drop_down_menu_ref=ref}}
+                            >
+                                <MenuItem onPress={this.handle_post_delete}>Delete</MenuItem>
+                            </Menu>
+                        </TouchableOpacity> :
+                        undefined
+                    }
                 </TouchableOpacity>
 
                 {/* avatar panel */}
@@ -353,11 +391,12 @@ const styles = StyleSheet.create({
         paddingLeft:10,
         paddingRight:10,
         marginTop:20,
-        marginBottom:10
+        marginBottom:10,
+        flexDirection:"row"
         // backgroundColor:base_style.color.primary_color_lighter
     },
     shared_to_name_text:{
-        ...base_style.typography.small_header,
+        ...base_style.typography.small_header,        
         // fontStyle:"italic",
         // textDecorationLine:"underline"
     },
@@ -375,6 +414,6 @@ const styles = StyleSheet.create({
 
 })
 
-export default ContentBox
+export default withApollo(ContentBox)
 
 

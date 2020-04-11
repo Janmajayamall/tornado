@@ -13,7 +13,7 @@ import {
 } from "./../../navigation/screens";
 import Icon from "react-native-vector-icons/AntDesign"
 
-export const navigation_set_root_two_bottoms_tabs = async ()=>{
+export const navigation_set_bottom_tabs = async ()=>{
     Promise.all([
       //bottom tab icons
 
@@ -49,7 +49,8 @@ export const navigation_set_root_two_bottoms_tabs = async ()=>{
                           drawBehind:true,
                           icon: icons[1],  
                           selectedIcon: icons[0],
-                          iconInsets: { top: 20, left: 0, bottom: -20, right: 0 },                                              
+                          iconInsets: { top: 20, left: 0, bottom: -20, right: 0 },    
+                          id:"dadw"                                          
                         },
                         topBar: {
                           rightButtons: [
@@ -141,7 +142,6 @@ export const navigation_set_root_two_bottoms_tabs = async ()=>{
 }
 
 export const navigation_set_root_one_screen = (screen_object) => {
-    console.log(screen_object)
     Navigation.setRoot({
         root: {
           stack: {

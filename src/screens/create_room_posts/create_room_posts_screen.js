@@ -10,7 +10,8 @@ import {
     SafeAreaView,
     TextInput,
     Dimensions,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from "react-native";
 import {
     Mutation,
@@ -112,8 +113,23 @@ class CreateRoomPosts extends React.PureComponent{
             })
 
         }catch(e){
-            console.log(e, "get_img_object function error in create_room_posts_screen.js")
+            this.error_alert()
         }
+    }
+
+    error_alert = () =>{
+        Alert.alert(
+            "Sorry",
+            "Something went wrong",
+            [
+                {text: 'OK', onPress: () => {
+                    this.setState({
+                        loading:false
+                    })
+                }},
+            ],
+            { cancelable: false }
+        )
     }
 
     add_room_to_set = (room_id) => {
@@ -375,8 +391,7 @@ class CreateRoomPosts extends React.PureComponent{
             await this.create_post()
             return
         }catch(e){
-            console.log(e, "create_room_posts_screen.js")
-            //TODO:set error state to true
+            this.error_alert()
         }
 
     }

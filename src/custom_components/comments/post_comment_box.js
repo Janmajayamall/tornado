@@ -22,10 +22,6 @@ class PostCommentPanel extends React.PureComponent {
 
     }
 
-    componentDidUpdate(){
-        console.log("rendered: PostCommentPanel",)
-    }
-
     render(){
         return(
             <View

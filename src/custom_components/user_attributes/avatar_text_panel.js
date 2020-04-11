@@ -110,6 +110,12 @@ class AvatarTextPanel extends React.PureComponent{
                     >
                         {this.props.comment_object.comment_body}
                     </HyperLinkText>
+                    {/* dropdown menu for delete */}
+                    <Menu
+                        ref={(ref)=>{this.drop_down_menu_ref=ref}}
+                    >
+                        <MenuItem onPress={this.handle_delete}>Delete</MenuItem>
+                    </Menu>
                 </View>
             )
         }
@@ -181,8 +187,12 @@ class AvatarTextPanel extends React.PureComponent{
                             </View>:
                             undefined
                     }
-                     
-                    
+                    {/* dropdown menu for delete */}
+                    <Menu
+                        ref={(ref)=>{this.drop_down_menu_ref=ref}}
+                    >
+                        <MenuItem onPress={this.handle_delete}>Delete</MenuItem>
+                    </Menu>             
                 </View>
             )
         }
@@ -258,7 +268,6 @@ class AvatarTextPanel extends React.PureComponent{
     }
 
     handle_delete = () => {
-        console.log('aq')
         //handling commment
         if(this.props.panel_type===constants.avatar_text_panel_type.comment_display && this.props.is_user){
             delete_comment_apollo(this.props.client, this.props.comment_object)
@@ -307,13 +316,6 @@ class AvatarTextPanel extends React.PureComponent{
                             this.generate_panel()
                         }   
                     </View>
-
-                    {/* dropdown menu for delete */}
-                    <Menu
-                        ref={(ref)=>{this.drop_down_menu_ref=ref}}
-                    >
-                        <MenuItem onPress={this.handle_delete}>Delete</MenuItem>
-                    </Menu>
                 </View>
                          
             </TouchableWithoutFeedback>

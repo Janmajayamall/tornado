@@ -30,6 +30,7 @@ import settings_screen from "./../screens/settings_screen/settings_screen"
 //importing apollo client 
 import apollo_client from './../apollo_client/client_configuration'
 
+
 //importing provider enhancer
 import enhance_provider_hoc from './enhance_provider'
 

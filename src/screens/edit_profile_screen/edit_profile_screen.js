@@ -6,7 +6,8 @@ import {
     TouchableWithoutFeedback,
     ScrollView,
     View,
-    Keyboard
+    Keyboard,
+    Alert
 } from "react-native";
 import { Navigation } from "react-native-navigation"
 import PropTypes from "prop-types"
@@ -21,7 +22,8 @@ import {
 //importing graphql mutation/queries
 import {  
     GET_USER_INFO,
-    EDIT_USER_PROFILE
+    EDIT_USER_PROFILE,
+    GET_USER_PROFILE_POSTS
 } from "./../../apollo_client/apollo_queries/index";
 
 //importing helpers
@@ -188,8 +190,7 @@ class EditProfile extends React.PureComponent {
         this.setState({loading:true})
 
         //validate the input 
-        const all_inputs_valid = await this.validate_inputs()
-        console.log(all_inputs_valid)
+        const all_inputs_valid = await this.validate_inputs()        
 
         if(!all_inputs_valid){
             this.setState({loading:false})
@@ -226,12 +227,20 @@ class EditProfile extends React.PureComponent {
         // mutating the user_profile
         const {data} = await this.props.client.mutate({
             mutation:EDIT_USER_PROFILE,
-            variables:edit_user_profile_variables
+            variables:edit_user_profile_variables,
+            refetchQueries:[
+                {
+                    query:GET_USER_PROFILE_POSTS,
+                    variables:{
+                        limit:5,                                            
+                    }
+                }                
+            ]
         })
 
         //re-rendering the profile screen
         this.props.render_edit_profile_screen()
-        console.log("aass")
+
         //go back
         Navigation.pop(this.props.componentId)
         return 
@@ -248,16 +257,24 @@ class EditProfile extends React.PureComponent {
             await this.edit_profile_mutation()
             return
         }catch(e){
-            console.log(e, "edit_profile_screen.js")
-            this.setState({loading:false})
-            //TODO: Notify the user about the error
+            Alert.alert(
+                "Sorry",
+                "Something went wrong. Profile update failed",
+                [
+                    {text: 'OK', onPress: () => {
+                        this.setState({
+                            loading:false
+                        })
+                    }},
+                ],
+                { cancelable: false }
+            )
             return 
         }
 
     }
 
-    setup_edit_profile_state = (user_info) => {
-        console.log(user_info)
+    setup_edit_profile_state = (user_info) => {        
         const state_text_input = {
             username:{
                 value:user_info.username,

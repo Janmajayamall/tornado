@@ -40,6 +40,7 @@ import {
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
 import RoomItemDisplay from "./../../custom_components/room_display/room_item_display"
 import Loader from "./../../custom_components/loading/loading_component"
+import ErrorComponent from "./../../custom_components/loading/error_component"
 
 const window = Dimensions.get("window")
 
@@ -120,8 +121,8 @@ class JoinedRoomsScreen extends React.PureComponent {
                 query={this.get_correct_query()}
                 variables={this.get_query_variables()}
             >
-                {({loading, error, data})=>{
-                    console.log(data)
+                {({loading, error, data, refetch, networkStatus})=>{
+                    
                     if(data){
 
                         return(
@@ -150,6 +151,16 @@ class JoinedRoomsScreen extends React.PureComponent {
                             </SafeAreaView>
                         )
 
+                    }
+
+                    if(!!error){
+                        <View style={styles.main_container}>
+                            <ErrorComponent
+                                retry={()=>{
+                                    refetch()
+                                }}
+                            />
+                        </View>
                     }
 
                     return(

@@ -1,6 +1,9 @@
 
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/AntDesign'
+import {CachePersistor, persistCache} from "apollo-cache-persist"
+import AsyncStorage from '@react-native-community/async-storage';
+import {cache} from "./../apollo_client/client_configuration"
 
 import {
   FEED_SCREEN,
@@ -29,7 +32,16 @@ import {
 // Register all screens on launch
 registerScreens();
 
-export function start_app () {
+export async function start_app () {
+
+  // const persistor = new CachePersistor({
+  //   cache,
+  //   storage: AsyncStorage,
+  //   trigger: 'background',
+  //   debug: true
+  // });
+
+  // await persistor.restore()
 
   navigation_set_root_one_screen({screen_name:SETTER_SCREEN})
 

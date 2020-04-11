@@ -22,6 +22,9 @@ import {
     LOGIN_SCREEN
 } from "./../../navigation/screens"
 
+//resetting apollo client 
+import {reset_token} from "./../../apollo_client/client_configuration"
+
 class SettingsScreen extends React.Component {
 
     constructor(props){
@@ -49,14 +52,16 @@ class SettingsScreen extends React.Component {
             //clearing apollo client cached data
             await this.props.client.clearStore()
 
+            //resetting cached token in apollo client
+            reset_token()
+
             //navigate to login screen
             navigation_set_root_one_screen({
                 screen_name:LOGIN_SCREEN
             })
 
             return 
-        }catch(e){
-            console.log(e, "settings_screen.js | logout")
+        }catch(e){           
             //TODO: inform user
             this.setState({loading:false})
         }

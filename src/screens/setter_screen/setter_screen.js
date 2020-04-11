@@ -36,7 +36,7 @@ import {
 } from "../../navigation/screens"
 import {
   navigation_push_to_screen,
-  navigation_set_root_two_bottoms_tabs,
+  navigation_set_bottom_tabs,
   navigation_set_root_one_screen
 } from "./../../navigation/navigation_routes/index"
 import { resolveFieldValueOrError } from "graphql/execution/execute";
@@ -60,7 +60,6 @@ class Setter extends React.PureComponent{
     check_user_jwt = async() => {
         try{
             const jwt = await AsyncStorage.getItem("token")
-            console.log(jwt, "this")
             if (jwt){
                 this.route_to_feed()
                 return
@@ -72,7 +71,7 @@ class Setter extends React.PureComponent{
     }
 
     route_to_feed = () => {
-        navigation_set_root_two_bottoms_tabs()
+        navigation_set_bottom_tabs()
     }
     
     route_to_login = () => {

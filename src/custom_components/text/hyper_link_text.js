@@ -27,7 +27,7 @@ class HyperLinkText extends React.PureComponent{
     }
 
     open_link = (url) => {
-        console.log(url)
+        
         try{
             Linking.openURL(url)
         }catch(e){

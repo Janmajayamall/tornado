@@ -39,10 +39,6 @@ class ChooseAvatar extends React.PureComponent{
 
     }
 
-    componentDidUpdate(){
-        // console.log("rendered: ContentList", this.props.bottom_padding)
-    }
-    
 
     crop_image_circle = (image_path) => {
         ImagePicker.openCropper({
@@ -50,7 +46,6 @@ class ChooseAvatar extends React.PureComponent{
             cropperCircleOverlay:true,
             includeBase64:true
         }).then(image=>{
-            console.log(image)
             const image_uri = `data:${image.mime};base64,${image.data}`
             const image_extension = image.mime.split("/")[1]
 

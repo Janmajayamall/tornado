@@ -356,8 +356,9 @@ const styles = StyleSheet.create({
     },
     like_container:{
         width:"20%",
-        justifyContent:"center",
+        justifyContent:"flex-end",
         alignItems:"center",
+        flexDirection:"row"
     },
     comment_container:{
         width:"50%",

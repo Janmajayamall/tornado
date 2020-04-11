@@ -66,8 +66,7 @@ class VotingPanel extends React.PureComponent{
                 update:(cache, {data})=>{
 
                     //getting toggle vote result
-                    const toggle_result = data.toggle_vote
-                    console.log(toggle_result, "qwerty")
+                    const toggle_result = data.toggle_vote                
 
                     //reaching caption objects for the post from cache
                     const {get_post_captions} = cache.readQuery({

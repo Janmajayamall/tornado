@@ -25,6 +25,7 @@ import ContentList from "./../../custom_components/content_list/content_list"
 import ContentBox from "./../../custom_components/content_list/content_box"
 import ContentCaptionBox from "./../../custom_components/content_list/content_caption_box"
 import Loader from "./../../custom_components/loading/loading_component"
+import ErrorComponent from "./../../custom_components/loading/error_component"
 
 //importing helpers & constants
 import {
@@ -50,13 +51,32 @@ class FeedScreen extends React.PureComponent {
 
         }
 
+        //refs 
+        this.content_list_ref = React.createRef()
+
+    }
+
+    componentDidMount(){
         //binding the topBar add post button 
         Navigation.events().bindComponent(this);
 
+        // navigation listeners
+        this.bottom_tab_event_listener = Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex, unselectedTabIndex }) => {
+
+            if(selectedTabIndex===0 && unselectedTabIndex===0){
+                //scroll the flat list to top
+                this.content_list_ref.current.scroll_to_top()
+            }
+        });
+    }
+
+    componentWillUnmount(){
+        this.bottom_tab_event_listener.remove()
     }
 
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
+        
         if (buttonId===constants.navigation.action_buttons.ADD_POST){
             navigation_push_to_screen(this.props.componentId,
                     {
@@ -91,14 +111,17 @@ class FeedScreen extends React.PureComponent {
                 limit:5
             }}
             fetchPolicy={"cache-and-network"}
+
         >
-            {({ loading, error, data, fetchMore, networkStatus, refetch }) => {   
-                if (data){
+            {({ data, fetchMore, networkStatus, refetch, error }) => {           
+                
+                if (data && data.get_room_posts_user_id){
 
                     return(
                         <ContentList
+                            ref={this.content_list_ref}
                             componentId={this.props.componentId}
-                            room_posts={data ? data.get_room_posts_user_id.room_posts : []}
+                            room_posts={data ? data.get_room_posts_user_id.room_posts : []}                            
                             on_load_more={()=>{
                                 fetchMore({
                                     //getting more posts using cursor
@@ -142,6 +165,16 @@ class FeedScreen extends React.PureComponent {
                     )
                 }
 
+                if(!!error){
+                    return(
+                        <ErrorComponent
+                            retry={()=>{
+                                refetch()
+                            }}
+                        />
+                    )
+                }
+
                 return(
                     <Loader/>
                 )
@@ -175,15 +208,6 @@ const styles = StyleSheet.create({
 
 })
 
-const mapStateToProps = (state) => {
-    return {
-    }
-}
-
-const mapDisptachToProps = (dispatch) => {
-    return {
-    }
-}
 
 
 export default FeedScreen

@@ -60,8 +60,6 @@ class SearchRooms extends React.PureComponent{
 
         this.state = {
             loading:true,
-            error:false,
-            no_result:false,
 
             //search
             name_filter:"",
@@ -86,12 +84,13 @@ class SearchRooms extends React.PureComponent{
             //setting the list on the state
             this.setState({
                 rooms_list:get_rooms,
-                loading:false,
-                no_result:get_rooms.length===0
+                loading:false,           
             })
-        }catch(e){
-            console.log(e, "ass")
-            this.setState({error:true})
+        }catch(e){            
+            this.setState({
+                loading:false,
+                rooms_list:[]
+            })
         }
     }
     
@@ -144,36 +143,34 @@ class SearchRooms extends React.PureComponent{
 
                             <Loader/>:
 
-                                //if the room_list is empty, that is no result is true
-                                this.state.no_result===true ?
-                                <View style={styles.no_result_container}>
-                                    <Text style={[base_style.typography.medium_header, {...base_style.typography.font_colors.low_emphasis}]}>
-                                        Sorry no such rooms
-                                    </Text>
-                                </View>:
-                                // if loading is false && no_result is false 
-                                <FlatList
-                                    data={this.state.rooms_list}
-                                    renderItem={(object)=>{
-                                        return(
-                                                <RoomItemDisplay
-                                                    room_object={object.item}
-                                                    index={object.index}
-                                                    add_to_set={()=>{}}
-                                                    remove_from_set={()=>{}}
-                                                    selected={false}
-                                                    selection_allowed={false}
-                                                    selection_on_press_sub={()=>{
-                                                        this.navigate_to_room_details(object.item)
-                                                    }}
-                                                />              
-                                        )
-                                    }}
-                                    ItemSeparatorComponent={()=> {
-                                        return <ListItemDivider/>
-                                    }}
-                                    
-                                />                
+                            <FlatList
+                                data={this.state.rooms_list}
+                                renderItem={(object)=>{
+                                    return(
+                                            <RoomItemDisplay
+                                                room_object={object.item}
+                                                index={object.index}
+                                                add_to_set={()=>{}}
+                                                remove_from_set={()=>{}}
+                                                selected={false}
+                                                selection_allowed={false}
+                                                selection_on_press_sub={()=>{
+                                                    this.navigate_to_room_details(object.item)
+                                                }}
+                                            />              
+                                    )
+                                }}
+                                ItemSeparatorComponent={()=> {
+                                    return <ListItemDivider/>
+                                }}
+                                ListEmptyComponent={
+                                    <View style={styles.no_result_container}>
+                                        <Text style={[base_style.typography.medium_header, {...base_style.typography.font_colors.low_emphasis}]}>
+                                            
+                                        </Text>
+                                    </View>
+                                }
+                            />                
 
                     }
 

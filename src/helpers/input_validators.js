@@ -114,7 +114,6 @@ export const validate_username = async(username, apollo_client) => {
         },
         fetchPolicy:"no-cache"
     })
-    console.log(data, "adoiwdaoijn")
     if(data.check_username){
         return ({
             valid:false,

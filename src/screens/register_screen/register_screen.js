@@ -4,7 +4,8 @@ import {
     Text,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    Alert
 } from "react-native";
 import {
     Mutation, 
@@ -145,7 +146,7 @@ class Register extends React.PureComponent{
         }
 
         //if even one of the inputs are not valid, update the state
-        console.log(new_input_objects)
+
         if (!all_inputs_valid){
             this.setState((prev_state)=>{
                 return({
@@ -175,8 +176,18 @@ class Register extends React.PureComponent{
                 return
             }
         }catch(e){
-            console.log(e, "register_screen.js")
-            //change error state to true
+            Alert.alert(
+                "Sorry",
+                "Registration Failed",
+                [
+                    {text: 'OK', onPress: () => {
+                        this.setState({
+                            loading:false
+                        })
+                    }},
+                ],
+                { cancelable: false }
+            )  
         }
 
         navigation_push_to_screen(this.props.componentId, 

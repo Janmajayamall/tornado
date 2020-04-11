@@ -29,6 +29,7 @@ import ContentList from "./../../custom_components/content_list/content_list"
 import ProfileDetails from "./components/profile_details"
 import SmallButton from "./../../custom_components/buttons/small_button"
 import Loader from "./../../custom_components/loading/loading_component"
+import ErrorComponent from "./../../custom_components/loading/error_component"
 
 //importing helpers & constants
 import {
@@ -65,16 +66,30 @@ class ProfileScreen extends React.Component {
         this.state={
             user_info:undefined,
             
-            loading:false
+            loading:false,
+
+            //error states
+            user_info_error:false
         }
         this.set_user_info()
+
+        //refs 
+        this.content_list_ref = React.createRef()
     }
 
 
     componentDidMount(){
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
 
-        // adding event for navigation
-        this.navigationEventListener = Navigation.events().bindComponent(this);
+        // navigation listeners
+        this.bottom_tab_event_listener = Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex, unselectedTabIndex }) => {
+
+            if(selectedTabIndex===2 && unselectedTabIndex===2){
+                //scroll the flat list to top
+                this.content_list_ref.current.scroll_to_top()
+            }
+        });
     }
 
     //react native navigation event binded function for action buttons
@@ -93,7 +108,7 @@ class ProfileScreen extends React.Component {
             loading:true
         })
         this.set_user_info()
-        // this.forceUpdate()
+        
     }
 
 
@@ -147,28 +162,17 @@ class ProfileScreen extends React.Component {
                                                     user_id:this.props.user_id
                                                 }
             })
-
             this.setState({
                 user_info:data.get_user_info,
-                loading:false                
+                loading:false,
+                user_info_error:false                
             })
         }catch(e){
-            console.log(e, "profile_screen.js | function set_user_info()")
+            this.setState({
+                user_info_error:true
+            })
         }
 
-        // if(this.props.is_user){
-        //     const {data} = await this.props.client.query({
-        //         query:GET_USER_INFO,
-                
-        //     })
-            
-        //     this.setState({
-        //         user_info:data.get_user_info,
-        //         loading:false                
-        //     })
-        // }else{
-
-        // }
     }
 
     navigation_to_joined_rooms = (query_type) => {
@@ -277,12 +281,14 @@ class ProfileScreen extends React.Component {
                     }
                     fetchPolicy={"cache-and-network"}
                 >
-                    {({ data, fetchMore, refetch, networkStatus }) => {
+                    {({ data, fetchMore, refetch, networkStatus, error }) => {
+
                         // if data is not undefined then render screen
-                        if(data && this.state.user_info && !this.state.loading){
+                        if(data && this.state.user_info && data.get_user_profile_posts){
 
                             return(
                                 <ContentList
+                                    ref={this.content_list_ref}
                                     componentId={this.props.componentId}
                                     room_posts={data ? data.get_user_profile_posts.room_posts : []}
                                     on_load_more={()=>{
@@ -342,6 +348,17 @@ class ProfileScreen extends React.Component {
                                     //refetch && networkStatus
                                     refetch={refetch}
                                     networkStatus={networkStatus}
+                                />
+                            )
+                        }
+
+                        if(!!error || this.state.user_info_error){
+                            return(
+                                <ErrorComponent
+                                    retry={()=>{
+                                        this.set_user_info()
+                                        refetch()
+                                    }}
                                 />
                             )
                         }

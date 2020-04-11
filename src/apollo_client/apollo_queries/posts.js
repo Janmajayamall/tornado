@@ -267,3 +267,10 @@ export const CREATE_ROOM_POST = gql`
         }
     }
 `
+
+
+export const DEACTIVATE_ROOM_POST = gql`
+    mutation deactivate_room_posts($post_id:ID!){
+        deactivate_room_post(post_id:$post_id)
+    }
+`

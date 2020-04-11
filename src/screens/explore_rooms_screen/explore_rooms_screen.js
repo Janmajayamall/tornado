@@ -26,7 +26,7 @@ import {
     PROFILE_SCREEN
 } from "./../../navigation/screens";
 import {  
-     navigation_set_root_two_bottoms_tabs
+    navigation_set_bottom_tabs
 } from "./../../navigation/navigation_routes/index";
 
 //importing base style 
@@ -130,7 +130,7 @@ class ExploreRooms extends React.Component{
         //checking if any room is selected or not 
         if(this.state.selected_set.size===0){
             //navigate to main screen. Remember user has not chosen any rooms
-            navigation_set_root_two_bottoms_tabs()
+            navigation_set_bottom_tabs()
             return
         }
         
@@ -157,12 +157,11 @@ class ExploreRooms extends React.Component{
                     follow_room_objects:bulk_join_objects
                 }
             })
-            console.log(bulk_follow_object, "the result is here")
+
             //navigate to the main screen
-            navigation_set_root_two_bottoms_tabs()
+            navigation_set_bottom_tabs()
             return 
-        }catch(e){
-            console.log(e, "explore_rooms_screen.js")
+        }catch(e){            
             //TODO: show error to the user
         }
 

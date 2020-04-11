@@ -44,7 +44,6 @@ class RoomNameList extends React.PureComponent {
         this.state = {
             loading:false
         }
-        console.log(this.props)
     }
 
     navigate_to_details_screen = async(room_id) => {
@@ -59,7 +58,6 @@ class RoomNameList extends React.PureComponent {
     }
 
     render_item = (object) => {
-        console.log(object)
         return(
             <TouchableOpacity
                 style={styles.list_main_container}
