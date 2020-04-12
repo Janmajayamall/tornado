@@ -409,96 +409,100 @@ class CreateRoomPosts extends React.PureComponent{
 
         //if loading state is false
         return(
-            <KeyboardAvoidingView 
-                behavior={"padding"}
-                style={styles.main_container}>
-                <SafeAreaView >
+            <ScrollView
+                style={styles.main_container}
+            >
+                <KeyboardAvoidingView 
+                    behavior={"padding"}
+                    >
+                    <SafeAreaView >
 
-                    <BigButton
-                        button_text={"Switch to Caption Post"}
-                        onPress={()=>{
-                            if(this.state.loading){
-                                return
-                            }
-                            this.props.switch_screen_func()
-                        }}
-                        active={true}
-                    />
-
-                    <ChoosePostImage
-                        upload_img_s3={this.get_img_object}
-                        ref={this.choose_post_image_ref}
-                        width={window.width}
-
-                         //if image is already chosen
-                        image={this.state.image_object.image_uri ? {
-                            image_uri:this.state.image_object.image_uri,
-                            height:this.state.image_object.height,
-                            width:this.state.image_object.width
-                        }:undefined}
-                    />
-                    {
-                        this.state.description.error ? 
-                        <View style={styles.error_view}>
-                            <Text style={styles.error_text}>
-                                {this.state.description.error_text}
-                            </Text>
-                        </View>:
-                        undefined
-                    }   
-                    <View style={styles.description_container}>                    
-                        <TextInput
-                            style={styles.description_text_input}
-                            multiline={true}
-                            value={this.state.description.value}
-                            onChangeText={(val)=>{
-                                this.setState((prev_state)=>{
-                                    return({
-                                        description:{
-                                            ...prev_state.description,
-                                            value:val
-                                        }
-                                    })
-                                })
+                        <BigButton
+                            button_text={"Switch to Caption Post"}
+                            onPress={()=>{
+                                if(this.state.loading){
+                                    return
+                                }
+                                this.props.switch_screen_func()
                             }}
-                            placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
-                            placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
-                        />                  
-                    </View>
-                    <View style={styles.choose_container}>
-                        <SmallButton
-                            button_text={this.state.choose_image_phrase}
-                            // width={window.width/3}
-                            onPress={()=>{this.choose_post_image()}}
+                            active={true}
                         />
-                        <Text style={{...base_style.typography.small_font, fontStyle:"italic",  alignSelf:"center"}}>
-                            {this.state.choose_image_subtext}
-                        </Text>
-                        
-                    </View>   
-                    <View style={styles.choose_container}>
-                        <SmallButton
-                            button_text="Select rooms"
-                            // width={window.width/3}
-                            onPress={this.open_room_select_modal}
-                        />   
-                        <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
-                            {` to share this post with?`}
-                        </Text>                                         
-                    </View>
-                    {
-                        this.state.set_error ? 
-                        <View style={styles.error_view}>
-                            <Text style={styles.error_text}>
-                                Choose at least one room to post this to.
+
+                        <ChoosePostImage
+                            upload_img_s3={this.get_img_object}
+                            ref={this.choose_post_image_ref}
+                            width={window.width}
+
+                            //if image is already chosen
+                            image={this.state.image_object.image_uri ? {
+                                image_uri:this.state.image_object.image_uri,
+                                height:this.state.image_object.height,
+                                width:this.state.image_object.width
+                            }:undefined}
+                        />
+                        {
+                            this.state.description.error ? 
+                            <View style={styles.error_view}>
+                                <Text style={styles.error_text}>
+                                    {this.state.description.error_text}
+                                </Text>
+                            </View>:
+                            undefined
+                        }   
+                        <View style={styles.description_container}>                    
+                            <TextInput
+                                style={styles.description_text_input}
+                                multiline={true}
+                                value={this.state.description.value}
+                                onChangeText={(val)=>{
+                                    this.setState((prev_state)=>{
+                                        return({
+                                            description:{
+                                                ...prev_state.description,
+                                                value:val
+                                            }
+                                        })
+                                    })
+                                }}
+                                placeholder={`Type what you want to share! \n \n Note: feel free to include urls of your content elsewhere!`}
+                                placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                            />                  
+                        </View>
+                        <View style={styles.choose_container}>
+                            <SmallButton
+                                button_text={this.state.choose_image_phrase}
+                                // width={window.width/3}
+                                onPress={()=>{this.choose_post_image()}}
+                            />
+                            <Text style={{...base_style.typography.small_font, fontStyle:"italic",  alignSelf:"center"}}>
+                                {this.state.choose_image_subtext}
                             </Text>
-                        </View>:
-                        undefined
-                    }      
-                                    
-                </SafeAreaView>
-            </KeyboardAvoidingView>
-        )
+                            
+                        </View>   
+                        <View style={styles.choose_container}>
+                            <SmallButton
+                                button_text="Select rooms"
+                                // width={window.width/3}
+                                onPress={this.open_room_select_modal}
+                            />   
+                            <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
+                                {` to share this post with?`}
+                            </Text>                                         
+                        </View>
+                        {
+                            this.state.set_error ? 
+                            <View style={styles.error_view}>
+                                <Text style={styles.error_text}>
+                                    Choose at least one room to post this to.
+                                </Text>
+                            </View>:
+                            undefined
+                        }      
+                                        
+                    </SafeAreaView>
+                </KeyboardAvoidingView>
+            </ScrollView>
+        )   
     }
 }
 

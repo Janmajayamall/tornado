@@ -381,9 +381,8 @@ class CreateCaptionRoomPosts extends React.PureComponent{
 
         //if loading is false
         return(
-            <View style={styles.main_container}>
+            <ScrollView style={styles.main_container}>
                 <SafeAreaView >
-
                     <BigButton
                         button_text={"Switch to Normal Post"}
                         onPress={()=>{
@@ -447,7 +446,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                         undefined
                     }                                      
                 </SafeAreaView>
-            </View>
+            </ScrollView>
         )
     }
 }

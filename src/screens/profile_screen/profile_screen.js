@@ -92,6 +92,10 @@ class ProfileScreen extends React.Component {
         });
     }
 
+    componentWillUnmount(){
+        this.bottom_tab_event_listener.remove()
+    }
+
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
         if (buttonId===constants.navigation.action_buttons.SETTINGS){
@@ -213,52 +217,58 @@ class ProfileScreen extends React.Component {
         //if not user's profile
         if (!this.props.is_user ){
             return(
-                <View style={styles.small_buttons_container}>
-                    <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
-                        {"Rooms "}
-                    </Text>
-                    <SmallButton
-                        button_text={"Created"}
-                        onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_created_rooms)}}
-                    />
-                    <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
-                        {" , "}
-                    </Text>
-                    <SmallButton
-                        button_text={"Joined"}
-                        onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_joined_rooms)}}
-                    />
-                    <Text style={{...base_style.typography.small_font, fontStyle:"italic"}}>
-                        {" & in "}
-                    </Text>
-                    <SmallButton
-                        button_text={"Common"}
-                        onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_common_rooms)}}
-                    />       
+                <View style={{...styles.small_buttons_container}}>
+                    <View style={{flexDirection:"row"}}>
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
+                            {"Rooms "}
+                        </Text>
+                        <SmallButton
+                            button_text={"Created"}
+                            onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_created_rooms)}}
+                        />
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
+                            {" , "}
+                        </Text>
+                        <SmallButton
+                            button_text={"Joined"}
+                            onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_joined_rooms)}}
+                        />
+                    </View>
+                    <View style={{flexDirection:"row", marginTop:10}}>
+                        <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
+                            {" & in "}
+                        </Text>
+                            <SmallButton
+                                button_text={"Common"}
+                                onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_common_rooms)}}
+                            />           
+                        </View>                
                 </View>
             )
         }
 
         return(
             <View style={styles.small_buttons_container}>
-                <SmallButton
-                    button_text={"Edit profile"}
-                    onPress={this.navigate_to_edit_profile}
-                />
-                <Text style={{...base_style.typography.small_font, fontStyle:"normal"}}>
-                    {"  |  "}
-                </Text>
-                <SmallButton
-                    button_text={"Create a room"}
-                    onPress={this.navigate_to_add_new_room}        
-                />
-                <Text style={{...base_style.typography.small_font, fontStyle:"normal"}}>
-                    {"  |  "}
-                </Text>
+                <View style={{flexDirection:"row"}}>
+                    <View style={styles.small_button_view}>
+                        <SmallButton
+                            button_text={"Edit profile"}
+                            onPress={this.navigate_to_edit_profile}
+                        />
+                    </View>
+                    <View style={styles.small_button_view}>
+                    <SmallButton
+                        button_text={"Create a room"}
+                        onPress={this.navigate_to_add_new_room}        
+                    />
+                    </View>
+                </View>
+                <View style={styles.small_button_view}>
                 <SmallButton
                     button_text={"Joined Rooms"}
                     onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_all_joined_rooms)}}
-                />       
+                />    
+                </View>   
             </View>
         )
 
@@ -390,9 +400,13 @@ const styles = StyleSheet.create({
         // borderBottomWidth:5
     },
     small_buttons_container:{
-        flexDirection:"row",
+        flexDirection:"column",
         marginTop:10,
         justifyContent:"center"
+    },
+    small_button_view:{
+        flexWrap:"wrap",
+        margin:5
     }
 
 })

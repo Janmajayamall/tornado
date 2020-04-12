@@ -135,20 +135,24 @@ class ContentBox extends React.PureComponent {
 
 
                 {/* room list container */}
-                <TouchableOpacity 
-                    style={styles.shared_to_name_container}
-                    onPress={this.navigate_to_room_list}
-                >
-                    <Text 
-                        style={[styles.shared_to_name_text, this.props.post_object.is_user ? {width:"90%"} :{}]}
-                        numberOfLines={1}
+                <View style={styles.icon_room_name_container}>
+                    <TouchableOpacity 
+                        style={[styles.shared_to_name_container, this.props.post_object.is_user ? {width:"90%"} :{width:"100%"}]}
+                        onPress={this.navigate_to_room_list}
                     >
-                        {`${this.generate_room_ids_name()}`}
-                    </Text>
+                        <Text 
+                            style={styles.shared_to_name_text}
+                            numberOfLines={1}
+                        >
+                            {`${this.generate_room_ids_name()}`}
+                        </Text>
+                    
+                    </TouchableOpacity>
+                    {/* delete icon container */}
                     {
                         this.props.post_object.is_user ?
                         <TouchableOpacity 
-                            style={{width:"10%", alignItems:"flex-end"}}
+                            style={styles.menu_icon_container}
                             ref={this.generate_panel_ref}
                             onPress={this.show_drop_down_menu}
                         >
@@ -166,7 +170,7 @@ class ContentBox extends React.PureComponent {
                         </TouchableOpacity> :
                         undefined
                     }
-                </TouchableOpacity>
+                </View>
 
                 {/* avatar panel */}
                 <View style={styles.user_content_container}>
@@ -386,15 +390,24 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         paddingLeft:5
     },
-    shared_to_name_container:{
-        width:"100%",
+    shared_to_name_container:{        
         paddingLeft:10,
-        paddingRight:10,
+        // paddingRight:10,
         marginTop:20,
         marginBottom:10,
-        flexDirection:"row"
+        // flexDirection:"row"
         // backgroundColor:base_style.color.primary_color_lighter
     },
+    menu_icon_container:{
+        marginTop:20,
+        marginBottom:10,
+        width:"10%",
+        alignItems:"center",
+        justifyContent:"center"
+    },
+    icon_room_name_container:{
+        flexDirection:"row"
+    },  
     shared_to_name_text:{
         ...base_style.typography.small_header,        
         // fontStyle:"italic",

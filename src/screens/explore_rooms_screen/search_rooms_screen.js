@@ -71,7 +71,7 @@ class SearchRooms extends React.PureComponent{
 
 
     get_room_results = async(name_filter="") => {
-        
+        console.log(name_filter, "name_filerddd")
         try{
             const {data} = await this.props.client.query({
                 query:GET_ROOMS,
@@ -79,14 +79,16 @@ class SearchRooms extends React.PureComponent{
                     name_filter:name_filter.trim()
                 }
             })
+            console.log(data, "ajoaij")
             const {get_rooms} = data
-            
+            console.log(get_rooms, "this is here")
             //setting the list on the state
             this.setState({
                 rooms_list:get_rooms,
                 loading:false,           
             })
-        }catch(e){            
+        }catch(e){    
+            console.log(e, "dawd")        
             this.setState({
                 loading:false,
                 rooms_list:[]
@@ -95,10 +97,12 @@ class SearchRooms extends React.PureComponent{
     }
     
     search_input_changed = (val) => {
+        console.log(val, "a")
         this.setState({
             name_filter:val,
             loading:true
         })
+        
         this.get_room_results(val)
     }
 
@@ -131,7 +135,7 @@ class SearchRooms extends React.PureComponent{
                                 placeholder={"Search rooms..."}
                                 style={styles.search_text_input}
                                 placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
-                                onChangeText={this.search_input_changed}
+                                onChangeText={this.search_input_changed}                                
                                 value={this.state.name_filter}
                             />        
                         </View>        
@@ -166,7 +170,7 @@ class SearchRooms extends React.PureComponent{
                                 ListEmptyComponent={
                                     <View style={styles.no_result_container}>
                                         <Text style={[base_style.typography.medium_header, {...base_style.typography.font_colors.low_emphasis}]}>
-                                            
+                                            No results found
                                         </Text>
                                     </View>
                                 }
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
     no_result_container:{
         justifyContent:"center",
         alignItems:"center",
-        flex:1
+        
     },
     search_icon_container:{
         width:"10%",

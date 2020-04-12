@@ -59,9 +59,9 @@ class AsyncImage extends PureComponent {
             >
 
                 <Animated.Image
-                    source={{uri:`${this.props.image_object.cdn_url}www/www${this.props.image_object.image_name}`}}
+                    source={{uri:`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`}}
                     style={{width:this.state.image_dimensions.width, height:this.state.image_dimensions.height, position:"absolute", opacity:this.state.image_opacity}}
-                    // onLoad={this.on_image_load}
+                    onLoad={this.on_image_load}
                 />
 
                 {/* <Animated.Image

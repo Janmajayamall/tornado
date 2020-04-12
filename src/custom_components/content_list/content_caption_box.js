@@ -11,10 +11,13 @@ import {
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
 import { 
-    Mutation, Query
+    Mutation, 
+    Query, 
+    withApollo
  } from "react-apollo";
 import base_style from "./../../styles/base"
 import Icon from 'react-native-vector-icons/AntDesign';
+import Menu, { MenuItem, Position } from "react-native-enhanced-popup-menu";
 
 
 //customer components
@@ -42,7 +45,8 @@ import {
 // importing helpers
 import { 
     constants,
-    get_relative_time_ago
+    get_relative_time_ago,
+    delete_post_apollo
 } from '../../helpers';
 
 
@@ -65,35 +69,17 @@ class ContentCaptionBox extends React.PureComponent {
 
         super(props)
         this.state={
-            img_width:window.width,
-            img_height:window.width*1.2,
-
             //for like functionality
             user_liked:false,
             likes_count:2
         }
 
+        //refs
+        this.drop_down_menu_ref = null
+        this.generate_panel_ref = React.createRef()
+
     }
 
-    toggle_like = () => {
-
-        if (this.props.toggle_post_like){
-            this.props.toggle_post_like()
-        }
-
-        // check for clarity
-        if (this.state.likes_count === 0 && this.state.user_liked === true){
-            return
-        }
-
-        this.setState((prev_state)=>{
-            const temp_likes_count = prev_state.user_liked ? prev_state.likes_count-1 : prev_state.likes_count+1
-            return({
-                likes_count:temp_likes_count,
-                user_liked:!prev_state.user_liked
-            })
-        })
-    }
 
     navigate_to_comment_screen = () => {
         navigation_push_to_screen(this.props.componentId, {
@@ -133,6 +119,16 @@ class ContentCaptionBox extends React.PureComponent {
         })
     }
 
+    //for floating drop down
+    show_drop_down_menu = () => {
+        this.drop_down_menu_ref.show(this.generate_panel_ref.current,Position.BOTTOM_LEFT);
+    }
+
+    handle_post_delete = async() => {
+        const result = await delete_post_apollo(this.props.client, this.props.post_object)
+        this.drop_down_menu_ref.hide()
+    }
+
     render(){
         return(
             <View 
@@ -140,17 +136,42 @@ class ContentCaptionBox extends React.PureComponent {
             
             >
                 {/* room list container */}
-                <TouchableOpacity 
-                    style={styles.shared_to_name_container}
-                    onPress={this.navigate_to_room_list}
-                >
-                    <Text 
-                        style={styles.shared_to_name_text}
-                        numberOfLines={1}
+                <View style={styles.icon_room_name_container}>
+                    <TouchableOpacity 
+                        style={[styles.shared_to_name_container, this.props.post_object.is_user ? {width:"90%"} :{width:"100%"}]}
+                        onPress={this.navigate_to_room_list}
                     >
-                        {`${this.generate_room_ids_name()}`}
-                    </Text>
-                </TouchableOpacity>
+                        <Text 
+                            style={styles.shared_to_name_text}
+                            numberOfLines={1}
+                        >
+                            {`${this.generate_room_ids_name()}`}
+                        </Text>
+                    
+                    </TouchableOpacity>
+                    {/* delete icon container */}
+                    {
+                        this.props.post_object.is_user ?
+                        <TouchableOpacity 
+                            style={styles.menu_icon_container}
+                            ref={this.generate_panel_ref}
+                            onPress={this.show_drop_down_menu}
+                        >
+                            <Icon
+                                name={"minuscircleo"}
+                                size={base_style.icons.icon_size}
+                                color={base_style.color.icon_not_selected}
+                            />
+                            {/* dropdown menu for delete */}
+                            <Menu
+                                ref={(ref)=>{this.drop_down_menu_ref=ref}}
+                            >
+                                <MenuItem onPress={this.handle_post_delete}>Delete</MenuItem>
+                            </Menu>
+                        </TouchableOpacity> :
+                        undefined
+                    }
+                </View>
 
                 {/* avatar panel */}
                 <View style={styles.user_content_container}>
@@ -372,14 +393,24 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         paddingLeft:5
     },
-    shared_to_name_container:{
-        width:"100%",
+    shared_to_name_container:{        
         paddingLeft:10,
-        paddingRight:10,
+        // paddingRight:10,
         marginTop:20,
-        marginBottom:10
+        marginBottom:10,
+        // flexDirection:"row"
         // backgroundColor:base_style.color.primary_color_lighter
     },
+    menu_icon_container:{
+        marginTop:20,
+        marginBottom:10,
+        width:"10%",
+        alignItems:"center",
+        justifyContent:"center"
+    },
+    icon_room_name_container:{
+        flexDirection:"row"
+    },  
     shared_to_name_text:{
         ...base_style.typography.small_header,
         // fontStyle:"italic",
@@ -399,4 +430,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default ContentCaptionBox
+export default withApollo(ContentCaptionBox)

@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import { Navigation } from "react-native-navigation"
 import PropTypes from "prop-types"
+import { 
+    withApollo 
+} from "react-apollo";
 
 //importing custom components
 import ChooseAvatar from "./../../custom_components/choose_image/choose_avatar"
 import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
-import { 
-    withApollo 
-} from "react-apollo";
+import Loader from "./../../custom_components/loading/loading_component"
 
 //importing graphql mutation/queries
 import {  
@@ -73,6 +74,23 @@ class EditProfile extends React.PureComponent {
         //binding the topBar add post button 
         Navigation.events().bindComponent(this);
 
+    }
+
+
+    componentDidMount(){
+        this.keyboard_did_show_listener = Keyboard.addListener("keyboardWillShow", this._keyboard_did_show)
+        this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
+    }
+
+    _keyboard_did_show = (e) => {
+        console.log(e, "keyboard")
+        if (e){
+            this.setState({main_container_bottom_padding:e.endCoordinates.height})
+        }
+    }   
+
+    _keyboard_will_hide = (e) => {
+        this.setState({main_container_bottom_padding:0})
     }
 
     //react native navigation event binded function for action buttons
@@ -372,9 +390,9 @@ class EditProfile extends React.PureComponent {
 
         if (this.state.loading){
             return(
-                <Text>
-                    Loading.....
-                </Text>
+                <View style={styles.main_container}>
+                    <Loader/>
+                </View>
             )
         }
 
@@ -384,59 +402,60 @@ class EditProfile extends React.PureComponent {
                     Keyboard.dismiss()
                 }}
             >
-                <ScrollView 
-                    contentContainerStyle={styles.main_scroll_container}
-                    style={[styles.main_container, {paddingBottom:this.state.main_container_bottom_padding}]}
+                <ScrollView             
+                    style={[styles.main_container, {}]}
                     >
-                    <View style={styles.input_box}> 
-                        <ChooseAvatar
-                            width={window.width*0.8}
-                            upload_img_s3={this.get_img_object}
-                            username={this.state.username.value}                            
-                            image_uri={this.get_choose_image_uri()}
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"Username"}
-                            type="TEXT"
-                            value={this.state.username.value}
-                            onChangeText={this.change_username}
-                            error_state={this.state.username.error}
-                            error_text={this.state.username.error_text}
-                        />
-                    </View>
+                    <View style={[styles.main_scroll_container, {marginBottom:this.state.main_container_bottom_padding}]}>
+                        <View style={styles.input_box}> 
+                            <ChooseAvatar
+                                width={window.width*0.8}
+                                upload_img_s3={this.get_img_object}
+                                username={this.state.username.value}                            
+                                image_uri={this.get_choose_image_uri()}
+                            />
+                        </View>
+                        <View style={styles.input_box}>
+                            <BigTextInput
+                                placeholder={"Username"}
+                                type="TEXT"
+                                value={this.state.username.value}
+                                onChangeText={this.change_username}
+                                error_state={this.state.username.error}
+                                error_text={this.state.username.error_text}
+                            />
+                        </View>
 
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"Name"}
-                            type="TEXT"
-                            value={this.state.name.value}
-                            onChangeText={this.change_name}
-                            error_state={this.state.name.error}
-                            error_text={this.state.name.error_text}
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"You in 3-4 words?"}
-                            type="TEXT"
-                            value={this.state.three_words.value}
-                            onChangeText={this.change_three_words}
-                            error_state={this.state.three_words.error}
-                            error_text={this.state.three_words.error_text}                            
-                        />
-                    </View>
-                    <View style={styles.input_box}>
-                        <BigTextInput
-                            placeholder={"Something about you..."}
-                            type="PARAGRAPH"
-                            value={this.state.bio.value}
-                            onChangeText={this.change_bio}
-                            error_state={this.state.bio.error}
-                            error_text={this.state.bio.error_text}
-                            height={window.height*0.3}
-                        />
+                        <View style={styles.input_box}>
+                            <BigTextInput
+                                placeholder={"Name"}
+                                type="TEXT"
+                                value={this.state.name.value}
+                                onChangeText={this.change_name}
+                                error_state={this.state.name.error}
+                                error_text={this.state.name.error_text}
+                            />
+                        </View>
+                        <View style={styles.input_box}>
+                            <BigTextInput
+                                placeholder={"You in 3-4 words?"}
+                                type="TEXT"
+                                value={this.state.three_words.value}
+                                onChangeText={this.change_three_words}
+                                error_state={this.state.three_words.error}
+                                error_text={this.state.three_words.error_text}                            
+                            />
+                        </View>
+                        <View style={styles.input_box}>
+                            <BigTextInput
+                                placeholder={"Something about you..."}
+                                type="PARAGRAPH"
+                                value={this.state.bio.value}
+                                onChangeText={this.change_bio}
+                                error_state={this.state.bio.error}
+                                error_text={this.state.bio.error_text}
+                                height={window.height*0.3}
+                            />
+                        </View>            
                     </View>
                 </ScrollView>
             </TouchableWithoutFeedback>                    
@@ -448,12 +467,12 @@ class EditProfile extends React.PureComponent {
 const styles = StyleSheet.create({
     main_container:{
         backgroundColor:base_style.color.primary_color,
-        paddingTop:20
+        paddingTop:20,
+        flex:1,        
     },
     main_scroll_container:{
         justifyContent:"flex-start",
-        alignItems:"center",
-        flex:1,
+        alignItems:"center",        
     },
     input_box:{
         width:"90%",
