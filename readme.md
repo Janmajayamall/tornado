@@ -70,3 +70,9 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 
 ## Generating different icon sizes for ios/android
 1. https://makeappicon.com/
+
+
+## final stuff before deploy
+1. Diff prod & dev mongodb endpoint
+2. Diff aws prod&dev buckets
+3. PM2 deploy on ec2 instance
