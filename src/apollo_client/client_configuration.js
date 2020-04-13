@@ -6,6 +6,7 @@ import { ApolloLink, Observable } from 'apollo-link';
 import AsyncStorage from '@react-native-community/async-storage';
 import { setContext } from 'apollo-link-context';
 import { RetryLink } from "apollo-link-retry";
+import bugsnag from "./../bugsnag/bugsnag"
 
 //navigation
 import { navigation_set_root_one_screen } from "./../navigation/navigation_routes/index"
@@ -22,7 +23,7 @@ const get_jwt_asyncstorage = async() => {
     }
     return ""
   }catch(e){
-    console.log("AsyncStorage Error(jwt token not setup): "+e)
+    // console.log("AsyncStorage Error(jwt token not setup): "+e)
     return ""
   }
 }
@@ -77,45 +78,35 @@ const logout_unauthenticated_err = async() => {
 
 }
 
-const error_link = onError(({ graphQLErrors, networkError }) => {
-    
+const error_link = onError(({ graphQLErrors, networkError }) => {    
     if (graphQLErrors){
       graphQLErrors.forEach(({message, locations, path, extensions})=> {
-            if(extensions.code==="UNAUTHENTICATED"){
+            // console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}, Extensions: code:${extensions.code}`) //commented in prod
+            if(extensions.code==="UNAUTHENTICATED"){  
+              bugsnag.notify(extensions);            
               logout_unauthenticated_err()
             }
-            console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}, Extensions: code:${extensions.code}`)
         });
     }
     if (networkError){                
-        console.log(`[Network error]: ${networkError}`);
+        // console.log(`[Network error]: ${networkError}`); //commented in prod
     }
 })
 
 
 
 const retry_link = new RetryLink({
-  attempts: (count, operation, error) => {
 
-    //queries & mutations to avoid
-    const avoid_requests_name = ['create_room_posts', 
-                                  "register_users", 
-                                  "edit_user_profiles", 
-                                  "login_users", 
-                                  "check_room_names",
-                                  "create_rooms", 
-                                  "password_recovery_send_codes",
-                                  "password_recovery_code_verifications",
-                                  "get_presigned_url",
-                                  "check_usernames"                                                       
-                                ]
+  delay: {
+    initial: 200,
+    max: 2000,
+    jitter: true
+  },
+  attempts: {
+    max: 10,
+    retryIf: (error, _operation) => !!error
+  }
 
-    //making sure create_posts mutation isn't retried
-    return !!error && !(avoid_requests_name.includes(operation.operationName));
-  },
-  delay: (count, operation, error) => {
-    return count * 1000 * Math.random();
-  },
 });
 
 const logger_link = new ApolloLink((operation, forward) => {
@@ -130,7 +121,7 @@ const logger_link = new ApolloLink((operation, forward) => {
 
 const client = new ApolloClient({
   link: ApolloLink.from([
-      logger_link,
+      // logger_link, // commented n prod
       with_token,
       retry_link,
       error_link,
@@ -143,3 +134,17 @@ const client = new ApolloClient({
 });
 
 export default client
+
+
+
+// ['create_room_posts', 
+//                                   "register_users", 
+//                                   "edit_user_profiles", 
+//                                   "login_users", 
+//                                   "check_room_names",
+//                                   "create_rooms", 
+//                                   "password_recovery_send_codes",
+//                                   "password_recovery_code_verifications",
+//                                   "get_presigned_url",
+//                                   "check_usernames"                                                       
+//                                 ]

@@ -180,51 +180,37 @@ class ExploreRooms extends React.Component{
                                 {({loading, error, data})=>{
 
                                     let not_joined_rooms = data ? data.get_not_joined_rooms : undefined
-
-                                    return(
-                                        <Mutation mutation={BULK_ROOM_FOLLOWS}>
-                                            {(bulk_follow_rooms, {loading, error, data})=>{
-        
-                                                if (data){
-                                                    this.navigate_to_feed(data) 
-                                                }
-                                                
-                                                if(not_joined_rooms && !this.state.loading){
-                                                    return(
-                                                        <SafeAreaView style={styles.main_container}>
-                                                            <FlatList
-                                                                data={not_joined_rooms}
-                                                                renderItem={(object)=>{
-                                                                    return(
-                                                                        <RoomItemDisplay
-                                                                            room_object={object.item}
-                                                                            index={object.index}
-                                                                            add_to_set={this.add_to_set}
-                                                                            remove_from_set={this.remove_from_set}
-                                                                            selected={false}
-                                                                            selection_allowed={true}
-                                                                        />
-                                                                )
-                                                                }}
-                                                                ItemSeparatorComponent={()=> {
-                                                                    return <ListItemDivider/>
-                                                                }}
-                                                                
-                                                            />                                                                                                 
-                                                        </SafeAreaView>
+                                    if(not_joined_rooms && !this.state.loading){
+                                        return(
+                                            <SafeAreaView style={styles.main_container}>
+                                                <FlatList
+                                                    data={not_joined_rooms}
+                                                    renderItem={(object)=>{
+                                                        return(
+                                                            <RoomItemDisplay
+                                                                room_object={object.item}
+                                                                index={object.index}
+                                                                add_to_set={this.add_to_set}
+                                                                remove_from_set={this.remove_from_set}
+                                                                selected={false}
+                                                                selection_allowed={true}
+                                                            />
                                                     )
-                                                }
+                                                    }}
+                                                    ItemSeparatorComponent={()=> {
+                                                        return <ListItemDivider/>
+                                                    }}
+                                                    keyExtractor={item => item.id}
+                                                />                                                                                                 
+                                            </SafeAreaView>
+                                        )
+                                    }
 
-                                                //when loading of not_joined_rooms is undefined
-                                                return(
-                                                    <View style={styles.main_container}>
-                                                        <Loader/>
-                                                    </View>
-                                                )
-            
-
-                                            }}                            
-                                        </Mutation>
+                                    //when loading of not_joined_rooms is undefined
+                                    return(
+                                        <View style={styles.main_container}>
+                                            <Loader/>
+                                        </View>
                                     )
                                 }}
                             </Query>

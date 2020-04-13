@@ -152,9 +152,18 @@ export const navigation_set_root_one_screen = (screen_object) => {
                 topBar: {
                   visible:false                
                 },
+                animations: {
+                  setRoot: {
+                    alpha: {
+                      from: 0,
+                      to: 1,
+                      duration: 200
+                    }
+                  }
+                },
                 ...screen_object.options,
               },
-                props:screen_object.props
+              props:screen_object.props,              
               }
             }]
           }

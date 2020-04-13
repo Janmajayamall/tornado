@@ -524,6 +524,7 @@ const styles = StyleSheet.create({
         borderColor:base_style.color.primary_color_lighter,
         borderWidth:2.5,
         padding:5,
+        textAlignVertical:"top"
     },
     choose_container:{
         flexDirection:"row",

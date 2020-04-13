@@ -23,6 +23,7 @@
     "apollo-link-retry": "^2.2.16",
     "axios": "^0.19.2",
     "buffer": "^5.5.0",
+    "bugsnag-react-native": "^2.23.7",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "moment": "^2.24.0",

@@ -71,7 +71,7 @@ class SearchRooms extends React.PureComponent{
 
 
     get_room_results = async(name_filter="") => {
-        console.log(name_filter, "name_filerddd")
+        
         try{
             const {data} = await this.props.client.query({
                 query:GET_ROOMS,
@@ -87,8 +87,7 @@ class SearchRooms extends React.PureComponent{
                 rooms_list:get_rooms,
                 loading:false,           
             })
-        }catch(e){    
-            console.log(e, "dawd")        
+        }catch(e){                      
             this.setState({
                 loading:false,
                 rooms_list:[]
@@ -174,6 +173,7 @@ class SearchRooms extends React.PureComponent{
                                         </Text>
                                     </View>
                                 }
+                                keyExtractor={item => item.id}
                             />                
 
                     }

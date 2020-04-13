@@ -10,7 +10,8 @@ export const constants = {
             DONE_POST_ROOM_SELECTION:"done_post_room_selection",
             SEARCH_ROOMS:"search_rooms",
             FOLLOW_BULK:"follow_bulk",
-            SETTINGS:"settings"
+            SETTINGS:"settings",
+            BACK:"back"
         }
     },
     queries:{

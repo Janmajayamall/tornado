@@ -120,6 +120,7 @@ class ContentList extends React.PureComponent{
                         </Text>
                     </View>
                 }
+                keyExtractor={item => item.id}
             />      
         )
     }

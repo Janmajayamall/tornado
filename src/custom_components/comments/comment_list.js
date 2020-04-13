@@ -133,6 +133,7 @@ class CommentList extends React.PureComponent{
                         tintColor="#ffffff"
                     />
                 }
+                keyExtractor={item => item.id}
             />      
         )
     }

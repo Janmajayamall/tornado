@@ -95,6 +95,11 @@ class EditProfile extends React.PureComponent {
 
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
+
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
+
         if(buttonId === constants.navigation.action_buttons.EDIT_PROFILE){
             this.edit_profile_mutation_wrapper()
         }
@@ -453,7 +458,7 @@ class EditProfile extends React.PureComponent {
                                 onChangeText={this.change_bio}
                                 error_state={this.state.bio.error}
                                 error_text={this.state.bio.error_text}
-                                height={window.height*0.3}
+                                height={window.height*0.3}                                
                             />
                         </View>            
                     </View>

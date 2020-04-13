@@ -1,5 +1,6 @@
 import {Navigation} from 'react-native-navigation'
 import {start_app} from './src/navigation/navigation'
+import "./src/bugsnag/bugsnag"
 
 Navigation.events().registerAppLaunchedListener(()=>start_app())
 

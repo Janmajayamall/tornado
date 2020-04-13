@@ -66,6 +66,19 @@ class JoinedRoomsScreen extends React.PureComponent {
 
     }
 
+    componentDidMount(){
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+    }
+
+    //for topBar buttons
+    navigationButtonPressed({ buttonId }) { 
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
+    }  
+    
+
     navigate_to_room_details = (room_object) => {
         navigation_push_to_screen(this.props.componentId, {
             screen_name:ROOM_DETAILS_SCREEN,
@@ -146,7 +159,8 @@ class JoinedRoomsScreen extends React.PureComponent {
                                     }}
                                     ItemSeparatorComponent={()=> {
                                         return <ListItemDivider/>
-                                    }}                                
+                                    }}   
+                                    keyExtractor={item => item.id}                             
                                 />    
                             </SafeAreaView>
                         )

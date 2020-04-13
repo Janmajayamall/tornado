@@ -106,6 +106,8 @@ class ChoosePostImage extends React.PureComponent{
                         height:image.height,
                     })
                 });
+            }).catch(e=>{
+                return
             })
     }
 

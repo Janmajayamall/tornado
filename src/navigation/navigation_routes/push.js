@@ -1,6 +1,7 @@
 import { Navigation } from "react-native-navigation"
 import Icon from 'react-native-vector-icons/AntDesign'
 import base_style from "./../../styles/base"
+import { constants } from "../../helpers"
 
 export const navigation_push_to_screen = (componentId, screen_object) => {
     Promise.all([
@@ -18,8 +19,9 @@ export const navigation_push_to_screen = (componentId, screen_object) => {
             icon: icons[0],
             visible: true,
             color:base_style.color.icon_selected ,
-            id:"back"       
+            id:constants.navigation.action_buttons.BACK      
         },
+        screen_object.options.topBar.rightButtonColor=base_style.color.icon_selected //setting all button colors to icon_selected color
     
         //setting the background color of topBar
         screen_object.options.topBar.background={

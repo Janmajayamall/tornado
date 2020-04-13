@@ -28,6 +28,7 @@ import base from "./../../styles/base";
 //import custom components
 import BigTextInput from "./../../custom_components/text_inputs/big_input_text"
 import BigButton from "./../../custom_components/buttons/big_buttons"
+import Loader from "./../../custom_components/loading/loading_component"
 
 // importing screens
 import {
@@ -88,17 +89,6 @@ class Login extends React.PureComponent{
     }
 
     validate_the_input = () =>{
-
-        //if loading is true, return 
-        if(this.state.loading){
-            return
-        }
-
-        //set loading to true 
-        this.setState({
-            loading:true,
-            login_error:false       
-        })
 
         let all_inputs_valid = true
 
@@ -173,6 +163,7 @@ class Login extends React.PureComponent{
         await setting_up_jwt_token(user_data.jwt)
 
         //routing bottom tab screens
+        console.log("podawdada")
         navigation_set_bottom_tabs()
         return
     }
@@ -190,6 +181,15 @@ class Login extends React.PureComponent{
     }
 
     render(){
+
+        if(this.state.loading){
+            return(
+                <View style={[styles.main_container, {flex:1}]}>
+                    <Loader/>
+                </View>
+            )
+        }
+
         return(
             <TouchableWithoutFeedback
                 onPress={()=>{
@@ -234,23 +234,34 @@ class Login extends React.PureComponent{
                         <Mutation
                             mutation={LOGIN_USER}
                             onError={(e)=>{
+                                console.log(e, "this is it")
                                 this.setState({
                                     login_error:true,
                                     loading:false
                                 })
                             }}
+                            onCompleted={({login_user})=>{
+                                this.setting_up_the_user(login_user)
+                            }}
                         >
-                            {(login_user, {data, error})=>{                                
-
-                                //after authenticating the user
-                                if (data){                                    
-                                    this.setting_up_the_user(data.login_user)
-                                }
+                            {(login_user)=>{                                
 
                                 return(
                                     <BigButton
                                         button_text={"Login"}
                                         onPress={()=>{
+
+                                            //if loading then return 
+                                            if(this.state.loading){
+                                                return
+                                            }
+
+                                            //set loading to true 
+                                            this.setState({
+                                                loading:true,
+                                                login_error:false       
+                                            })
+
                                             //validate the input
                                             if(!this.validate_the_input()){
                                                 //set loading to false
@@ -260,16 +271,15 @@ class Login extends React.PureComponent{
                                                 return
                                             }
 
-                                            try{
-                                                login_user({
-                                                    variables:{
-                                                        email:this.state.email.value.trim(),
-                                                        password:this.state.password.value.trim()
-                                                    }
-                                                })    
-                                            }catch(e){
-                                                console.log(e)
-                                            }                                      
+                                       
+                                            login_user({
+                                                variables:{
+                                                    email:this.state.email.value.trim(),
+                                                    password:this.state.password.value.trim()
+                                                }
+                                            })    
+                                            
+                                   
                                         }}
                                         active={true}
                                     />

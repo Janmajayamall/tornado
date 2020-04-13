@@ -8,6 +8,7 @@ import {
 import base_style from "./../../styles/base"
 import AsyncStorage from "@react-native-community/async-storage"
 import { withApollo } from "react-apollo"
+import {Navigation} from "react-native-navigation"
 
 //custom components 
 import ListItemDivider from "./../../custom_components/common_decorators/list_item_divider"
@@ -22,6 +23,10 @@ import {
     LOGIN_SCREEN
 } from "./../../navigation/screens"
 
+import {
+    constants
+} from "./../../helpers/index"
+
 //resetting apollo client 
 import {reset_token} from "./../../apollo_client/client_configuration"
 
@@ -32,6 +37,18 @@ class SettingsScreen extends React.Component {
         
         this.state={
             loading:false
+        }
+    }
+
+    componentDidMount(){
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+    }
+
+    //for topBar buttons
+    navigationButtonPressed({ buttonId }) {        
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
         }
     }
 

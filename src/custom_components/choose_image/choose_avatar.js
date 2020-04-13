@@ -64,6 +64,8 @@ class ChooseAvatar extends React.PureComponent{
             this.setState({
                 image_uri:image_uri
             })
+        }).catch(e=>{
+            return
         })
     }
 
@@ -72,7 +74,9 @@ class ChooseAvatar extends React.PureComponent{
         ImagePicker.openPicker({
             }).then(image => {                
                 this.crop_image_circle(image.path)
-            });
+            }).catch(e=>{
+                return
+            })
     }
 
 

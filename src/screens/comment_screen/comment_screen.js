@@ -55,7 +55,7 @@ class Comment extends React.PureComponent {
     
         this.state = {
             comment_list_padding:0,
-            post_comment_box_padding:20,
+            post_comment_box_padding:10,
             comment_container_height:0
         }
 
@@ -64,9 +64,21 @@ class Comment extends React.PureComponent {
     }   
 
     componentDidMount(){
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+
         this.keyboard_did_show_listener = Keyboard.addListener("keyboardWillShow", this._keyboard_did_show)
         this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
     }
+
+     //for topBar buttons
+     navigationButtonPressed({ buttonId }) {
+        
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
+
+    }  
 
 
     _keyboard_did_show = (e) => {
@@ -82,7 +94,7 @@ class Comment extends React.PureComponent {
     }   
 
     _keyboard_will_hide = (e) => {
-        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:20})//padding for input at bottom 
+        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:10})//padding for input at bottom 
     }
 
     componentWillUnmount(){
@@ -252,8 +264,8 @@ class Comment extends React.PureComponent {
                                                     three_words: user_info.three_words,
                                                     __typename: "User_account"
                                                 },                                                                         
-                                                timestamp: new Date().getTime(),
-                                                last_modified: new Date().getTime(),
+                                                timestamp: String(new Date().getTime()),
+                                                last_modified: String(new Date().getTime()),
                                                 description: caption_body,
                                                 up_votes_count: 0,
                                                 down_votes_count: 0,

@@ -58,7 +58,7 @@ class CommonCreatePosts extends React.PureComponent{
     //for topBar buttons
     navigationButtonPressed({ buttonId }) {
         
-        if(buttonId === "back"){
+        if(buttonId === constants.navigation.action_buttons.BACK){
             Navigation.pop(this.props.componentId)
         }
 

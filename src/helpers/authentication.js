@@ -37,10 +37,10 @@ export const setting_up_jwt_token = async(jwt) => {
         // if jwt is not present then return
         return
     }
-
+    console.log(jwt, "here")
     //store it in local storage
     await AsyncStorage.setItem("token", jwt)
-    
+    console.log(jwt, "here1")
     return
 }
 

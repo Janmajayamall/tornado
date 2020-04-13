@@ -3,13 +3,9 @@ import React from "react"
 import { 
     View,
     Text,
-    TouchableWithoutFeedback,
-    Keyboard,
     ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    SafeAreaView,
-    TextInput,
+    StyleSheet,    
+    SafeAreaView,    
     Dimensions,
     Alert
 } from "react-native";

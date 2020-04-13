@@ -55,6 +55,18 @@ class RoomDetails extends React.Component{
 
     }
 
+    componentDidMount(){
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+    }
+
+    //for topBar buttons
+    navigationButtonPressed({ buttonId }) {
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
+    }  
+    
     navigate_to_creator_profile = (user_id, is_user) => {
         navigation_push_to_screen(this.props.componentId, {
             screen_name:PROFILE_SCREEN,

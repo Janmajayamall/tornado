@@ -96,8 +96,19 @@ class RegisterOtherAtt extends React.PureComponent{
     }
 
     componentDidMount(){
+
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+        
         this.keyboard_did_show_listener = Keyboard.addListener("keyboardWillShow", this._keyboard_did_show)
         this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
+    }
+
+    //for topBar buttons
+    navigationButtonPressed({ buttonId }) {
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
     }
 
     _keyboard_did_show = (e) => {

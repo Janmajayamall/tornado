@@ -1,5 +1,10 @@
 PODS:
   - boost-for-react-native (1.63.0)
+  - BugsnagReactNative (2.23.7):
+    - BugsnagReactNative/Core (= 2.23.7)
+    - React
+  - BugsnagReactNative/Core (2.23.7):
+    - React
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
@@ -259,6 +264,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -303,6 +309,8 @@ SPEC REPOS:
     - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
+  BugsnagReactNative:
+    :path: "../node_modules/bugsnag-react-native"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -368,6 +376,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  BugsnagReactNative: 4b076d31d5201fe7208e8c37f7a0e9879383165e
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   FBLazyVector: cb37b5590a27600f0a889222d7c1f019625f4168
   FBReactNativeSpec: 6fda0eee5b059ee8ea0f845f4060620ff96b5b55

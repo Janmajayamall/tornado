@@ -71,6 +71,10 @@ class AddRooms extends React.Component{
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
 
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
+
         //create room action button is triggered
         if (buttonId===constants.navigation.action_buttons.CREATE_ROOM && !this.state.loading){
             this.create_room_mutation_wrapper()
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
         width:"100%",
         ...base_style.typography.small_font,
         backgroundColor:base_style.color.primary_color_lighter,
-        padding:10
+        padding:10,
     },
     description_container:{
         width:"100%",
@@ -318,6 +322,7 @@ const styles = StyleSheet.create({
         padding:10,
         borderColor:base_style.color.primary_color_lighter,
         borderWidth:2.5,
+        textAlignVertical:"top"
     },
     error_view:{
         paddingTop:2

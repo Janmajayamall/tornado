@@ -90,7 +90,7 @@ class CreatePostRoomSelect extends React.Component{
                                     ItemSeparatorComponent={()=> {
                                         return <ListItemDivider/>
                                     }}
-                                    
+                                    keyExtractor={item => item.id}
                                 />                                                                                                                        
                             </SafeAreaView>                   
                         )

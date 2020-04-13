@@ -141,10 +141,10 @@ class AvatarTextPanel extends React.PureComponent{
                         onPress={()=>{
                             if(this.state.comment_text_input.trim()===""){
                                 console.log("Please enter comment first")
-                            }else{
-                                this.props.create_comment_func(this.state.comment_text_input)
-                                this.setState({comment_text_input:""})
-                                Keyboard.dismiss()
+                            }else{                                                                
+                                this.props.create_comment_func(this.state.comment_text_input)   
+                                this.setState({comment_text_input:""})                
+                                Keyboard.dismiss()                                             
                             }
                         }}
                     >
@@ -370,7 +370,8 @@ const styles = StyleSheet.create({
     },
     comment_text_input:{
         width:"100%",
-        ...base_style.typography.small_font
+        ...base_style.typography.small_font,
+        textAlignVertical:"top"
     },
     vote_container:{
         flexDirection:"row",

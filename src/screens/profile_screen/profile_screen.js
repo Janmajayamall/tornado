@@ -98,6 +98,11 @@ class ProfileScreen extends React.Component {
 
     //react native navigation event binded function for action buttons
     navigationButtonPressed({ buttonId }) {
+
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
+        }
+
         if (buttonId===constants.navigation.action_buttons.SETTINGS){
             navigation_push_to_screen(this.props.componentId,
                     {

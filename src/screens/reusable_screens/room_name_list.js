@@ -27,7 +27,8 @@ import {
 
 //importing helpers
 import {  
-    get_relative_time_ago
+    get_relative_time_ago,
+    constants
 } from "./../../helpers/index";
 
 //importing custom components
@@ -43,6 +44,17 @@ class RoomNameList extends React.PureComponent {
         super(props)
         this.state = {
             loading:false
+        }
+    }
+
+    componentDidMount(){
+        //binding the topBar add post button 
+        Navigation.events().bindComponent(this);
+    }
+
+    navigationButtonPressed({ buttonId }) {        
+        if(buttonId === constants.navigation.action_buttons.BACK){
+            Navigation.pop(this.props.componentId)
         }
     }
 
@@ -89,6 +101,7 @@ class RoomNameList extends React.PureComponent {
                     ItemSeparatorComponent={()=> {
                         return <ListItemDivider/>
                     }}
+                    keyExtractor={item => item.id}
                 />
             </SafeAreaView>
         )

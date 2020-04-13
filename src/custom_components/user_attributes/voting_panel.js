@@ -88,7 +88,7 @@ class VotingPanel extends React.PureComponent{
 
                             //updating user_vote_object 
                             new_post_caption.user_vote_object=toggle_result
-                            
+                            console.log(new_post_caption, "changed one")
                             //changing the vote counts
                             if(toggle_result.vote_type===constants.vote_type.up){
                                 new_post_caption.up_votes_count+=1
@@ -112,7 +112,7 @@ class VotingPanel extends React.PureComponent{
                             updated_post_captions.push(caption)
                         }
                     })
-    
+                    console.log(updated_post_captions, "this is here")
                     //writing it to the cache
                     cache.writeQuery({
                         query:GET_POST_CAPTIONS,

@@ -86,7 +86,7 @@ class BigTextInput extends React.PureComponent {
                     placeholder={this.props.placeholder}
                     value={this.props.value}
                     onChangeText={this.props.onChangeText}
-                    style={[styles.input_box, {height:this.props.height}]}
+                    style={[styles.input_box, {height:this.props.height, textAlignVertical:"top"}]}
                     placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
                     multiline={true}
 

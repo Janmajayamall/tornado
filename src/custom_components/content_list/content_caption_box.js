@@ -279,9 +279,11 @@ class ContentCaptionBox extends React.PureComponent {
                             })
                         
                         }}
-
+                        onError={(e)=>{
+                            return
+                        }}
                     >
-                        {(toggle_like, {data})=>{ 
+                        {(toggle_like)=>{ 
                             return(
                                 <TouchableOpacity 
                                     onPress={()=>{
