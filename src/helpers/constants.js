@@ -58,7 +58,8 @@ export const constants = {
         name:100,
         room_name:50,
         room_description:1000,
-        comment:2000
+        comment:2000,
+        max_age:150
     },
     apollo_query:{
         network_status:{

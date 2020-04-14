@@ -88,6 +88,7 @@ class AddRooms extends React.Component{
         
         //validate room name
         const name_validation = await validate_room_name(this.state.name.value, this.props.client)
+    
         if(!name_validation.valid){
             all_inputs_valid=false
             new_input_objects.name={

@@ -76,7 +76,8 @@ class QueryComments extends React.PureComponent{
                     //render comment list when data is not undefined
                     if(data){
                         //getting data array
-                        const data_array = data[`${Object.keys(data)[0]}`]                    
+                        const data_array = data[`${Object.keys(data)[0]}`]      
+                        console.log(data_array)              
                         return(
                             <CommentList
                                 comment_list={data_array ? data_array : []}

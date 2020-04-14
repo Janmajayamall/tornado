@@ -28,7 +28,7 @@ export const validate_email = async(email, apollo_client) => {
     if(data.check_email){
         return ({
             valid:false,
-            error_text:"Username already in use"
+            error_text:"Email already in use"
         })
     }
 
@@ -257,7 +257,7 @@ export const validate_room_name = async (room_name, apollo_client) => {
             room_name:room_name.trim()
         }
     })
-
+    
     if(data.check_room_name){ //if true, name already exists. Return valid false
         return({
             valid:false,

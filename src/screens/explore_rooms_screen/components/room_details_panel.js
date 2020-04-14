@@ -104,12 +104,14 @@ class RoomDetailsPanel extends React.PureComponent{
                         }
                         //change the user_follows to true
                         updated_room_demographics.user_follows=true
+                        updated_room_demographics.room_members_count+=1
                     }else{
                         if(updated_room_demographics.user_follows===false){ //if user_follows is already false, return
                             return
                         }
                         //change the user_follows to false
                         updated_room_demographics.user_follows=false
+                        updated_room_demographics.room_members_count-=1
                     }
                 
 

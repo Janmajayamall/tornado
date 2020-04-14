@@ -107,7 +107,7 @@ class ChoosePostImage extends React.PureComponent{
                     })
                 });
             }).catch(e=>{
-                return
+                
             })
     }
 

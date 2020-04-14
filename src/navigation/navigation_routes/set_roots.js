@@ -157,7 +157,7 @@ export const navigation_set_root_one_screen = (screen_object) => {
                     alpha: {
                       from: 0,
                       to: 1,
-                      duration: 200
+                      duration: 500
                     }
                   }
                 },

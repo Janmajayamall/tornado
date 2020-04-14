@@ -81,15 +81,15 @@ const logout_unauthenticated_err = async() => {
 const error_link = onError(({ graphQLErrors, networkError }) => {    
     if (graphQLErrors){
       graphQLErrors.forEach(({message, locations, path, extensions})=> {
-            // console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}, Extensions: code:${extensions.code}`) //commented in prod
+            console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}, Extensions: code:${extensions.code}`) //commented in prod
             if(extensions.code==="UNAUTHENTICATED"){  
-              bugsnag.notify(extensions);            
+              bugsnag.notify("UNAUTHENTICATED");            
               logout_unauthenticated_err()
             }
         });
     }
     if (networkError){                
-        // console.log(`[Network error]: ${networkError}`); //commented in prod
+        console.log(`[Network error]: ${networkError}`); //commented in prod
     }
 })
 
@@ -126,7 +126,7 @@ const client = new ApolloClient({
       retry_link,
       error_link,
       new HttpLink({
-          uri: "http://192.168.43.53:3000/graphql",
+          uri: "http://52.66.200.94:3000/graphql",
           credentials: "same-origin"
       })
   ]),

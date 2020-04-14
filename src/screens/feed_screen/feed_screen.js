@@ -114,7 +114,7 @@ class FeedScreen extends React.PureComponent {
 
         >
             {({ data, fetchMore, networkStatus, refetch, error }) => {           
-                
+                console.log(data, "this is new data")
                 if (data && data.get_room_posts_user_id){
 
                     return(

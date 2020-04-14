@@ -103,7 +103,7 @@ class CreateRoomPosts extends React.PureComponent{
             const get_user_info = data.get_user_info
         
             //adding file_name to img_obj
-            img_obj.file_name=`${get_user_info.user_id}_${new Date().toISOString()}.${img_obj.file_mime.split("/")[1]}`
+            img_obj.file_name=`${get_user_info.user_id}_${String(new Date().getTime())}.${img_obj.file_mime.split("/")[1]}`
             this.setState({
                 image_object:img_obj, 
 
@@ -179,9 +179,9 @@ class CreateRoomPosts extends React.PureComponent{
                                   text:"Done"
                               }
                           ],
-                          rightButtonColor:base_style.color.icon_selected,
+                          rightButtonColor:base_style.color.primary_color,
                           background:{
-                              color:base_style.color.primary_color
+                              color:base_style.color.icon_selected
                           }
                       }
                   }

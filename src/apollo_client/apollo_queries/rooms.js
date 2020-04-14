@@ -96,7 +96,8 @@ export const GET_ROOM_DEMOGRAPHICS = gql`
                 },
                 timestamp,
                 bio,
-                three_words
+                three_words,
+                default_avatar
             }, 
             room_members_count,
             user_follows,

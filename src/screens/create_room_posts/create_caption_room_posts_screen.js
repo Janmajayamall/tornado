@@ -1,4 +1,3 @@
-
 import React from "react"
 import { 
     View,
@@ -94,7 +93,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
             const get_user_info = data.get_user_info
         
             //adding file_name to img_obj
-            img_obj.file_name=`${get_user_info.user_id}_${new Date().toISOString()}.${img_obj.file_mime.split("/")[1]}`
+            img_obj.file_name=`${get_user_info.user_id}_${String(new Date().getTime())}.${img_obj.file_mime.split("/")[1]}`
             this.setState({
                 image_object:img_obj,
                 choose_image_phrase:"Choose",

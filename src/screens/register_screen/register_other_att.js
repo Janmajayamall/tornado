@@ -26,6 +26,7 @@ import {
     constants
  } from "./../../helpers/index";
 import Icon from 'react-native-vector-icons/AntDesign'
+import {Navigation} from "react-native-navigation"
 
 //importing base style 
 import base_style from "./../../styles/base"

@@ -175,7 +175,24 @@ class Register extends React.PureComponent{
                 this.setState({loading:false})
                 return
             }
+
+
+            navigation_push_to_screen(this.props.componentId, 
+                { 
+                    screen_name:REGISTER_OTHER_ATT_SCREEN,
+                    props:{
+                        email:this.state.email.value,
+                        password:this.state.password.value,
+                        username:this.state.username.value,    
+                    }
+                }
+            )
+
+            this.setState({loading:false})
+            return
+
         }catch(e){
+            console.log(e)
             Alert.alert(
                 "Sorry",
                 "Registration Failed",
@@ -189,20 +206,6 @@ class Register extends React.PureComponent{
                 { cancelable: false }
             )  
         }
-
-        navigation_push_to_screen(this.props.componentId, 
-            { 
-                screen_name:REGISTER_OTHER_ATT_SCREEN,
-                props:{
-                    email:this.state.email.value,
-                    password:this.state.password.value,
-                    username:this.state.username.value,    
-                }
-            }
-        )
-
-        this.setState({loading:false})
-        return
     }
 
     change_email_id = async(val) => {

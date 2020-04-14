@@ -69,6 +69,20 @@ class SearchRooms extends React.PureComponent{
         this.get_room_results()
     }
 
+    componentDidMount(){
+        //binding the topBar add post button 
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
+    }
+
+    componentDidAppear() {
+        console.log("this is herey addada")
+        this.get_room_results()
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
+    }
+
 
     get_room_results = async(name_filter="") => {
         
@@ -77,7 +91,8 @@ class SearchRooms extends React.PureComponent{
                 query:GET_ROOMS,
                 variables:{
                     name_filter:name_filter.trim()
-                }
+                },
+                
             })
             console.log(data, "ajoaij")
             const {get_rooms} = data
@@ -167,7 +182,7 @@ class SearchRooms extends React.PureComponent{
                                     return <ListItemDivider/>
                                 }}
                                 ListEmptyComponent={
-                                    <View style={styles.no_result_container}>
+                                    <View style={[styles.no_result_container, {marginTop:20}]}>
                                         <Text style={[base_style.typography.medium_header, {...base_style.typography.font_colors.low_emphasis}]}>
                                             No results found
                                         </Text>
@@ -215,5 +230,3 @@ const styles = StyleSheet.create({
 })
 
 export default withApollo(SearchRooms)
-
-//TODO: shift the share button to top right on the navigator bar, because it is more UI friendly

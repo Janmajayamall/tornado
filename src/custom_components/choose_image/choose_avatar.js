@@ -55,7 +55,7 @@ class ChooseAvatar extends React.PureComponent{
                 width:image.width,
                 height:image.height,
                 image_data:image.data,
-                file_name:`${this.props.username}_${new Date().toISOString()}.${image_extension}`,
+                file_name:`${this.props.username}_${String(new Date().getTime())}.${image_extension}`,
                 image_uri:image_uri
             }
 
@@ -65,7 +65,7 @@ class ChooseAvatar extends React.PureComponent{
                 image_uri:image_uri
             })
         }).catch(e=>{
-            return
+            
         })
     }
 
@@ -75,7 +75,7 @@ class ChooseAvatar extends React.PureComponent{
             }).then(image => {                
                 this.crop_image_circle(image.path)
             }).catch(e=>{
-                return
+                
             })
     }
 

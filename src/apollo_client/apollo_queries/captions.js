@@ -15,7 +15,8 @@ export const GET_POST_CAPTIONS = gql`
                     cdn_url
                 }, 
                 username,
-                three_words
+                three_words,
+                default_avatar
             },
             timestamp,
             last_modified,        
@@ -52,7 +53,8 @@ export const CREATE_CAPTION = gql`
                     cdn_url
                 }, 
                 username,
-                three_words
+                three_words,
+                default_avatar
             },
             timestamp,
             last_modified,        
