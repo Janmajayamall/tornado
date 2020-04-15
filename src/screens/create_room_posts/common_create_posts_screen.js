@@ -48,7 +48,7 @@ class CommonCreatePosts extends React.PureComponent{
         this.choose_post_image_ref = React.createRef()
 
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
 
         //creating diff create_posts refs
         this.create_room_posts_ref = React.createRef()
@@ -75,6 +75,10 @@ class CommonCreatePosts extends React.PureComponent{
         }
 
     }  
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
+    }
     
     switch_screen_func = () => {
         if(this.state.create_post_type===constants.create_post_type.room_post){

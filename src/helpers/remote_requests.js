@@ -10,6 +10,7 @@ import {
     GET_ROOM_FEED,
     GET_USER_PROFILE_POSTS
  } from "./../apollo_client/apollo_queries/index";
+import { constants } from "./constants";
 
 
 export const upload_image_to_s3 = async(presigned_url, image_data, file_mime) => {
@@ -143,8 +144,7 @@ export const delete_caption_apollo = async(apollo_client, caption_object) => {
 }
 
 
-export const delete_post_apollo = async(apollo_client, post_object) => {
-    console.log(post_object, "thir daw")
+export const delete_post_apollo = async(apollo_client, post_object) => {    
     try{
         const data = await apollo_client.mutate({
             mutation:DEACTIVATE_ROOM_POST,
@@ -155,13 +155,13 @@ export const delete_post_apollo = async(apollo_client, post_object) => {
                 {
                     query:GET_ROOM_FEED,
                     variables:{
-                        limit:5
+                        limit:constants.apollo_query.pagination_limit
                     }
                 },
                 {
                     query:GET_USER_PROFILE_POSTS,
                     variables:{
-                        limit:5
+                        limit:constants.apollo_query.pagination_limit
                     }
                 }
             ]

@@ -225,7 +225,7 @@ class ContentCaptionBox extends React.PureComponent {
                             const {get_room_posts_user_id} = cache.readQuery({
                                 query:GET_ROOM_FEED,
                                 variables:{
-                                    limit:5
+                                    limit:constants.apollo_query.pagination_limit
                                 }
                             })
                             
@@ -271,7 +271,7 @@ class ContentCaptionBox extends React.PureComponent {
                             cache.writeQuery({
                                 query:GET_ROOM_FEED,
                                 variables:{
-                                    limit:5
+                                    limit:constants.apollo_query.pagination_limit
                                 },
                                 data:{                                            
                                     get_room_posts_user_id:updated_get_room_posts
@@ -346,6 +346,7 @@ class ContentCaptionBox extends React.PureComponent {
                                     <CaptionPanel
                                         caption_object={object}
                                         caption_index={index}
+                                        key={object._id}
                                     />
                                 )
                             }) :

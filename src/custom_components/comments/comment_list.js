@@ -34,7 +34,7 @@ class CommentList extends React.PureComponent{
         componentId:PropTypes.any,
 
         //for identifying avatar_text_panel type CAPTION or COMMENT
-        query_type :PropTypes.object
+        query_type :PropTypes.string
 
     }
 
@@ -42,7 +42,6 @@ class CommentList extends React.PureComponent{
         super(props)
         this.state={
         }
-        console.log("commentlist")
     }
 
     render_item = (object) => {
@@ -133,7 +132,7 @@ class CommentList extends React.PureComponent{
                         tintColor="#ffffff"
                     />
                 }
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
             />      
         )
     }

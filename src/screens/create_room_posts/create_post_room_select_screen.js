@@ -45,7 +45,11 @@ class CreatePostRoomSelect extends React.Component{
         }
 
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
     //for topBar buttons
@@ -90,7 +94,7 @@ class CreatePostRoomSelect extends React.Component{
                                     ItemSeparatorComponent={()=> {
                                         return <ListItemDivider/>
                                     }}
-                                    keyExtractor={item => item.id}
+                                    keyExtractor={item => item._id}
                                 />                                                                                                                        
                             </SafeAreaView>                   
                         )

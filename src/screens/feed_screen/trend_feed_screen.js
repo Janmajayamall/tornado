@@ -52,8 +52,12 @@ class TrendFeedScreen extends React.PureComponent {
         }
 
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
 
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
     //react native navigation event binded function for action buttons
@@ -80,7 +84,7 @@ class TrendFeedScreen extends React.PureComponent {
         <Query 
             query={GET_ROOM_FEED}
             variables={{
-                limit:5
+                limit:constants.apollo_query.pagination_limit
             }}
         >
             {({ loading, error, data, fetchMore }) => {   
@@ -95,7 +99,7 @@ class TrendFeedScreen extends React.PureComponent {
                                     //getting more posts using cursor
                                     query:GET_ROOM_FEED,
                                     variables:{
-                                        limit:5,
+                                        limit:constants.apollo_query.pagination_limit,
                                         room_post_cursor:data.get_room_posts_user_id.room_post_cursor
                                     },
                                     updateQuery: (previous_data, {fetchMoreResult}) => {

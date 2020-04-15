@@ -77,10 +77,6 @@ class ContentBox extends React.PureComponent {
         this.generate_panel_ref = React.createRef()
     }
 
-    // componentDidMount(){
-    //     console.log("rendered: ContentBox")
-    // }
-
     navigate_to_comment_screen = () => {
         navigation_push_to_screen(this.props.componentId, {
             screen_name: COMMENT_SCREEN, 
@@ -239,7 +235,7 @@ class ContentBox extends React.PureComponent {
                             const {get_room_posts_user_id} = cache.readQuery({
                                 query:GET_ROOM_FEED,
                                 variables:{
-                                    limit:5
+                                    limit:constants.apollo_query.pagination_limit
                                 }
                             })
                             
@@ -285,7 +281,7 @@ class ContentBox extends React.PureComponent {
                             cache.writeQuery({
                                 query:GET_ROOM_FEED,
                                 variables:{
-                                    limit:5
+                                    limit:constants.apollo_query.pagination_limit
                                 },
                                 data:{                                            
                                     get_room_posts_user_id:updated_get_room_posts

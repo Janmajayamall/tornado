@@ -64,7 +64,7 @@ class ExploreRooms extends React.Component{
         }
         
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
     }
 
     //react native navigation event binded function for action buttons
@@ -79,6 +79,9 @@ class ExploreRooms extends React.Component{
         }
     }
     
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
+    }
 
     add_to_set = (room_id) => {
         if (this.state.selected_set.has(room_id)){''
@@ -200,7 +203,7 @@ class ExploreRooms extends React.Component{
                                                     ItemSeparatorComponent={()=> {
                                                         return <ListItemDivider/>
                                                     }}
-                                                    keyExtractor={item => item.id}
+                                                    keyExtractor={item => item._id}
                                                 />                                                                                                 
                                             </SafeAreaView>
                                         )

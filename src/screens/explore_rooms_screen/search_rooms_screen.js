@@ -74,8 +74,7 @@ class SearchRooms extends React.PureComponent{
         this.navigation_event_listener = Navigation.events().bindComponent(this);
     }
 
-    componentDidAppear() {
-        console.log("this is herey addada")
+    componentDidAppear() {        
         this.get_room_results()
     }
 
@@ -92,17 +91,18 @@ class SearchRooms extends React.PureComponent{
                 variables:{
                     name_filter:name_filter.trim()
                 },
-                
+                fetchPolicy:"network-only"
             })
-            console.log(data, "ajoaij")
+            
             const {get_rooms} = data
-            console.log(get_rooms, "this is here")
+            
             //setting the list on the state
             this.setState({
                 rooms_list:get_rooms,
                 loading:false,           
             })
-        }catch(e){                      
+        }catch(e){      
+            console.log(e, "daw")                
             this.setState({
                 loading:false,
                 rooms_list:[]
@@ -111,7 +111,7 @@ class SearchRooms extends React.PureComponent{
     }
     
     search_input_changed = (val) => {
-        console.log(val, "a")
+        
         this.setState({
             name_filter:val,
             loading:true
@@ -188,7 +188,7 @@ class SearchRooms extends React.PureComponent{
                                         </Text>
                                     </View>
                                 }
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item._id}
                             />                
 
                     }

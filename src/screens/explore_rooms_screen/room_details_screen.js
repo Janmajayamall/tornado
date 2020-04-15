@@ -57,7 +57,11 @@ class RoomDetails extends React.Component{
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
     //for topBar buttons
@@ -99,7 +103,7 @@ class RoomDetails extends React.Component{
                             <Query 
                                 query={GET_ROOM_POSTS}
                                 variables={{
-                                    limit:5,
+                                    limit:constants.apollo_query.pagination_limit,
                                     room_id:this.props.room_id
                                 }}
                                 fetchPolicy={"cache-and-network"}
@@ -120,7 +124,7 @@ class RoomDetails extends React.Component{
                                                         //getting more posts using cursor
                                                         query:GET_ROOM_POSTS,
                                                         variables:{
-                                                            limit:5,
+                                                            limit:constants.apollo_query.pagination_limit,
                                                             room_post_cursor:get_room_posts_room_id.room_post_cursor,
                                                             room_id:this.props.room_id
                                                         },

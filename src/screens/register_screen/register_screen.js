@@ -192,7 +192,7 @@ class Register extends React.PureComponent{
             return
 
         }catch(e){
-            console.log(e)
+            
             Alert.alert(
                 "Sorry",
                 "Registration Failed",

@@ -70,6 +70,7 @@ export const constants = {
             loading:1, 
             setVariables:2,
             poll:6
-        }
-    }
+        },
+        pagination_limit:10
+    },
 }

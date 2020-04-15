@@ -6,6 +6,7 @@ import {
 } from "react-native"
 import HyperLink from "react-native-hyperlink"
 import PropTypes from "prop-types"
+import bugsnag from "./../../bugsnag/bugsnag"
 
 class HyperLinkText extends React.PureComponent{
 
@@ -27,12 +28,13 @@ class HyperLinkText extends React.PureComponent{
     }
 
     open_link = (url) => {
-        
-        try{
-            Linking.openURL(url)
-        }catch(e){
-            console.log(`not able to open url: ${url} with error:\n ${e}`)
-        }
+        Linking.openURL(url).catch(e=>{
+            if(__DEV__){
+                console.log(`not able to open url: ${url} with error:\n ${e}`)
+            }else{
+                bugsnag.notify(e);
+            }
+        })
     }   
 
 

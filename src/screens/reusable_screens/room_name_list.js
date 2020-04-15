@@ -49,13 +49,17 @@ class RoomNameList extends React.PureComponent {
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
     }
 
     navigationButtonPressed({ buttonId }) {        
         if(buttonId === constants.navigation.action_buttons.BACK){
             Navigation.pop(this.props.componentId)
         }
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
     navigate_to_details_screen = async(room_id) => {
@@ -101,7 +105,7 @@ class RoomNameList extends React.PureComponent {
                     ItemSeparatorComponent={()=> {
                         return <ListItemDivider/>
                     }}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item._id}
                 />
             </SafeAreaView>
         )

@@ -140,7 +140,7 @@ class AvatarTextPanel extends React.PureComponent{
                         style={styles.post_button_container}
                         onPress={()=>{
                             if(this.state.comment_text_input.trim()===""){
-                                console.log("Please enter comment first")
+                                return
                             }else{                                                                
                                 this.props.create_comment_func(this.state.comment_text_input)   
                                 this.setState({comment_text_input:""})                
@@ -217,7 +217,7 @@ class AvatarTextPanel extends React.PureComponent{
                         style={styles.post_button_container}
                         onPress={()=>{
                             if(this.state.caption_text_input.trim()===""){
-                                console.log("Please enter the caption")
+                                return 
                             }else{
                                 this.props.create_caption_func(this.state.caption_text_input)
                                 this.setState({caption_text_input:""})

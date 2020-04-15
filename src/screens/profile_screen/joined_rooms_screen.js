@@ -68,7 +68,7 @@ class JoinedRoomsScreen extends React.PureComponent {
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
     }
 
     //for topBar buttons
@@ -77,6 +77,10 @@ class JoinedRoomsScreen extends React.PureComponent {
             Navigation.pop(this.props.componentId)
         }
     }  
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
+    }
     
 
     navigate_to_room_details = (room_object) => {
@@ -160,7 +164,7 @@ class JoinedRoomsScreen extends React.PureComponent {
                                     ItemSeparatorComponent={()=> {
                                         return <ListItemDivider/>
                                     }}   
-                                    keyExtractor={item => item.id}                             
+                                    keyExtractor={item => item._id}                             
                                 />    
                             </SafeAreaView>
                         )

@@ -16,7 +16,9 @@ export const setting_up_the_user = async(user_data, apollo_client) => {
         }
                    
     }catch(e){
-        console.log("AsyncStorage Error: "+e)
+        if(__DEV__){
+            console.log("AsyncStorage Error: "+e)
+        }
     }
 
     //writing to Apollo's local state
@@ -37,10 +39,10 @@ export const setting_up_jwt_token = async(jwt) => {
         // if jwt is not present then return
         return
     }
-    console.log(jwt, "here")
+    
     //store it in local storage
     await AsyncStorage.setItem("token", jwt)
-    console.log(jwt, "here1")
+    
     return
 }
 

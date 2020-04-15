@@ -65,7 +65,7 @@ class AddRooms extends React.Component{
         }
 
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
     }
 
     //react native navigation event binded function for action buttons
@@ -79,6 +79,10 @@ class AddRooms extends React.Component{
         if (buttonId===constants.navigation.action_buttons.CREATE_ROOM && !this.state.loading){
             this.create_room_mutation_wrapper()
         }
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
     validate_inputs = async() => {

@@ -72,7 +72,7 @@ class EditProfile extends React.PureComponent {
         this.load_user_profile()
 
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
 
     }
 
@@ -82,8 +82,11 @@ class EditProfile extends React.PureComponent {
         this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
     }
 
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
+    }
+
     _keyboard_did_show = (e) => {
-        console.log(e, "keyboard")
         if (e){
             this.setState({main_container_bottom_padding:e.endCoordinates.height})
         }
@@ -115,7 +118,7 @@ class EditProfile extends React.PureComponent {
             const get_user_info = data.get_user_info
             this.setup_edit_profile_state(get_user_info)
         }catch(e){
-            console.log(e, "edit_profile_screen.js error")
+            
         }
 
     }
@@ -255,7 +258,7 @@ class EditProfile extends React.PureComponent {
                 {
                     query:GET_USER_PROFILE_POSTS,
                     variables:{
-                        limit:5,                                            
+                        limit:constants.apollo_query.pagination_limit,                                            
                     }
                 }                
             ]

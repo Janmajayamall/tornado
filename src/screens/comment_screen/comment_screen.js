@@ -42,6 +42,7 @@ import ErrorComponent from "./../../custom_components/loading/error_component"
 import moment from "moment"
 
 const window = Dimensions.get("window")
+const default_comment_box_padding = 10
 
 class Comment extends React.PureComponent {
 
@@ -55,7 +56,7 @@ class Comment extends React.PureComponent {
     
         this.state = {
             comment_list_padding:0,
-            post_comment_box_padding:10,
+            post_comment_box_padding:default_comment_box_padding,
             comment_container_height:0
         }
 
@@ -65,10 +66,14 @@ class Comment extends React.PureComponent {
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
 
         this.keyboard_did_show_listener = Keyboard.addListener("keyboardWillShow", this._keyboard_did_show)
         this.keyboard_will_hide_listener = Keyboard.addListener("keyboardWillHide", this._keyboard_will_hide)
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
      //for topBar buttons
@@ -82,19 +87,18 @@ class Comment extends React.PureComponent {
 
 
     _keyboard_did_show = (e) => {
-        if (e){
+        if (e){            
             this.setState((prev_state)=>{
-                const temp_height_list = prev_state.comment_list_padding+e.endCoordinates.height
                 return({
-                    comment_list_padding:temp_height_list, 
-                    post_comment_box_padding:e.endCoordinates.height+prev_state.post_comment_box_padding
+                    comment_list_padding:prev_state.comment_container_height+e.endCoordinates.height, 
+                    post_comment_box_padding: e.endCoordinates.height
                 })
             })
         }
     }   
 
     _keyboard_will_hide = (e) => {
-        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:10})//padding for input at bottom 
+        this.setState({comment_list_padding:this.state.comment_container_height, post_comment_box_padding:default_comment_box_padding})//padding for input at bottom 
     }
 
     componentWillUnmount(){
@@ -168,7 +172,7 @@ class Comment extends React.PureComponent {
                                         }
                                         return optimistic_response
                                     },
-                                    update:(proxy, {data:{create_comment}})=>{                                        
+                                    update:(proxy, {data:{create_comment}})=>{                                                                                                                
                                         //generating comment object temp
                                         /*
                                             In this case please note the following
@@ -177,7 +181,7 @@ class Comment extends React.PureComponent {
                                                 otherwise it will throw error.
                                             3. Also populate the rest of the information (i.e. creator_info object, timestamp, last_modified) in the crete_comment object, so 
                                                 that object keys match with prior comments object keys.
-                                        */
+                                        */                            
                                         const get_comment_obj = {
                                             ...create_comment,
                                             timestamp:new Date().toISOString(),
@@ -193,8 +197,7 @@ class Comment extends React.PureComponent {
                                                 content_id:post_object._id,
                                                 content_type:"ROOM_POST"
                                             }
-                                        }
-
+                                        }                                        
                                         //reading query response from cache
                                         const data = proxy.readQuery(cache_query)
                                     
@@ -262,6 +265,7 @@ class Comment extends React.PureComponent {
                                                     avatar: user_info.avatar,
                                                     username: user_info.username,
                                                     three_words: user_info.three_words,
+                                                    default_avatar: user_info.default_avatar,
                                                     __typename: "User_account"
                                                 },                                                                         
                                                 timestamp: String(new Date().getTime()),
@@ -277,7 +281,7 @@ class Comment extends React.PureComponent {
                                         return optimistic_response
                                     },
                                     update:(proxy, {data:{create_caption}})=>{
-                                        console.log(create_caption)
+                                        
                                         //reading from cache all the captions of the current post
                                         const cache_query = {
                                             query:GET_POST_CAPTIONS,

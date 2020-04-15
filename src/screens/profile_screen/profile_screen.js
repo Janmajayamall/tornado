@@ -80,7 +80,7 @@ class ProfileScreen extends React.Component {
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
 
         // navigation listeners
         this.bottom_tab_event_listener = Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex, unselectedTabIndex }) => {
@@ -94,6 +94,7 @@ class ProfileScreen extends React.Component {
 
     componentWillUnmount(){
         this.bottom_tab_event_listener.remove()
+        this.navigation_event_listener.remove()
     }
 
     //react native navigation event binded function for action buttons
@@ -287,10 +288,10 @@ class ProfileScreen extends React.Component {
                     variables={
                         this.props.is_user?
                         {
-                            limit:5,                                            
+                            limit:constants.apollo_query.pagination_limit,                                            
                         }:
                         {
-                            limit:5,
+                            limit:constants.apollo_query.pagination_limit,
                             user_id:this.props.user_id
                         }
                     }
@@ -310,7 +311,7 @@ class ProfileScreen extends React.Component {
     
                                         //generating variables
                                         const fetch_variables = {
-                                            limit:5,
+                                            limit:constants.apollo_query.pagination_limit,
                                             room_post_cursor:data.get_user_profile_posts.room_post_cursor,                                                        
                                         }
                                         if(!this.props.is_user){

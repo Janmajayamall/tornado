@@ -76,7 +76,7 @@ class RoomItemDisplay extends React.PureComponent{
                 style={{width:"100%"}}
                 >
                     <View style={styles.main_container}>
-                        <View style={[styles.description_container, {backgroundColor:!this.state.selected?base_style.color.primary_color:"#9641e5"}]}>
+                        <View style={[styles.description_container, {backgroundColor:!this.state.selected?base_style.color.primary_color:"#9C27B0"}]}>
                         
                             <Text numberOfLines={1} style={styles.room_name_text}>
                                 {this.props.room_object.name}

@@ -58,7 +58,7 @@ class FeedScreen extends React.PureComponent {
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
 
         // navigation listeners
         this.bottom_tab_event_listener = Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex, unselectedTabIndex }) => {
@@ -72,6 +72,7 @@ class FeedScreen extends React.PureComponent {
 
     componentWillUnmount(){
         this.bottom_tab_event_listener.remove()
+        this.navigation_event_listener.remove()
     }
 
     //react native navigation event binded function for action buttons
@@ -108,13 +109,13 @@ class FeedScreen extends React.PureComponent {
         <Query 
             query={GET_ROOM_FEED}
             variables={{
-                limit:5
+                limit:constants.apollo_query.pagination_limit
             }}
             fetchPolicy={"cache-and-network"}
 
         >
             {({ data, fetchMore, networkStatus, refetch, error }) => {           
-                console.log(data, "this is new data")
+                
                 if (data && data.get_room_posts_user_id){
 
                     return(
@@ -127,7 +128,7 @@ class FeedScreen extends React.PureComponent {
                                     //getting more posts using cursor
                                     query:GET_ROOM_FEED,
                                     variables:{
-                                        limit:5,
+                                        limit:constants.apollo_query.pagination_limit,
                                         room_post_cursor:data.get_room_posts_user_id.room_post_cursor
                                     },
                                     updateQuery: (previous_data, {fetchMoreResult}) => {

@@ -359,13 +359,13 @@ class CreateRoomPosts extends React.PureComponent{
                 {
                     query:GET_ROOM_FEED,
                     variables:{
-                        limit:5
+                        limit:constants.apollo_query.pagination_limit
                     }
                 },
                 {
                     query:GET_USER_PROFILE_POSTS,
                     variables:{
-                        limit:5
+                        limit:constants.apollo_query.pagination_limit
                     }
                 }
             ]

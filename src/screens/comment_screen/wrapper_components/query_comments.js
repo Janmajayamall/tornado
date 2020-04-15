@@ -33,7 +33,7 @@ class QueryComments extends React.PureComponent{
         this.state = {
 
         }
-        console.log("query comments you fool")
+        
     }
 
     get_query = () => {
@@ -77,7 +77,7 @@ class QueryComments extends React.PureComponent{
                     if(data){
                         //getting data array
                         const data_array = data[`${Object.keys(data)[0]}`]      
-                        console.log(data_array)              
+                        
                         return(
                             <CommentList
                                 comment_list={data_array ? data_array : []}

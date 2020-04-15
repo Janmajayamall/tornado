@@ -1,6 +1,4 @@
-import {
-    constants
-} from "./index"
+import {constants} from "./constants"
 import {
     CHECK_USERNAME,
     CHECK_EMAIL,
@@ -13,6 +11,14 @@ export const validate_email = async(email, apollo_client) => {
         return({
             valid:false,
             error_text:"Please enter your email"
+        })
+    }
+
+    const email_regex = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
+    if (!email.toLowerCase().trim().match(email_regex)){
+        return({
+            valid:false,
+            error_text:"Not a valid email"
         })
     }
 

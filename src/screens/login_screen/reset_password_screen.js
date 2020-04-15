@@ -13,7 +13,7 @@ import {
     withApollo
 } from "react-apollo"
 import { 
-    validate_login_password, 
+    validate_password, 
     validate_login_email,
  } from "../../helpers/index";
 
@@ -190,7 +190,7 @@ class ResetPassword extends React.PureComponent{
         }
 
         //validating password
-        const password_validation = validate_login_password(this.state.password.value)
+        const password_validation = validate_password(this.state.password.value)
         if(!password_validation.valid){
             all_inputs_valid=false
             new_input_objects.password={

@@ -42,7 +42,7 @@ class SettingsScreen extends React.Component {
 
     componentDidMount(){
         //binding the topBar add post button 
-        Navigation.events().bindComponent(this);
+        this.navigation_event_listener = Navigation.events().bindComponent(this);
     }
 
     //for topBar buttons
@@ -50,6 +50,10 @@ class SettingsScreen extends React.Component {
         if(buttonId === constants.navigation.action_buttons.BACK){
             Navigation.pop(this.props.componentId)
         }
+    }
+
+    componentWillUnmount(){
+        this.navigation_event_listener.remove()
     }
 
     logout = async () => {

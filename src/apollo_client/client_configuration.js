@@ -23,7 +23,9 @@ const get_jwt_asyncstorage = async() => {
     }
     return ""
   }catch(e){
-    // console.log("AsyncStorage Error(jwt token not setup): "+e)
+    if(__DEV__){
+      console.log("AsyncStorage Error(jwt token not setup): "+e)
+    }
     return ""
   }
 }
@@ -81,15 +83,22 @@ const logout_unauthenticated_err = async() => {
 const error_link = onError(({ graphQLErrors, networkError }) => {    
     if (graphQLErrors){
       graphQLErrors.forEach(({message, locations, path, extensions})=> {
-            console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}, Extensions: code:${extensions.code}`) //commented in prod
-            if(extensions.code==="UNAUTHENTICATED"){  
-              bugsnag.notify("UNAUTHENTICATED");            
+            if(__DEV__){
+              console.log(`[GraphQL error]: Message ${message}, Location: ${locations}, Path: ${path}, Extensions: code:${extensions.code}`)
+            }
+            if(extensions.code==="UNAUTHENTICATED" && path[0]!=="login_user"){  
+              if(!__DEV__){
+                bugsnag.notify(new Error(JSON.stringify(extensions)));       
+              }     
               logout_unauthenticated_err()
             }
         });
     }
-    if (networkError){                
-        console.log(`[Network error]: ${networkError}`); //commented in prod
+    if (networkError){      
+        if(__DEV__){
+          console.log(`[Network error]: ${networkError}`);
+        }          
+        
     }
 })
 
@@ -109,8 +118,7 @@ const retry_link = new RetryLink({
 
 });
 
-const logger_link = new ApolloLink((operation, forward) => {
-  console.log(`GraphQL Request: ${operation.operationName}`);
+const logger_link = new ApolloLink((operation, forward) => {  
   operation.setContext({ start: new Date() });
   return forward(operation).map((response) => {
     const responseTime = new Date() - operation.getContext().start;
@@ -121,12 +129,12 @@ const logger_link = new ApolloLink((operation, forward) => {
 
 const client = new ApolloClient({
   link: ApolloLink.from([
-      // logger_link, // commented n prod
+      // logger_link, 
       with_token,
       retry_link,
       error_link,
       new HttpLink({
-          uri: "http://52.66.200.94:3000/graphql",
+          uri: __DEV__ ? "http://localhost:3000/graphql" : "http://52.66.200.94:3000/graphql",
           credentials: "same-origin"
       })
   ]),

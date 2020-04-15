@@ -131,7 +131,7 @@ class RoomDetailsPanel extends React.PureComponent{
                     {
                         query:GET_ROOM_FEED,
                         variables:{
-                            limit:5
+                            limit:constants.apollo_query.pagination_limit
                         }
                     },
                     {
@@ -141,7 +141,7 @@ class RoomDetailsPanel extends React.PureComponent{
                 ]
             })
         }catch(e){
-            console.log(`Error in toggling follow room: ${e}`)
+            
         }
     }   
     

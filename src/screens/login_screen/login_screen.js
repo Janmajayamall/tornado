@@ -79,7 +79,7 @@ class Login extends React.PureComponent{
     }
 
     _keyboard_did_show = (e) => {
-        if (e){
+        if (e){            
             this.setState({main_container_bottom_padding:e.endCoordinates.height})
         }
     }   
@@ -162,8 +162,7 @@ class Login extends React.PureComponent{
 
         await setting_up_jwt_token(user_data.jwt)
 
-        //routing bottom tab screens
-        console.log("podawdada")
+        //routing bottom tab screens        
         navigation_set_bottom_tabs()
         return
     }
@@ -234,7 +233,7 @@ class Login extends React.PureComponent{
                         <Mutation
                             mutation={LOGIN_USER}
                             onError={(e)=>{
-                                console.log(e, "this is it")
+                                
                                 this.setState({
                                     login_error:true,
                                     loading:false
@@ -242,7 +241,7 @@ class Login extends React.PureComponent{
                             }}
                             onCompleted={({login_user})=>{
                                 this.setting_up_the_user(login_user)
-                            }}
+                            }}                            
                         >
                             {(login_user)=>{                                
 

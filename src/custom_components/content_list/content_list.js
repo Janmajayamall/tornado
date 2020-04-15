@@ -6,7 +6,8 @@ import {
     ScrollView,
     Dimensions,
     FlatList,
-    RefreshControl
+    RefreshControl,
+    requireNativeComponent
 } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -92,7 +93,9 @@ class ContentList extends React.PureComponent{
     }
 
     scroll_to_top = () => {
-        this.flat_list_ref.scrollToIndex({index:0, viewOffset:0, viewPosition:0})
+        if(this.props.room_posts.length!==0){
+            this.flat_list_ref.scrollToIndex({index:0, viewOffset:0, viewPosition:0})
+        }
     }
 
     render(){
@@ -120,7 +123,13 @@ class ContentList extends React.PureComponent{
                         </Text>
                     </View>
                 }
-                keyExtractor={item => item.id}
+                keyExtractor={item => {
+                    if(item._id){
+                        return item._id
+                    }else{
+                        return "1"
+                    }                    
+                }}
             />      
         )
     }
