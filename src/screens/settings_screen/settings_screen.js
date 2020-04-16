@@ -3,7 +3,8 @@ import {
     View,
     StyleSheet,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Linking
 } from "react-native"
 import base_style from "./../../styles/base"
 import AsyncStorage from "@react-native-community/async-storage"
@@ -113,6 +114,24 @@ class SettingsScreen extends React.Component {
                     </Text>
                 </TouchableOpacity>
                 <ListItemDivider/>
+                <TouchableOpacity 
+                    style={styles.item_row}
+                    onPress={()=>{
+                        Linking.openURL("https://sites.google.com/view/tornado-services/home").catch(e=>{
+                            if(__DEV__){
+                                console.log(`not able to open url: ${url} with error:\n ${e}`)
+                            }else{
+                                bugsnag.notify(e);
+                            }
+                        })
+                    }}
+                >
+                    <Text 
+                        style={styles.item_text}                        
+                    >
+                        Privacy Policy
+                    </Text>
+                </TouchableOpacity>
             </View> 
 
         )

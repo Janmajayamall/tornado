@@ -134,7 +134,7 @@ const client = new ApolloClient({
       retry_link,
       error_link,
       new HttpLink({
-          uri: __DEV__ ? "http://localhost:3000/graphql" : "http://52.66.200.94:3000/graphql",
+          uri: __DEV__ ? "http://192.168.43.53:3000/graphql" : "http://52.66.200.94:3000/graphql",
           credentials: "same-origin"
       })
   ]),

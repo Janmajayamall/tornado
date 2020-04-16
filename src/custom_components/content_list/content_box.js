@@ -199,7 +199,7 @@ class ContentBox extends React.PureComponent {
                     <HyperLinkText
                         style={base_style.typography.small_font_paragraph}
                         trim={true}
-                        numberOfLines={3}
+                        numberOfLines={6}
                     >
                         {this.props.post_object.description}
                     </HyperLinkText>

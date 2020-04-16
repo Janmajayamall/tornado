@@ -72,6 +72,13 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 1. https://makeappicon.com/
 2. https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&foreground.space.trim=1&foreground.space.pad=0&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(68%2C%20138%2C%20255)&crop=0&backgroundShape=circle&effects=none&name=ic_launcher_round
 
+## Generating phone mocks
+1. https://mockuphone.com/iphonexspacegrey
+2. https://screenshots.appure.io/apps/28020/export
+
+## Generated Privacy policy
+1. https://app.termly.io/dashboard/website/403141/privacy-policy
+2. Hosted on google sites
 
 ## final stuff before deploy
 1. Diff prod & dev mongodb endpoint
