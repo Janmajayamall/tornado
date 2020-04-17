@@ -71,6 +71,11 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 ## Generating different icon sizes for ios/android
 1. https://makeappicon.com/
 2. https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&foreground.space.trim=1&foreground.space.pad=0&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(68%2C%20138%2C%20255)&crop=0&backgroundShape=circle&effects=none&name=ic_launcher_round
+3. Logo design
+    a. Font: Iowan Old Style - Italics
+    b. BG :FFD600
+    c Font Color :262A36
+    d Graphic font: Euphemia UCAS
 
 ## Generating phone mocks
 1. https://mockuphone.com/iphonexspacegrey
