@@ -52,7 +52,7 @@ export const constants = {
         caption:2000,
         bio:500,
         three_words:40,
-        min_age:1,
+        min_age:13,
         max_password:100,
         min_password:8,
         name:100,

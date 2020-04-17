@@ -1,4 +1,4 @@
-package com.tornado;
+package com.tornado_2020;
 
 import com.reactnativenavigation.NavigationActivity;
 

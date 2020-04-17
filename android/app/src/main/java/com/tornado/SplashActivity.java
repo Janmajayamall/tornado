@@ -1,4 +1,4 @@
-package com.tornado; // Change this to your package name.
+package com.tornado_2020; // Change this to your package name.
 
 import android.content.Intent;
 import android.os.Bundle;
