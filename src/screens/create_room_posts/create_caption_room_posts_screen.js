@@ -226,7 +226,6 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                     file_mime:this.state.image_object.file_mime
                  }
             })
-
             if(data.get_image_upload_url){
                 const result = await upload_image_to_s3(data.get_image_upload_url,this.state.image_object.image_data, this.state.image_object.file_mime)
                 return result
@@ -281,7 +280,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
             },
             valid:true
         }
-
+        
         //if image is added to the post then upload it first
         if(Object.keys(this.state.image_object).length>0){            
             await this.upload_image_to_s3()
@@ -289,14 +288,14 @@ class CreateCaptionRoomPosts extends React.PureComponent{
                 image_name:this.state.image_object.file_name,
                 width:this.state.image_object.width, 
                 height:this.state.image_object.height
-            }        
-        }
+            }     
 
+        }   
+        
         return variable_object
     }
 
     create_post = async() => {
-
         //if loading is true then return (perform no action)
         if(this.state.loading){
             return
@@ -309,7 +308,7 @@ class CreateCaptionRoomPosts extends React.PureComponent{
 
         //TODO: start loading
         const variable_object = await this.generate_create_post_variables()
-
+        
         //checking whether variable_object are valid or not
         if (!variable_object.valid){
             this.setState({loading:false})

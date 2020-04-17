@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { setContext } from 'apollo-link-context';
 import { RetryLink } from "apollo-link-retry";
 import bugsnag from "./../bugsnag/bugsnag"
+import { Platform } from "react-native";
 
 //navigation
 import { navigation_set_root_one_screen } from "./../navigation/navigation_routes/index"
@@ -134,7 +135,7 @@ const client = new ApolloClient({
       retry_link,
       error_link,
       new HttpLink({
-          uri: __DEV__ ? "http://192.168.43.53:3000/graphql" : "http://52.66.200.94:3000/graphql",
+          uri: __DEV__ ? Platform.OS === "ios" ? "http://192.168.43.53:3000/graphql" : "http://localhost:3000/graphql" : "http://52.66.200.94:3000/graphql",
           credentials: "same-origin"
       })
   ]),

@@ -8,9 +8,9 @@ import {
     StyleSheet,
     TouchableHighlight,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Alert
 } from "react-native"
-import Menu, { MenuItem, MenuDivider, Position } from "react-native-enhanced-popup-menu";
 
 
 import ProfileImage from "./../image/profile_image"
@@ -71,10 +71,6 @@ class AvatarTextPanel extends React.PureComponent{
         this.state={
             comment_text_input:"",            
         }
-
-        //refs
-        this.drop_down_menu_ref = null
-        this.generate_panel_ref = React.createRef()
     }
     
     // generating text panel on the basis of value of panel_type
@@ -110,12 +106,7 @@ class AvatarTextPanel extends React.PureComponent{
                     >
                         {this.props.comment_object.comment_body}
                     </HyperLinkText>
-                    {/* dropdown menu for delete */}
-                    <Menu
-                        ref={(ref)=>{this.drop_down_menu_ref=ref}}
-                    >
-                        <MenuItem onPress={this.handle_delete}>Delete</MenuItem>
-                    </Menu>
+
                 </View>
             )
         }
@@ -177,7 +168,7 @@ class AvatarTextPanel extends React.PureComponent{
                     </HyperLinkText>
                     <Text style={[base_style.typography.small_font, {...base_style.typography.font_colors.low_emphasis, alignSelf:"flex-end"}]}>
                             {`${get_relative_time_ago(this.props.caption_object.timestamp)}`}
-                        </Text>
+                    </Text>
                     {
                         !this.props.feed_screen_caption ? 
                             <View style={styles.vote_container}>
@@ -186,13 +177,7 @@ class AvatarTextPanel extends React.PureComponent{
                                 />
                             </View>:
                             undefined
-                    }
-                    {/* dropdown menu for delete */}
-                    <Menu
-                        ref={(ref)=>{this.drop_down_menu_ref=ref}}
-                    >
-                        <MenuItem onPress={this.handle_delete}>Delete</MenuItem>
-                    </Menu>             
+                    }                             
                 </View>
             )
         }
@@ -259,12 +244,30 @@ class AvatarTextPanel extends React.PureComponent{
         //comment display && is_user, then give option to delete
         if((this.props.panel_type===constants.avatar_text_panel_type.comment_display || this.props.panel_type===constants.avatar_text_panel_type.caption)
              && this.props.is_user){
-                this.show_drop_down_menu()
+                this.show_delete_alert()
         }
     }
 
-    show_drop_down_menu = () => {
-       this.drop_down_menu_ref.show(this.generate_panel_ref.current,Position.BOTTOM_CENTER);
+    show_delete_alert = () => {
+
+        Alert.alert(
+            "Confirm",
+            "Are you sure you want to delete?",
+            [
+                {
+                    text:"OK", 
+                    onPress: () => this.handle_delete(),
+                    style: "default"                    
+                },
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },         
+            ],
+            { cancelable: true}
+        )
+   
     }
 
     handle_delete = () => {
@@ -278,20 +281,10 @@ class AvatarTextPanel extends React.PureComponent{
             delete_caption_apollo(this.props.client, this.props.caption_object)
         }
 
-        //hide the dropdown menu
-        this.drop_down_menu_ref.hide()
-
         return
 
     }
 
-    handle_comment_delete = () => {
-
-    }
-
-    handle_caption_delete = () => {
-
-    }
 
     render(){
 
@@ -310,14 +303,14 @@ class AvatarTextPanel extends React.PureComponent{
                     </View>
                     <View 
                         style={styles.content_panel_container}
-                        ref={this.generate_panel_ref}
-                        >
+                    >
                         {
                             this.generate_panel()
                         }   
                     </View>
                 </View>
-                         
+  
+                   
             </TouchableWithoutFeedback>
         )
 

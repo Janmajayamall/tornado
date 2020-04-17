@@ -75,6 +75,8 @@ class ProfileScreen extends React.Component {
 
         //refs 
         this.content_list_ref = React.createRef()
+
+        console.log(this.props, "props profile screen")
     }
 
 

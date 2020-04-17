@@ -8,6 +8,7 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
+    Alert
 } from 'react-native'
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
@@ -16,7 +17,7 @@ import {
  } from "react-apollo";
 import base_style from "./../../styles/base"
 import Icon from 'react-native-vector-icons/AntDesign';
-import Menu, { MenuItem, Position } from "react-native-enhanced-popup-menu";
+
 
 
 //customer components
@@ -46,8 +47,6 @@ import {
     get_relative_time_ago,
     delete_post_apollo
 } from "./../../helpers/index"
-import base from './../../styles/base';
-import { getBlockStringIndentation } from 'graphql/language/blockString';
 
 
 
@@ -64,17 +63,13 @@ class ContentBox extends React.PureComponent {
         avatar_navigate_user_profile:PropTypes.any
 
     }
-
+a
     constructor(props){
 
         super(props)
 
         this.state={
         }
-
-        //refs
-        this.drop_down_menu_ref = null
-        this.generate_panel_ref = React.createRef()
     }
 
     navigate_to_comment_screen = () => {
@@ -115,14 +110,30 @@ class ContentBox extends React.PureComponent {
         })
     }
 
-    //for floating drop down
-    show_drop_down_menu = () => {
-        this.drop_down_menu_ref.show(this.generate_panel_ref.current,Position.BOTTOM_LEFT);
+    show_delete_alert = () => {
+        
+        Alert.alert(
+            "Confirm",
+            "Are you sure you want to delete?",
+            [
+                {
+                    text:"OK", 
+                    onPress: () => this.handle_post_delete(),
+                    style: "default"                    
+                },
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },         
+            ],
+            { cancelable: true}
+        )
+
     }
 
     handle_post_delete = async() => {
         const result = await delete_post_apollo(this.props.client, this.props.post_object)
-        this.drop_down_menu_ref.hide()
     }
 
     render(){
@@ -149,20 +160,13 @@ class ContentBox extends React.PureComponent {
                         this.props.post_object.is_user ?
                         <TouchableOpacity 
                             style={styles.menu_icon_container}
-                            ref={this.generate_panel_ref}
-                            onPress={this.show_drop_down_menu}
+                            onPress={this.show_delete_alert}
                         >
                             <Icon
                                 name={"minuscircleo"}
                                 size={base_style.icons.icon_size}
                                 color={base_style.color.icon_not_selected}
-                            />
-                            {/* dropdown menu for delete */}
-                            <Menu
-                                ref={(ref)=>{this.drop_down_menu_ref=ref}}
-                            >
-                                <MenuItem onPress={this.handle_post_delete}>Delete</MenuItem>
-                            </Menu>
+                            />                            
                         </TouchableOpacity> :
                         undefined
                     }

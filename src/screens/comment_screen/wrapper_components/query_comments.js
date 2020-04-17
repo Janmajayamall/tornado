@@ -72,7 +72,7 @@ class QueryComments extends React.PureComponent{
                 fetchPolicy={"cache-and-network"}
             >
                 {({loading, error, data, refetch, networkStatus}) => {
-            
+                    console.log(data, "comments & captions")
                     //render comment list when data is not undefined
                     if(data){
                         //getting data array

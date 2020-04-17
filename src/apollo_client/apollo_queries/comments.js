@@ -10,12 +10,11 @@ export const GET_POST_COMMENTS = gql`
             _id, 
             content_id, 
             content_type, 
-            creator_info{
-                _id,
+            creator_info{            
+                user_id
                 username,
                 timestamp,
-                avatar{
-                    _id,
+                avatar{                    
                     width,
                     height,
                     image_name, 
