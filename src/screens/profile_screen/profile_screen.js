@@ -76,7 +76,8 @@ class ProfileScreen extends React.Component {
         //refs 
         this.content_list_ref = React.createRef()
 
-        console.log(this.props, "props profile screen")
+        
+        
     }
 
 
@@ -303,7 +304,7 @@ class ProfileScreen extends React.Component {
 
                         // if data is not undefined then render screen
                         if(data && this.state.user_info && data.get_user_profile_posts){
-
+                            
                             return(
                                 <ContentList
                                     ref={this.content_list_ref}

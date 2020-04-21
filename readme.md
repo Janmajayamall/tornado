@@ -89,3 +89,7 @@ https://www.youtube.com/watch?v=JmFSGqbmzT4&list=PL55RiY5tL51rG1x02Yyj93iypUuHYX
 1. Diff prod & dev mongodb endpoint
 2. Diff aws prod&dev buckets
 3. PM2 deploy on ec2 instance
+
+
+## iOS generate main.jsbundle
+react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'

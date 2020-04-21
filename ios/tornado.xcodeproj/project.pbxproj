@@ -16,6 +16,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* tornadoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* tornadoTests.m */; };
+		5DB07CCA244D70BA00448D09 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		7B4A9EF3FADE9100682A5645 /* libPods-tornado-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8D7C87BBA0C984C8F7D27BE /* libPods-tornado-tvOSTests.a */; };
 		A261F47D6C5D11FF7FD61E6E /* libPods-tornadoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 532A7CABD38EBB2FDB45F593 /* libPods-tornadoTests.a */; };
 		D8512DBC93DCF38D2820904B /* libPods-tornado.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FF294D4451DF80ED283003 /* libPods-tornado.a */; };
@@ -303,7 +304,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = B8GFL3DC67;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -350,6 +351,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DB07CCA244D70BA00448D09 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -428,10 +430,8 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-tornado/Pods-tornado-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-tornado/Pods-tornado-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -452,8 +452,6 @@
 				"${PODS_ROOT}/RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
@@ -476,7 +474,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-tornado/Pods-tornado-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-tornado/Pods-tornado-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D3497DAA58A1F53DF6155BEB /* [CP] Check Pods Manifest.lock */ = {
@@ -702,9 +700,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = B8GFL3DC67;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = tornado/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -712,7 +710,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.Tornado;
+				PRODUCT_BUNDLE_IDENTIFIER = org.2020.Tornado;
 				PRODUCT_NAME = Tornado;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -724,9 +722,9 @@
 			baseConfigurationReference = 51DA21626535579DE36A62BD /* Pods-tornado.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = B8GFL3DC67;
 				INFOPLIST_FILE = tornado/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -735,9 +733,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.Tornado;
+				PRODUCT_BUNDLE_IDENTIFIER = org.2020.Tornado;
 				PRODUCT_NAME = Tornado;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore org.2020.Tornado";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

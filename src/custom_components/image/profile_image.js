@@ -47,7 +47,7 @@ class ProfileImage extends React.PureComponent {
                 }]}
             >
                 <Animated.Image
-                    source={{uri:!this.props.default_avatar?`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"}}  
+                    source={{uri:!this.props.default_avatar?`${this.props.image_object.cdn_url}/${this.props.image_object.image_name}`:"https://tornado-images.s3.ap-south-1.amazonaws.com/default_picture.png"}}  
                     style={{
                         width:this.props.width, 
                         height:this.props.width, 

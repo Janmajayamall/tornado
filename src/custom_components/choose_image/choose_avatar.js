@@ -34,7 +34,7 @@ class ChooseAvatar extends React.PureComponent{
     constructor(props){
         super(props)
         this.state={
-            image_uri:this.props.image_uri!==undefined?this.props.image_uri:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSC8zNSl8ANpBEbImwNl2XCd0IHldNyVIZw3i3LI5kydF3bLQhL"
+            image_uri:this.props.image_uri!==undefined?this.props.image_uri:"https://tornado-images.s3.ap-south-1.amazonaws.com/default_picture.png"
         }
 
     }

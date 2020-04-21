@@ -170,7 +170,7 @@ class Register extends React.PureComponent{
 
         //validate the input
         try{
-            let validation_result = await this.validate_the_input()
+            let validation_result = await this.validate_the_input()            
             if (!validation_result){
                 this.setState({loading:false})
                 return

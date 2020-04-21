@@ -102,7 +102,7 @@ class SearchRooms extends React.PureComponent{
                 loading:false,           
             })
         }catch(e){      
-            console.log(e, "daw")                
+                          
             this.setState({
                 loading:false,
                 rooms_list:[]
