@@ -13,7 +13,8 @@ import {
 import {
     Mutation,
     ApolloConsumer,
-    Query
+    Query,
+    withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
 import {  
@@ -35,10 +36,16 @@ import Loader from "./../../custom_components/loading/loading_component"
 import ErrorComponent from "./../../custom_components/loading/error_component"
 
 //importing graphql queries
-import { GET_ROOM_POSTS, GET_ROOM_DEMOGRAPHICS } from "../../apollo_client/apollo_queries/index";
 import { 
-    constants
+    GET_ROOM_POSTS, 
+    GET_ROOM_DEMOGRAPHICS,
+    GET_BLOCKED_USERS
+} from "../../apollo_client/apollo_queries/index";
+import { 
+    constants,
+    filter_blocked_posts
 } from "../../helpers";
+import bugsnag from "../../bugsnag/bugsnag";
 
 
 class RoomDetails extends React.Component{
@@ -51,6 +58,7 @@ class RoomDetails extends React.Component{
         super(props)
 
         this.state = {
+            blocked_ids_set:undefined
         }
 
     }
@@ -58,6 +66,8 @@ class RoomDetails extends React.Component{
     componentDidMount(){
         //binding the topBar add post button 
         this.navigation_event_listener = Navigation.events().bindComponent(this);
+
+        this.get_blocked_users()
     }
 
     componentWillUnmount(){
@@ -79,6 +89,30 @@ class RoomDetails extends React.Component{
                 user_id:user_id
             }
         })
+    }
+
+    get_blocked_users = async() => {
+        try{
+            const {data} = await this.props.client.query({
+                query:GET_BLOCKED_USERS,
+                fetchPolicy:"network-only"
+            })
+          
+            const {get_blocked_users} = data
+            const blocked_ids_set = new Set()
+            get_blocked_users.forEach((object)=>{
+                blocked_ids_set.add(object.blocked_user_id)
+            })
+            
+            this.setState({
+                blocked_ids_set:blocked_ids_set
+            })
+        }catch(e){
+            if(__DEV__){
+                console.log(e, "room_details_screen.js | get_blocked_users")
+            }
+            bugsnag.notify(e)
+        }
     }
 
     render(){
@@ -114,11 +148,11 @@ class RoomDetails extends React.Component{
                                     const room_posts_error = !!error
                                     const get_room_posts_room_id = data ? data.get_room_posts_room_id : undefined
 
-                                    if(get_room_demographics && get_room_posts_room_id){
+                                    if(get_room_demographics && get_room_posts_room_id && this.state.blocked_ids_set){
                                         return(
                                             <ContentList
                                                 componentId={this.props.componentId}
-                                                room_posts={get_room_posts_room_id ? get_room_posts_room_id.room_posts : []}
+                                                room_posts={get_room_posts_room_id ? filter_blocked_posts(get_room_posts_room_id.room_posts, this.state.blocked_ids_set) : []}
                                                 on_load_more={()=>{
                                                     fetchMore({
                                                         //getting more posts using cursor
@@ -211,5 +245,5 @@ const styles = StyleSheet.create({
 
 })
 
-export default RoomDetails
+export default withApollo(RoomDetails)
 

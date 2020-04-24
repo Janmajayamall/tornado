@@ -119,6 +119,21 @@ export const PASSWORD_RECOVERY_CODE_VERIFICATION = gql`
     }
 `
 
+export const BLOCK_USER = gql`
+    mutation block_users($blocked_user_id:ID!){
+        block_user(
+            blocked_user_id:$blocked_user_id
+        )
+    }
+`
+
+export const UNBLOCK_USER = gql`
+    mutation unblock_users($blocked_user_id:ID!){
+        unblock_user(
+            blocked_user_id:$blocked_user_id
+        )
+    }
+`
 
 //Query
 export const GET_PRESIGNED_URL = gql`
@@ -149,6 +164,17 @@ export const GET_USER_INFO = gql`
                 cdn_url
             },
             default_avatar,
+            is_blocked
+        }
+    }
+`
+
+export const GET_BLOCKED_USERS = gql`
+    query get_blocked_user{
+        get_blocked_users{
+            _id, 
+            user_id, 
+            blocked_user_id
         }
     }
 `

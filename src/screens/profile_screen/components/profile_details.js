@@ -13,6 +13,7 @@ import {
     Mutation,
     ApolloConsumer
 } from "react-apollo"
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import PropTypes from "prop-types"
 
@@ -52,7 +53,7 @@ class ProfileDetails extends React.PureComponent{
 
             <View style={styles.main_container}>
 
-                <View style={styles.first_container}>
+                <View style={styles.first_container}>            
                     <View style={styles.username_container}>
                         <Text style={styles.username_text}>
                             {this.props.user_info.username}

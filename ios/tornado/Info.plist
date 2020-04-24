@@ -40,7 +40,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Please give acces to photos for selecting images</string>
+	<string>For selecting your profile picture / add photos to your post</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

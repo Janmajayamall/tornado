@@ -8,7 +8,8 @@ import {
     GET_POST_CAPTIONS,
     DEACTIVATE_ROOM_POST,
     GET_ROOM_FEED,
-    GET_USER_PROFILE_POSTS
+    GET_USER_PROFILE_POSTS,
+    REPORT_POST
  } from "./../apollo_client/apollo_queries/index";
 import { constants } from "./constants";
 
@@ -166,6 +167,23 @@ export const delete_post_apollo = async(apollo_client, post_object) => {
                     }
                 }
             ]
+        })
+        return data
+    }catch(e){
+        
+    }
+
+}
+
+export const report_post_apollo = async(apollo_client, post_id, reason) => {
+
+    try{
+        const data = await apollo_client.mutate({
+            mutation:REPORT_POST,
+            variables:{
+                post_id:post_id,
+                reason:reason
+            },
         })
         return data
     }catch(e){

@@ -274,3 +274,12 @@ export const DEACTIVATE_ROOM_POST = gql`
         deactivate_room_post(post_id:$post_id)
     }
 `
+
+export const REPORT_POST = gql`
+    mutation report_posts($post_id:ID!, $reason:String!){
+        report_post(user_input:{
+            post_id:$post_id,
+            reason:$reason
+        })
+    }
+`

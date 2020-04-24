@@ -12,6 +12,7 @@ import {
     withApollo
 } from "react-apollo"
 import {Navigation} from "react-native-navigation"
+import Modal from "react-native-modal"
 
 //importing base style 
 import base_style from "./../../styles/base"
@@ -35,7 +36,8 @@ import {
 import {
     validate_email,
     validate_password,
-    validate_username
+    validate_username,
+    constants
 } from "./../../helpers/index"
 
 // import navigation routes
@@ -246,6 +248,41 @@ class Register extends React.PureComponent{
             screen_name:LOGIN_SCREEN
         })
     }
+
+    show_bottom_modal = () => {
+        
+        return(
+            <Modal
+                isVisible={this.state.is_model_visible}
+                onBackdropPress={()=>{
+                    this.setState({
+                        is_model_visible:false                        
+                    })
+                }}
+                style={styles.modal_view}
+            >               
+                <ScrollView>
+                    <View>
+                        <Text style={base_style.typography.small_font}>
+                            {constants.terms_and_conditions}
+                        </Text>
+                    </View>
+                    <View style={[styles.input_box, {alignSelf:"center", marginTop:5}]}>
+                        <BigButton
+                            button_text={"Done"}
+                            onPress={()=>{
+                                this.setState({
+                                    is_model_visible:false
+                                })
+                            }}                        
+                            active={true}
+                        />  
+                    </View>
+                </ScrollView>
+            </Modal>
+        )
+        
+    }
     
     render(){
 
@@ -298,6 +335,27 @@ class Register extends React.PureComponent{
                         />
                     </View>
                     <View style={styles.input_box}>
+                        <Text 
+                            style={[base_style.typography.small_font, {textAlign:"center"}]}
+                        >
+                            By tapping on
+                            <Text style={{color:base_style.color.icon_selected}}>
+                                {" Next "} 
+                            </Text>
+                            you agree to our 
+                            <Text 
+                                style={{color:"#00acee"}}
+                                onPress={()=>{
+                                    this.setState({
+                                        is_model_visible:true
+                                    })
+                                }}
+                            >
+                                {" End-User License Agreement "}
+                            </Text>
+                        </Text>
+                    </View>
+                    <View style={styles.input_box}>
                         <BigButton
                             button_text={"Next"}
                             onPress={()=>{this.register_other_att()}}
@@ -310,7 +368,11 @@ class Register extends React.PureComponent{
                     >
                         Already have an account?
                     </Text>
+                    {
+                        this.show_bottom_modal()
+                    }
                 </ScrollView>
+
             </TouchableWithoutFeedback>
         )
     }
@@ -328,6 +390,10 @@ const styles = {
     input_box:{
         width:"80%",
         marginBottom:10
+    },
+    modal_view:{
+        flex:1,
+        backgroundColor:base_style.color.primary_color
     }
 }
 

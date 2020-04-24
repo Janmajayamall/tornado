@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
-    Alert
+    Alert,
+    TextInput
 } from 'react-native'
 import PropTypes from 'prop-types'
 import {Navigation} from "react-native-navigation"
@@ -16,7 +17,9 @@ import {
     Mutation, Query, withApollo
  } from "react-apollo";
 import base_style from "./../../styles/base"
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/AntDesign'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from "react-native-modal"
 
 
 
@@ -45,7 +48,8 @@ import {
 import {
     constants,
     get_relative_time_ago,
-    delete_post_apollo
+    delete_post_apollo,
+    report_post_apollo
 } from "./../../helpers/index"
 
 
@@ -69,6 +73,13 @@ a
         super(props)
 
         this.state={
+
+            report_reason_text:"",
+
+            //modals visibility
+            is_model_visible:false,
+            reporting_modal_visible:false,
+            thank_you_modal_visible:false  
         }
     }
 
@@ -110,30 +121,154 @@ a
         })
     }
 
-    show_delete_alert = () => {
-        
-        Alert.alert(
-            "Confirm",
-            "Are you sure you want to delete?",
-            [
-                {
-                    text:"OK", 
-                    onPress: () => this.handle_post_delete(),
-                    style: "default"                    
-                },
-                {
-                    text: 'Cancel',
-                    onPress: () => {},
-                    style: 'cancel',
-                  },         
-            ],
-            { cancelable: true}
-        )
+    choose_modal_display = () => {
+
+        if(this.state.reporting_modal_visible){
+            return(
+                <View
+                style={styles.modal_wrapper_reporting}
+                >
+                    <Text
+                        style={[base_style.typography.small_font, {color:"#000000", paddingBottom:10}]}
+                    > 
+                        Why are you reporting this post?
+                    </Text>
+                    <TextInput
+                        placeholder={"Your reason please"}
+                        placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                        multiline={true}
+                        numberOfLines={5}
+                        style={[base_style.typography.small_font, {height:window.height*0.4, color:"#000000"}]}
+                        value={this.state.report_reason_text}
+                        onChangeText={(val)=>{
+                            if(val.length<=constants.input_limits.reporting){
+                                this.setState({
+                                    report_reason_text:val
+                                })
+                            }
+                        }}
+                    />
+                    <Text 
+                        style={[base_style.typography.small_font, {color:"#00acee", padding:5}]}
+                        onPress={()=>{
+
+                            if(this.state.report_reason_text.trim()===""){
+                                return
+                            }
+
+                            report_post_apollo(this.props.client, this.props.post_object._id, this.state.report_reason_text.trim())
+                            this.setState({
+                                reporting_modal_visible:false,                                
+                                thank_you_modal_visible:true                                                                 
+                            })
+                        }}
+                    >
+                        Done
+                    </Text>
+                </View>
+            )
+        }else if(this.state.thank_you_modal_visible){
+            return(
+                <View
+                    style={styles.modal_wrapper}
+                >
+                    <Text style={[base_style.typography.medium_font, {color:"#000000", paddingBottom:10}]}>
+                        Thank you for reporting!
+                    </Text>
+                    <Text style={[base_style.typography.small_font, {color:"#000000"}]}>
+                        We will review the post and take appropriate actions within 24 Hours.
+                    </Text>
+                    <Text
+                        style={[base_style.typography.small_font, {color:"#00acee", padding:5}]}
+                        onPress={()=>{
+                            this.setState({
+                                is_model_visible:false,
+                                reporting_modal_visible:false,
+                                thank_you_modal_visible:false
+                            })
+                        }}                        
+                    >
+                        Okay!
+                    </Text>
+                </View>
+            )
+        }else{
+            return(
+                <View
+                    style={styles.modal_wrapper}
+                >
+                    {
+                        this.props.post_object.is_user?
+                            <View style={styles.modal_row}>
+                                <Text 
+                                    style={[base_style.typography.small_font, {color:"#00acee", padding:5}]}
+                                    onPress={this.handle_post_delete}
+                                >
+                                    Delete
+                                </Text>
+                            </View>:
+                            undefined
+                    }
+                    {
+                        !this.props.post_object.is_user?
+                            <View style={styles.modal_row}>
+                                <Text 
+                                    style={[base_style.typography.small_font, {color:"#00acee", padding:5}]}
+                                    onPress={()=>{                                        
+                                        this.setState({
+                                            reporting_modal_visible:true,
+                                            thank_you_modal_visible:false
+                                        })
+                                    }}
+                                >
+                                    Report
+                                </Text>
+                            </View>:
+                            undefined
+                    }
+                </View>
+            )
+        }
 
     }
 
+    show_bottom_modal = () => {
+        
+        return(
+            <Modal
+                isVisible={this.state.is_model_visible}
+                swipeDirection="down"
+                onSwipeComplete={()=>{                    
+                    this.setState({
+                        is_model_visible:false,
+                        reporting_modal_visible:false,
+                        thank_you_modal_visible:false
+                    })
+                }}
+                onBackdropPress={()=>{
+                    this.setState({
+                        is_model_visible:false,
+                        reporting_modal_visible:false,
+                        thank_you_modal_visible:false
+                    })
+                }}
+                style={styles.modal_view}
+            >               
+                {
+                    this.choose_modal_display()
+                }
+            </Modal>
+        )
+        
+    }
+
     handle_post_delete = async() => {
-        const result = await delete_post_apollo(this.props.client, this.props.post_object)
+        const result = delete_post_apollo(this.props.client, this.props.post_object)
+        this.setState({
+            is_model_visible:false,
+            reporting_modal_visible:false,
+            thank_you_modal_visible:false
+        })
     }
 
     render(){
@@ -144,7 +279,7 @@ a
                 {/* room list container */}
                 <View style={styles.icon_room_name_container}>
                     <TouchableOpacity 
-                        style={[styles.shared_to_name_container, this.props.post_object.is_user ? {width:"90%"} :{width:"100%"}]}
+                        style={[styles.shared_to_name_container, {width:"90%"}]}
                         onPress={this.navigate_to_room_list}
                     >
                         <Text 
@@ -155,21 +290,22 @@ a
                         </Text>
                     
                     </TouchableOpacity>
-                    {/* delete icon container */}
-                    {
-                        this.props.post_object.is_user ?
-                        <TouchableOpacity 
-                            style={styles.menu_icon_container}
-                            onPress={this.show_delete_alert}
-                        >
-                            <Icon
-                                name={"minuscircleo"}
-                                size={base_style.icons.icon_size}
-                                color={base_style.color.icon_not_selected}
-                            />                            
-                        </TouchableOpacity> :
-                        undefined
-                    }
+                    {/* menu icon container */}
+                    <TouchableOpacity 
+                        style={styles.menu_icon_container}
+                        onPress={()=>{
+                            //making the modal visible
+                            this.setState({
+                                is_model_visible:true
+                            })
+                        }}
+                    >
+                        <MaterialCommunityIcons
+                            name={"dots-vertical"}
+                            size={base_style.icons.icon_size}
+                            color={base_style.color.icon_not_selected}
+                        />                            
+                    </TouchableOpacity>
                 </View>
 
                 {/* avatar panel */}
@@ -348,8 +484,12 @@ a
                             Comments
                         </Text>                        
                     </TouchableOpacity>
-                </View>    
-            
+                </View>  
+
+                {/* generating the modal box */}
+                {
+                    this.show_bottom_modal()                
+                }  
             </View>
         )
     }
@@ -425,8 +565,23 @@ const styles = StyleSheet.create({
         ...base_style.typography.small_font, 
         ...base_style.typography.font_colors.low_emphasis,
         alignSelf:"flex-end"
+    },
+    modal_view:{
+        justifyContent: 'flex-end',
+        margin: 0,        
+    },
+    modal_row:{
+        justifyContent:"center",
+        alignItems:"center", 
+    },
+    modal_wrapper:{
+        backgroundColor:base_style.color.secondary_color,
+        padding:20
+    },
+    modal_wrapper_reporting:{
+        backgroundColor:base_style.color.secondary_color,
+        padding:20,
     }
-
 })
 
 export default withApollo(ContentBox)

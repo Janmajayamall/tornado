@@ -6,8 +6,8 @@ import {
     Text,
     ScrollView,
     Dimensions,
-    SafeAreaView
-
+    SafeAreaView,
+    Alert
 } from 'react-native'
 import base_style from './../../styles/base'
 import {
@@ -17,11 +17,15 @@ import {
 } from 'react-apollo'
 import { Navigation } from "react-native-navigation"
 import PropTypes from "prop-types"
+import Modal from "react-native-modal"
 
 //importing queries/mutations in gql
 import {
     GET_USER_PROFILE_POSTS,
-    GET_USER_INFO
+    GET_USER_INFO,
+    BLOCK_USER,
+    UNBLOCK_USER,
+    GET_ROOM_FEED
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
@@ -69,7 +73,10 @@ class ProfileScreen extends React.Component {
             loading:false,
 
             //error states
-            user_info_error:false
+            user_info_error:false,
+
+            //modal visibility
+            is_model_visible:false
         }
         this.set_user_info()
 
@@ -173,7 +180,8 @@ class ProfileScreen extends React.Component {
                 variables:this.props.is_user ? {} :
                                                 {
                                                     user_id:this.props.user_id
-                                                }
+                                                },
+                fetchPolicy:"network-only"
             })
             this.setState({
                 user_info:data.get_user_info,
@@ -219,7 +227,107 @@ class ProfileScreen extends React.Component {
         navigation_push_to_screen(this.props.componentId,screen_vars)
     }
 
-    
+    show_bottom_modal = () => {
+        
+        return(
+            <Modal
+                isVisible={this.state.is_model_visible}
+                swipeDirection="down"
+                onSwipeComplete={()=>{                    
+                    this.setState({
+                        is_model_visible:false
+                    })
+                }}
+                onBackdropPress={()=>{
+                    this.setState({
+                        is_model_visible:false
+                    })
+                }}
+                style={styles.modal_view}
+            >
+               
+                <View
+                    style={styles.modal_wrapper}
+                >
+                    <View style={styles.modal_row}>
+                        <Text 
+                            style={[base_style.typography.small_font, {color:"#00acee", padding:5}]}
+                            onPress={()=>{
+                                this.alert_toggle_block_user()
+                            }}
+                        >
+                            {
+                                this.state.user_info.is_blocked ?
+                                "Unblock User" :
+                                "Block User"
+                            }
+                        </Text>
+                    </View>
+                </View>
+      
+            </Modal>
+        )
+        
+    }
+
+    alert_toggle_block_user = ()=> {
+        Alert.alert(
+            "Confirm",
+            this.state.user_info.is_blocked ? "Are you sure you want to unblock the user?": "Are you sure you want to block the user?",
+            [
+                {
+                    text:"Yes", 
+                    onPress: () => {
+                        this.toggle_block_user()
+                        this.setState({
+                            is_model_visible:false,
+                            
+                        })
+                    },
+                    style: "default"                    
+                },
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },         
+            ],
+            { cancelable: true}
+        )
+    }
+
+    toggle_block_user = async() => {
+        const result = await this.props.client.mutate({
+            mutation:this.state.user_info.is_blocked ? UNBLOCK_USER : BLOCK_USER,
+            variables:{
+                blocked_user_id:this.state.user_info.user_id
+            },
+            refetchQueries:[
+                {
+                    query:GET_USER_PROFILE_POSTS,
+                    variables:
+                        this.props.is_user?
+                        {
+                            limit:constants.apollo_query.pagination_limit,                                            
+                        }:
+                        {
+                            limit:constants.apollo_query.pagination_limit,
+                            user_id:this.props.user_id
+                        }
+                    
+                },
+                {
+                    query:GET_ROOM_FEED,
+                    variables:{
+                        limit:constants.apollo_query.pagination_limit
+                    }
+                },
+            ]
+        })
+        
+        this.set_user_info()
+    }
+
 
     generate_lower_body = () => {
         
@@ -247,11 +355,21 @@ class ProfileScreen extends React.Component {
                         <Text style={{...base_style.typography.small_font, fontStyle:"italic", alignSelf:"center"}}>
                             {" & in "}
                         </Text>
-                            <SmallButton
-                                button_text={"Common"}
-                                onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_common_rooms)}}
-                            />           
-                        </View>                
+                        <SmallButton
+                            button_text={"Common"}
+                            onPress={()=>{this.navigation_to_joined_rooms(constants.queries.get_common_rooms)}}
+                        />                              
+                    </View>  
+                    <View style={{flexDirection:"row", marginTop:10}}>                        
+                        <SmallButton
+                            button_text={"More"}
+                            onPress={()=>{
+                                this.setState({
+                                    is_model_visible:true
+                                })
+                            }}
+                        />                              
+                    </View>                              
                 </View>
             )
         }
@@ -286,6 +404,7 @@ class ProfileScreen extends React.Component {
     render(){
         return(
             <SafeAreaView style={styles.main_container}>
+
                 <Query 
                     query={GET_USER_PROFILE_POSTS}
                     variables={
@@ -301,7 +420,7 @@ class ProfileScreen extends React.Component {
                     fetchPolicy={"cache-and-network"}
                 >
                     {({ data, fetchMore, refetch, networkStatus, error }) => {
-
+                        
                         // if data is not undefined then render screen
                         if(data && this.state.user_info && data.get_user_profile_posts){
                             
@@ -309,7 +428,7 @@ class ProfileScreen extends React.Component {
                                 <ContentList
                                     ref={this.content_list_ref}
                                     componentId={this.props.componentId}
-                                    room_posts={data ? data.get_user_profile_posts.room_posts : []}
+                                    room_posts={this.state.user_info.is_blocked ? []: data ? data.get_user_profile_posts.room_posts : []}
                                     on_load_more={()=>{
     
                                         //generating variables
@@ -390,6 +509,13 @@ class ProfileScreen extends React.Component {
 
                     }}
                 </Query>
+                                
+                {/* generating the modal box */}
+                {
+                    this.state.user_info ?
+                    this.show_bottom_modal() :
+                    undefined
+                }
             </SafeAreaView>
                 
         )
@@ -416,8 +542,20 @@ const styles = StyleSheet.create({
     small_button_view:{
         flexWrap:"wrap",
         margin:5
+    },
+    modal_view:{
+        justifyContent: 'flex-end',
+        margin: 0,        
+    },
+    modal_row:{
+        justifyContent:"center",
+        alignItems:"center",
+        
+    },
+    modal_wrapper:{
+        backgroundColor:base_style.color.secondary_color,
+        padding:20
     }
-
 })
 
 export default withApollo(ProfileScreen)

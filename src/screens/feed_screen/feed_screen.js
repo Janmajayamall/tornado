@@ -11,13 +11,14 @@ import {
 import base_style from './../../styles/base'
 import gql from 'graphql-tag';
 import {
-    Query
+    Query, withApollo
 } from 'react-apollo'
 import { Navigation } from "react-native-navigation"
 
 //importing queries/mutations in gql
 import {
-    GET_ROOM_FEED
+    GET_ROOM_FEED,
+    GET_BLOCKED_USERS
 } from "./../../apollo_client/apollo_queries/index"
 
 //importing components 
@@ -29,14 +30,16 @@ import ErrorComponent from "./../../custom_components/loading/error_component"
 
 //importing helpers & constants
 import {
-    constants
+    constants,
+    filter_blocked_posts
 } from "./../../helpers/index"
 
 //importing screens and navigation functions
 import { navigation_push_to_screen } from '../../navigation/navigation_routes';
 import {  
-    COMMON_CREATE_POSTS_SCREEN
+    COMMON_CREATE_POSTS_SCREEN,
 } from "./../../navigation/screens";
+import bugsnag from '../../bugsnag/bugsnag';
 
 
 
@@ -48,7 +51,7 @@ class FeedScreen extends React.PureComponent {
         super(props)
 
         this.state={
-
+            blocked_ids_set:undefined
         }
 
         //refs 
@@ -68,11 +71,37 @@ class FeedScreen extends React.PureComponent {
                 this.content_list_ref.current.scroll_to_top()
             }
         });
+
+        this.get_blocked_users()
     }
 
     componentWillUnmount(){
         this.bottom_tab_event_listener.remove()
         this.navigation_event_listener.remove()
+    }
+
+    get_blocked_users = async() => {
+        try{
+            const {data} = await this.props.client.query({
+                query:GET_BLOCKED_USERS,
+                fetchPolicy:"network-only"
+            })
+          
+            const {get_blocked_users} = data
+            const blocked_ids_set = new Set()
+            get_blocked_users.forEach((object)=>{
+                blocked_ids_set.add(object.blocked_user_id)
+            })
+            
+            this.setState({
+                blocked_ids_set:blocked_ids_set
+            })
+        }catch(e){
+            if(__DEV__){
+                console.log(e, "feed_screen.js | get_blocked_users")
+            }
+            bugsnag.notify(e)
+        }
     }
 
     //react native navigation event binded function for action buttons
@@ -116,13 +145,13 @@ class FeedScreen extends React.PureComponent {
         >
             {({ data, fetchMore, networkStatus, refetch, error }) => {           
                 
-                if (data && data.get_room_posts_user_id){
-
+                if (data && data.get_room_posts_user_id && this.state.blocked_ids_set){
+                    this.get_blocked_users()
                     return(
                         <ContentList
                             ref={this.content_list_ref}
                             componentId={this.props.componentId}
-                            room_posts={data ? data.get_room_posts_user_id.room_posts : []}                            
+                            room_posts={data ? filter_blocked_posts(data.get_room_posts_user_id.room_posts, this.state.blocked_ids_set) : []}                            
                             on_load_more={()=>{
                                 fetchMore({
                                     //getting more posts using cursor
@@ -138,9 +167,11 @@ class FeedScreen extends React.PureComponent {
                                             return previous_data
                                         }
     
+                                        const get_filtered_posts = get_filtered_posts(fetchMoreResult.get_room_posts_user_id.room_posts, this.state.blocked_ids_set)
+
                                         const new_posts_arr = [
                                             ...previous_data.get_room_posts_user_id.room_posts,
-                                            ...fetchMoreResult.get_room_posts_user_id.room_posts
+                                            ...get_filtered_posts
                                         ]
     
                                         const new_data_object = {
@@ -211,4 +242,4 @@ const styles = StyleSheet.create({
 
 
 
-export default FeedScreen
+export default withApollo(FeedScreen)
