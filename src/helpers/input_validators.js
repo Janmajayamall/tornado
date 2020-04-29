@@ -177,7 +177,7 @@ export const validate_age = (age) => {
     if(age<constants.input_limits.min_age){
         return ({
             valid:false,
-            error_text:"Your age cannot be negative"
+            error_text:"You must be older than 12"
         })
     }
 

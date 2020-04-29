@@ -14,3 +14,25 @@ export const TOGGLE_LIKE = gql`
         }
     }
 `
+
+
+//Queries 
+export const GET_LIKES_LIST = gql`
+
+    query get_like_list($content_id:ID!){
+        get_likes_list(content_id:$content_id){
+            _id,
+            user_id,
+            username,
+            default_avatar,
+            avatar{
+                _id,
+                image_name,
+                height,
+                width, 
+                cdn_url
+            },
+            is_user
+        }
+    }
+`

@@ -34,6 +34,7 @@ class BigTextInput extends React.PureComponent {
                     onChangeText={this.props.onChangeText}
                     style={styles.input_box}
                     placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                    autoCapitalize = 'none'
                 />
             )
         }else if(this.props.type==="PHONE"){
@@ -56,6 +57,7 @@ class BigTextInput extends React.PureComponent {
                     keyboardType={"email-address"}
                     style={styles.input_box}
                     placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                    autoCapitalize = 'none'
                 />
             )
         }else if(this.props.type==="PASSWORD"){
@@ -67,6 +69,7 @@ class BigTextInput extends React.PureComponent {
                     secureTextEntry={true}
                     style={styles.input_box}
                     placeholderTextColor={base_style.typography.font_colors.text_input_placeholder}
+                    autoCapitalize = 'none'
                 />
             )
         }else if(this.props.type==="NUMBER"){

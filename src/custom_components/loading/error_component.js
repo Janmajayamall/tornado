@@ -17,6 +17,7 @@ import base_style from "./../../styles/base"
 class ErrorComponent extends React.PureComponent{
 
     static propTypes = {
+        retry:PropTypes.func
     }
 
     constructor(props){

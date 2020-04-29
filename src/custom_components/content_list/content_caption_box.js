@@ -39,7 +39,8 @@ import {
 // import screens & navigation functions
 import {
     COMMENT_SCREEN,
-    ROOM_NAME_LIST
+    ROOM_NAME_LIST,
+    USER_LIST
 } from "./../../navigation/screens"
 import {  
     navigation_push_to_screen
@@ -129,6 +130,16 @@ class ContentCaptionBox extends React.PureComponent {
         })
     }
 
+
+    navigate_user_likes_list = () => {
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name:USER_LIST,
+            props:{
+                user_list_type:constants.queries.get_likes_list,
+                content_id:this.props.post_object._id
+            },
+        })
+    }
 
     choose_modal_display = () => {
 
@@ -460,11 +471,13 @@ class ContentCaptionBox extends React.PureComponent {
                             )
                         }}
                     </Mutation>          
-                    <View style={styles.likes_count_container}>
+                    <TouchableOpacity 
+                        onPress={this.navigate_user_likes_list}
+                        style={styles.likes_count_container}>
                         <Text style={[base_style.typography.small_font, {alignSelf:"center", color:base_style.color.icon_not_selected}]}>
                             {`${this.props.post_object.likes_count} ${this.props.post_object.likes_count===1?"like":"likes"}`}
                         </Text>   
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.comment_container}
                         onPress={()=>{
                             if(!this.props.on_feed){

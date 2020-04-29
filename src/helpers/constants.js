@@ -20,7 +20,9 @@ export const constants = {
     queries:{
         get_all_joined_rooms:"GET_ALL_JOINED_ROOMS",
         get_all_created_rooms:"GET_ALL_CREATED_ROOMS",
-        get_common_rooms:"GET_COMMON_ROOMS"
+        get_common_rooms:"GET_COMMON_ROOMS",
+        get_likes_list:"GET_LIKES_LIST",
+        get_room_members_list:"GET_ROOM_MEMBERS_LIST"
     },
     create_post_type:{
         room_post:"ROOM_POST",

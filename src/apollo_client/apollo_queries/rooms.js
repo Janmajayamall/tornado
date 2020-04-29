@@ -134,6 +134,26 @@ export const CHECK_ROOM_NAME = gql`
     }
 `
 
+export const GET_ROOM_MEMBERS_LIST = gql`
+
+    query get_room_member_list($room_id:ID!){
+        get_room_members_list(room_id:$room_id){
+            _id,
+            user_id,
+            username,
+            default_avatar,
+            avatar{
+                _id,
+                image_name,
+                height,
+                width, 
+                cdn_url
+            },
+            is_user
+        }
+    }
+`
+
 
 //Mutations
 export const BULK_ROOM_FOLLOWS = gql`

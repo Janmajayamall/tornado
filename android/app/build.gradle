@@ -132,8 +132,8 @@ android {
         applicationId "com.tornado_2020"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.0"
+        versionCode 6
+        versionName "1.01"
     }
     splits {
         abi {

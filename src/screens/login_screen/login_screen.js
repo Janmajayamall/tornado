@@ -139,7 +139,7 @@ class Login extends React.PureComponent{
         return all_inputs_valid
     }
 
-
+    //TODO: fix & make everything lower case. Here & as well as in recovery
     change_email_id = (val) => {
         this.setState({
             email:{

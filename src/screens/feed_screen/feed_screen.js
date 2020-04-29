@@ -167,8 +167,7 @@ class FeedScreen extends React.PureComponent {
                                             return previous_data
                                         }
     
-                                        const get_filtered_posts = get_filtered_posts(fetchMoreResult.get_room_posts_user_id.room_posts, this.state.blocked_ids_set)
-
+                                        const get_filtered_posts = filter_blocked_posts(fetchMoreResult.get_room_posts_user_id.room_posts, this.state.blocked_ids_set)
                                         const new_posts_arr = [
                                             ...previous_data.get_room_posts_user_id.room_posts,
                                             ...get_filtered_posts

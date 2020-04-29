@@ -194,6 +194,7 @@ class RoomDetails extends React.Component{
                                                         navigate_to_creator_profile={()=>{                                                                            
                                                             this.navigate_to_creator_profile(get_room_demographics.creator_info.user_id, get_room_demographics.is_user)
                                                         }}
+                                                        componentId={this.props.componentId}
                                                     />
                                                 }
                                                 avatar_navigate_user_profile={true}

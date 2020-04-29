@@ -14,7 +14,6 @@ import {
     ApolloConsumer,
     withApollo
 } from "react-apollo"
-import {Navigation} from "react-native-navigation"
 import PropTypes from "prop-types"
 
 //importing queries and mutations
@@ -36,12 +35,23 @@ import BigButton from "./../../../custom_components/buttons/big_buttons"
 import ProfileImage from "./../../../custom_components/image/profile_image"
 import HyperLinkText from "./../../../custom_components/text/hyper_link_text"
 
+//importing navigation stuff
+import {
+    navigation_push_to_screen
+} from "./../../../navigation/navigation_routes/index"
+import {
+    USER_LIST
+} from "./../../../navigation/screens"
+
 const window = Dimensions.get("window")
 class RoomDetailsPanel extends React.PureComponent{
 
     static propTypes = {
         room_object:PropTypes.object,
-        navigate_to_creator_profile:PropTypes.func
+        navigate_to_creator_profile:PropTypes.func,
+
+        //componentId
+        componentId:PropTypes.any
     }
 
     constructor(props){
@@ -145,6 +155,16 @@ class RoomDetailsPanel extends React.PureComponent{
         }
     }   
     
+    navigate_room_members_list = () => {
+        navigation_push_to_screen(this.props.componentId, {
+            screen_name:USER_LIST,
+            props:{
+                user_list_type:constants.queries.get_room_members_list,
+                room_id:this.props.room_object._id
+            },
+        })
+    }
+
     render(){
         return(
 
@@ -167,11 +187,14 @@ class RoomDetailsPanel extends React.PureComponent{
                         </View>
 
                         <View style={styles.third_container}>
-                            <View style={styles.second_container_first_col}>
+                            <TouchableOpacity 
+                                style={styles.second_container_first_col}
+                                onPress={this.navigate_room_members_list}
+                            >
                                 <Text style={[styles.description_text, {}]}>
                                     {`${this.props.room_object.room_members_count} ${this.props.room_object.room_members_count===1?"member":"members"}`}
                                 </Text>
-                            </View> 
+                            </TouchableOpacity> 
                             <View style={styles.second_container_second_col}>
                                 <Text style={[styles.description_text, {}]}>
                                     {`created ${get_relative_time_ago(this.props.room_object.timestamp)}`}
