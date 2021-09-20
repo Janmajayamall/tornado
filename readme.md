@@ -1,4 +1,5 @@
 # Tornado - Building communities
+Tornado is available on iOS & Android
 
 Tornado makes it easy for individuals to discover and be part of communities on topics that interest them.
 I have always believed that communities formed on topics of interest can help people take their interests to new heights, and that's how Tornado was born. Tornado also helps small communities to harness the power of mass collaboration & make a big impact.
